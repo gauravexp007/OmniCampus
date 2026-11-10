@@ -1,0 +1,141 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Health Check & Diagnostics
+    match /test/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Users Collection
+    match /users/{userId} {
+      allow read: if true;
+      allow create, update: if isAuthenticated() && (request.auth.uid == userId || !exists(/databases/$(database)/documents/users/$(userId)));
+      allow delete: if false;
+    }
+
+    // User Uploaded Files Collection
+    match /user_files/{fileId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.resource.data.uploadedByUid == request.auth.uid;
+      allow update, delete: if isAuthenticated();
+    }
+
+    // Students Collection
+    match /students/{studentId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // Faculty Collection
+    match /faculty/{facultyId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // Courses Collection
+    match /courses/{courseId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // Student Attendance Collection
+    match /student_attendance/{recordId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // Faculty Attendance Collection
+    match /faculty_attendance/{recordId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // Attendance Collection
+    match /attendance/{recordId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // Timetable Slots Collection
+    match /timetable/{slotId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // Exams Collection
+    match /exams/{examId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // Results Collection
+    match /results/{resultId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // Admissions Collection
+    match /admissions/{candidateId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // Official Documents Collection
+    match /documents/{documentId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // Announcements Collection
+    match /announcements/{announcementId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // Financial Transactions Collection
+    match /transactions/{transactionId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // Library Items Collection
+    match /library/{itemId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // Hostel Occupancy Collection
+    match /hostel/{roomId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // HR Employees Collection
+    match /employees/{employeeId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // Notifications Collection
+    match /notifications/{notificationId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // System Credentials Collection (Protected Database Storage)
+    match /system_credentials/{docId} {
+      allow read, write: if isAuthenticated() && request.auth.token.email == 'fab.gaurav007@gmail.com';
+    }
+  }
+}

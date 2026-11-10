@@ -1,0 +1,413 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with role, contact info and metadata",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "name": { "type": "string" },
+        "role": { "type": "string", "enum": ["Admin", "Faculty", "Student"] },
+        "department": { "type": "string" },
+        "avatar": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["uid", "email", "name", "role"]
+    },
+    "UserUploadedFile": {
+      "title": "UserUploadedFile",
+      "description": "User uploaded document or media record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "fileType": { "type": "string" },
+        "sizeBytes": { "type": "number" },
+        "dataUrl": { "type": "string" },
+        "uploadedByUid": { "type": "string" },
+        "uploaderName": { "type": "string" },
+        "uploaderEmail": { "type": "string" },
+        "uploadedAt": { "type": "string" },
+        "category": { "type": "string" }
+      },
+      "required": ["id", "name", "uploadedByUid", "uploadedAt"]
+    },
+    "Student": {
+      "title": "Student",
+      "description": "Student academic and enrollment profile",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "enrollmentNo": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "department": { "type": "string" },
+        "program": { "type": "string" },
+        "semester": { "type": "number" },
+        "cgpa": { "type": "number" },
+        "attendancePct": { "type": "number" },
+        "feeStatus": { "type": "string" },
+        "phone": { "type": "string" },
+        "avatar": { "type": "string" },
+        "createdByUid": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "enrollmentNo", "name", "department"]
+    },
+    "FacultyMember": {
+      "title": "FacultyMember",
+      "description": "Faculty staff academic profile",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "employeeId": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "department": { "type": "string" },
+        "designation": { "type": "string" },
+        "specialization": { "type": "string" },
+        "officeRoom": { "type": "string" },
+        "phone": { "type": "string" },
+        "avatar": { "type": "string" },
+        "createdByUid": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "employeeId", "name", "department"]
+    },
+    "AcademicCourse": {
+      "title": "AcademicCourse",
+      "description": "Academic course curriculum",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "code": { "type": "string" },
+        "title": { "type": "string" },
+        "department": { "type": "string" },
+        "credits": { "type": "number" },
+        "facultyName": { "type": "string" },
+        "semester": { "type": "number" },
+        "syllabus": { "type": "string" },
+        "createdByUid": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "code", "title", "department"]
+    },
+    "StudentAttendanceRecord": {
+      "title": "StudentAttendanceRecord",
+      "description": "Student daily lecture attendance marking",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "studentId": { "type": "string" },
+        "studentName": { "type": "string" },
+        "enrollmentNo": { "type": "string" },
+        "courseCode": { "type": "string" },
+        "courseTitle": { "type": "string" },
+        "department": { "type": "string" },
+        "date": { "type": "string" },
+        "timeSlot": { "type": "string" },
+        "status": { "type": "string", "enum": ["Present", "Absent", "Late"] },
+        "markedBy": { "type": "string" },
+        "facultyName": { "type": "string" },
+        "remarks": { "type": "string" },
+        "timestamp": { "type": "number" },
+        "createdByUid": { "type": "string" }
+      },
+      "required": ["id", "studentName", "courseCode", "date", "status"]
+    },
+    "FacultyAttendanceRecord": {
+      "title": "FacultyAttendanceRecord",
+      "description": "Faculty duty check-in record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "facultyId": { "type": "string" },
+        "facultyName": { "type": "string" },
+        "employeeId": { "type": "string" },
+        "department": { "type": "string" },
+        "designation": { "type": "string" },
+        "date": { "type": "string" },
+        "status": { "type": "string" },
+        "checkInTime": { "type": "string" },
+        "assignedLecture": { "type": "string" },
+        "lectureRoom": { "type": "string" },
+        "leaveReason": { "type": "string" },
+        "createdByUid": { "type": "string" }
+      },
+      "required": ["id", "facultyName", "date", "status"]
+    },
+    "TimetableSlot": {
+      "title": "TimetableSlot",
+      "description": "Class timetable schedule slot",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "day": { "type": "string" },
+        "time": { "type": "string" },
+        "course": { "type": "string" },
+        "courseCode": { "type": "string" },
+        "faculty": { "type": "string" },
+        "room": { "type": "string" },
+        "department": { "type": "string" },
+        "semester": { "type": "number" },
+        "createdByUid": { "type": "string" }
+      },
+      "required": ["id", "day", "time", "course", "department"]
+    },
+    "ExamRecord": {
+      "title": "ExamRecord",
+      "description": "Semester examination schedule record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "courseCode": { "type": "string" },
+        "courseTitle": { "type": "string" },
+        "examDate": { "type": "string" },
+        "time": { "type": "string" },
+        "venue": { "type": "string" },
+        "hallTicketStatus": { "type": "string" },
+        "department": { "type": "string" },
+        "semester": { "type": "number" },
+        "createdByUid": { "type": "string" }
+      },
+      "required": ["id", "courseCode", "courseTitle", "examDate"]
+    },
+    "ResultRecord": {
+      "title": "ResultRecord",
+      "description": "Academic published student grades and results",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "studentId": { "type": "string" },
+        "studentName": { "type": "string" },
+        "enrollmentNo": { "type": "string" },
+        "semester": { "type": "number" },
+        "gpa": { "type": "number" },
+        "status": { "type": "string" },
+        "department": { "type": "string" },
+        "publishedDate": { "type": "string" },
+        "createdByUid": { "type": "string" }
+      },
+      "required": ["id", "studentName", "enrollmentNo", "semester"]
+    },
+    "AdmissionCandidate": {
+      "title": "AdmissionCandidate",
+      "description": "Admissions candidate application record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "applicationNo": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "appliedProgram": { "type": "string" },
+        "department": { "type": "string" },
+        "stage": { "type": "string" },
+        "entranceScore": { "type": "number" },
+        "appliedDate": { "type": "string" },
+        "createdByUid": { "type": "string" }
+      },
+      "required": ["id", "name", "appliedProgram", "stage"]
+    },
+    "DocumentRecord": {
+      "title": "DocumentRecord",
+      "description": "Official institutional document certificates and letters",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "type": { "type": "string" },
+        "requester": { "type": "string" },
+        "issuedDate": { "type": "string" },
+        "verifiedBy": { "type": "string" },
+        "digitalSealHash": { "type": "string" },
+        "status": { "type": "string" },
+        "fileDataUrl": { "type": "string" },
+        "fileName": { "type": "string" },
+        "createdByUid": { "type": "string" }
+      },
+      "required": ["id", "title", "type", "requester"]
+    },
+    "AnnouncementItem": {
+      "title": "AnnouncementItem",
+      "description": "Campus announcements and bulletins",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "category": { "type": "string" },
+        "author": { "type": "string" },
+        "date": { "type": "string" },
+        "priority": { "type": "string" },
+        "targetAudience": { "type": "string" },
+        "createdByUid": { "type": "string" }
+      },
+      "required": ["id", "title", "content", "date"]
+    },
+    "FinancialTransaction": {
+      "title": "FinancialTransaction",
+      "description": "Tuition fee payment and transactions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "transactionId": { "type": "string" },
+        "studentName": { "type": "string" },
+        "enrollmentNo": { "type": "string" },
+        "amount": { "type": "number" },
+        "type": { "type": "string" },
+        "category": { "type": "string" },
+        "status": { "type": "string" },
+        "date": { "type": "string" },
+        "paymentMode": { "type": "string" },
+        "receiptNo": { "type": "string" },
+        "createdByUid": { "type": "string" }
+      },
+      "required": ["id", "amount", "status", "date"]
+    },
+    "LibraryItem": {
+      "title": "LibraryItem",
+      "description": "University library catalog book item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "isbn": { "type": "string" },
+        "title": { "type": "string" },
+        "author": { "type": "string" },
+        "department": { "type": "string" },
+        "totalCopies": { "type": "number" },
+        "availableCopies": { "type": "number" },
+        "shelfLocation": { "type": "string" },
+        "createdByUid": { "type": "string" }
+      },
+      "required": ["id", "title", "author"]
+    },
+    "HostelOccupancy": {
+      "title": "HostelOccupancy",
+      "description": "Hostel room occupancy record",
+      "type": "object",
+      "properties": {
+        "block": { "type": "string" },
+        "roomNo": { "type": "string" },
+        "capacity": { "type": "number" },
+        "occupied": { "type": "number" },
+        "gender": { "type": "string" },
+        "status": { "type": "string" },
+        "createdByUid": { "type": "string" }
+      },
+      "required": ["block", "roomNo", "capacity", "occupied"]
+    },
+    "HREmployee": {
+      "title": "HREmployee",
+      "description": "HR staff employee record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "employeeCode": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "department": { "type": "string" },
+        "role": { "type": "string" },
+        "salary": { "type": "number" },
+        "joinDate": { "type": "string" },
+        "status": { "type": "string" },
+        "createdByUid": { "type": "string" }
+      },
+      "required": ["id", "name", "employeeCode", "department"]
+    },
+    "AppNotification": {
+      "title": "AppNotification",
+      "description": "User notification alert",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "recipientRole": { "type": "string" },
+        "recipientId": { "type": "string" },
+        "title": { "type": "string" },
+        "desc": { "type": "string" },
+        "time": { "type": "string" },
+        "read": { "type": "boolean" },
+        "type": { "type": "string" },
+        "timestamp": { "type": "number" },
+        "createdByUid": { "type": "string" }
+      },
+      "required": ["id", "title", "desc"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Profiles for registered application users"
+    },
+    "/user_files/{fileId}": {
+      "schema": "UserUploadedFile",
+      "description": "Uploaded documents, receipts, course materials and files"
+    },
+    "/students/{studentId}": {
+      "schema": "Student",
+      "description": "Student master records"
+    },
+    "/faculty/{facultyId}": {
+      "schema": "FacultyMember",
+      "description": "Faculty academic staff records"
+    },
+    "/courses/{courseId}": {
+      "schema": "AcademicCourse",
+      "description": "Academic course curriculum records"
+    },
+    "/student_attendance/{recordId}": {
+      "schema": "StudentAttendanceRecord",
+      "description": "Student daily attendance markings"
+    },
+    "/faculty_attendance/{recordId}": {
+      "schema": "FacultyAttendanceRecord",
+      "description": "Faculty duty check-in records"
+    },
+    "/timetable/{slotId}": {
+      "schema": "TimetableSlot",
+      "description": "Class timetable schedule slots"
+    },
+    "/exams/{examId}": {
+      "schema": "ExamRecord",
+      "description": "Semester examination schedules"
+    },
+    "/results/{resultId}": {
+      "schema": "ResultRecord",
+      "description": "Student published results and grades"
+    },
+    "/admissions/{candidateId}": {
+      "schema": "AdmissionCandidate",
+      "description": "Admissions candidate applications"
+    },
+    "/documents/{documentId}": {
+      "schema": "DocumentRecord",
+      "description": "Official documents, certificates and letters"
+    },
+    "/announcements/{announcementId}": {
+      "schema": "AnnouncementItem",
+      "description": "Campus announcements and bulletins"
+    },
+    "/transactions/{transactionId}": {
+      "schema": "FinancialTransaction",
+      "description": "Tuition fees and transactions"
+    },
+    "/library/{itemId}": {
+      "schema": "LibraryItem",
+      "description": "Library book catalog items"
+    },
+    "/hostel/{roomId}": {
+      "schema": "HostelOccupancy",
+      "description": "Hostel room occupancy and beds"
+    },
+    "/employees/{employeeId}": {
+      "schema": "HREmployee",
+      "description": "HR staff records"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "AppNotification",
+      "description": "User notifications"
+    }
+  }
+}
