@@ -697,8 +697,8 @@ html.dark body {
   color: #a3f7bf !important; /* Mint accent for key metrics / highlight labels */
 }
 
-.dark .text-[\#818181\],
-.dark .dark\:text-[\#818181\] {
+.dark .text-\[\#818181\],
+.dark .dark\:text-\[\#818181\] {
   color: #8ea1a5 !important;
 }
 
