@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { WifiOff, RefreshCw, AlertTriangle, ArrowRight } from 'lucide-react';
+import { WifiOff, RefreshCw, AlertTriangle, ArrowRight, GraduationCap } from 'lucide-react';
+import { GradientGreyBackground } from './GradientGreyBackground';
 
 interface CampusSkeletonPreviewProps {
   reason?: 'offline' | 'weak' | 'loading' | 'simulated';
@@ -9,6 +10,14 @@ interface CampusSkeletonPreviewProps {
   isSimulated?: boolean;
 }
 
+/**
+ * CampusSkeletonPreview
+ * 
+ * An authentic, full-application skeleton loader for OmniCampus ERP.
+ * Matches the actual dashboard layout (Navbar, Sidebar rail, Metric KPI cards,
+ * schedule blocks, and directory table) with hardware-accelerated shimmer effects
+ * in both light and dark modes.
+ */
 export const CampusSkeletonPreview: React.FC<CampusSkeletonPreviewProps> = ({
   reason = 'loading',
   onRetry,
@@ -16,259 +25,202 @@ export const CampusSkeletonPreview: React.FC<CampusSkeletonPreviewProps> = ({
   isSimulated = false,
 }) => {
   return (
-    <div className="relative min-h-screen w-full bg-[#8fa9cb] p-3 sm:p-6 md:p-8 flex flex-col items-center justify-center font-sans antialiased overflow-x-hidden selection:bg-[#132c4e] selection:text-white">
-      {/* Top Advisory Banner for Weak/Offline Network State */}
-      <motion.div
-        initial={{ opacity: 0, y: -12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="w-full max-w-5xl mb-4 bg-white/95 backdrop-blur-md border border-white/60 shadow-lg rounded-2xl p-3.5 sm:px-5 flex flex-wrap items-center justify-between gap-3 text-slate-800 z-10"
-      >
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="p-2 rounded-xl bg-amber-100 text-amber-800 shrink-0">
-            {reason === 'offline' ? (
-              <WifiOff className="w-5 h-5 text-rose-600" />
-            ) : reason === 'weak' ? (
-              <AlertTriangle className="w-5 h-5 text-amber-600" />
-            ) : (
-              <RefreshCw className="w-5 h-5 text-indigo-600 animate-spin" />
-            )}
-          </div>
-          <div className="min-w-0">
-            <h4 className="text-xs sm:text-sm font-bold text-slate-900 truncate flex items-center gap-2">
-              <span>
+    <div className="relative min-h-screen w-screen overflow-hidden bg-slate-100 dark:bg-[#181b20] font-sans text-slate-900 dark:text-[#f8fafc] antialiased flex flex-col">
+      {/* Background Gradient Shade */}
+      <GradientGreyBackground />
+
+      {/* Optional Advisory Toast for Weak/Offline Network State */}
+      {(reason === 'offline' || reason === 'weak' || isSimulated) && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative z-50 bg-white/90 dark:bg-[#222834]/95 backdrop-blur-md border-b border-slate-200 dark:border-[#373e4b] px-4 py-2.5 shadow-sm flex items-center justify-between gap-3 text-xs"
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="p-1.5 rounded-lg bg-amber-500/15 text-amber-600 dark:text-amber-400 shrink-0">
+              {reason === 'offline' ? (
+                <WifiOff className="w-4 h-4 text-rose-500" />
+              ) : reason === 'weak' ? (
+                <AlertTriangle className="w-4 h-4 text-amber-500" />
+              ) : (
+                <RefreshCw className="w-4 h-4 text-brand animate-spin" />
+              )}
+            </span>
+            <div className="min-w-0">
+              <span className="font-extrabold text-slate-900 dark:text-white mr-2">
                 {reason === 'offline'
-                  ? 'No Internet Connection Detected'
+                  ? 'Offline Cached Preview'
                   : reason === 'weak'
-                  ? 'Slow / Weak Network Connection'
-                  : isSimulated
-                  ? 'Simulated Offline Skeleton Preview'
+                  ? 'Weak Connection Detected'
                   : 'Synchronizing University ERP Records...'}
               </span>
-              <span className="px-2 py-0.5 text-[10px] font-extrabold uppercase rounded-full bg-slate-100 text-slate-600 border border-slate-200">
-                Offline Mode
+              <span className="text-slate-500 dark:text-slate-400 hidden sm:inline">
+                {reason === 'offline'
+                  ? 'Displaying offline application skeleton while connection recovers.'
+                  : 'Streaming real-time campus datasets and permissions.'}
               </span>
-            </h4>
-            <p className="text-[11px] sm:text-xs text-slate-500 truncate">
-              {reason === 'offline'
-                ? 'Your device appears disconnected from the internet. Displaying cached dashboard skeleton preview.'
-                : 'Connection bandwidth is constrained. Displaying layout skeleton while university data streams in.'}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 shrink-0 ml-auto">
-          {onRetry && (
-            <button
-              onClick={onRetry}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-[#132c4e] text-white hover:bg-[#1a3861] transition-all shadow-xs cursor-pointer active:scale-95"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-              <span>Retry Connection</span>
-            </button>
-          )}
-          {onDismiss && (
-            <button
-              onClick={onDismiss}
-              className="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
-            >
-              <span>Dismiss Preview</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          )}
-        </div>
-      </motion.div>
-
-      {/* Main Skeleton Frame Matching image.png */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.98 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.35, ease: 'easeOut' }}
-        className="w-full max-w-5xl bg-[#edf2f8] border border-white/80 rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 space-y-5 animate-pulse"
-      >
-        {/* 1. Top Navbar Skeleton */}
-        <div className="flex items-center justify-between pb-3 border-b border-slate-200/60 gap-3">
-          {/* Left: Brand circle logo + 2 placeholder title bars */}
-          <div className="flex items-center gap-3">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#132c4e] shrink-0" />
-            <div className="space-y-1.5">
-              <div className="h-2 w-16 sm:w-20 bg-slate-300 rounded-full" />
-              <div className="h-1.5 w-10 sm:w-14 bg-slate-200 rounded-full" />
             </div>
           </div>
 
-          {/* Right: Search Pill + Action Pill */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            <div className="h-8 w-44 sm:w-64 rounded-full border border-slate-300/80 bg-white/80 flex items-center px-3 gap-2">
-              <div className="w-3.5 h-3.5 rounded-full border border-slate-400 shrink-0" />
-              <div className="h-2 w-12 bg-slate-200 rounded-full" />
-              <div className="h-2 w-20 bg-slate-100 rounded-full hidden sm:block" />
-            </div>
-            <div className="h-8 w-16 sm:w-24 rounded-full bg-[#132c4e] shrink-0" />
+          <div className="flex items-center gap-2 shrink-0 ml-auto">
+            {onRetry && (
+              <button
+                type="button"
+                onClick={onRetry}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-brand text-white font-bold hover:brightness-105 transition-all cursor-pointer shadow-xs"
+              >
+                <RefreshCw className="w-3 h-3" />
+                <span>Retry</span>
+              </button>
+            )}
+            {onDismiss && (
+              <button
+                type="button"
+                onClick={onDismiss}
+                className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-[#2c3342] text-slate-700 dark:text-slate-300 font-semibold hover:bg-slate-200 transition-colors cursor-pointer"
+              >
+                <span>Dismiss</span>
+                <ArrowRight className="w-3 h-3" />
+              </button>
+            )}
+          </div>
+        </motion.div>
+      )}
+
+      {/* Top Navbar Skeleton */}
+      <header className="relative z-10 h-16 border-b border-slate-200 dark:border-[#373e4b] bg-white/70 dark:bg-[#202530]/80 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between gap-4 shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-brand/20 dark:bg-brand/30 flex items-center justify-center animate-pulse">
+            <GraduationCap className="w-5 h-5 text-brand" />
+          </div>
+          <div className="space-y-1.5 hidden sm:block">
+            <div className="h-3.5 w-28 bg-slate-200 dark:bg-[#343b48] rounded-md animate-pulse" />
+            <div className="h-2 w-20 bg-slate-100 dark:bg-[#282f3c] rounded-md animate-pulse" />
           </div>
         </div>
 
-        {/* 2. Main Body Grid: Left Sidebar Rail + Center Content + Right Auxiliary Cards */}
-        <div className="flex gap-4 sm:gap-6">
-          {/* Left Vertical Rail: 4 Circle Icons */}
-          <div className="flex flex-col items-center gap-3.5 pt-2 shrink-0">
-            <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#132c4e]" />
-            <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#4f80be]" />
-            <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#99b9dd]" />
-            <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-white border border-slate-200" />
+        {/* Search bar placeholder */}
+        <div className="flex-1 max-w-md mx-4 hidden md:block">
+          <div className="h-9 w-full bg-slate-100 dark:bg-[#282f3c] border border-slate-200 dark:border-[#373e4b] rounded-xl flex items-center px-3 gap-2 animate-pulse">
+            <div className="w-3.5 h-3.5 rounded-full bg-slate-300 dark:bg-[#3e4858]" />
+            <div className="h-2.5 w-40 bg-slate-200 dark:bg-[#343b48] rounded-md" />
           </div>
+        </div>
 
-          {/* Center Main Dashboard Content Area */}
-          <div className="flex-1 min-w-0 space-y-4">
-            {/* Hero Banner: Dark Navy Card with Avatar Silhouette, 3 Lines, and White Circle Indicator */}
-            <div className="bg-[#132c4e] rounded-2xl p-4 sm:p-5 flex items-center justify-between text-white shadow-sm">
-              <div className="flex items-center gap-3.5 sm:gap-5 min-w-0">
-                {/* User avatar circle */}
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-                  <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white/90" />
-                </div>
-                {/* 3 Text Placeholder Lines */}
-                <div className="space-y-2 min-w-0">
-                  <div className="h-3 sm:h-3.5 w-28 sm:w-36 bg-[#8bb3dc] rounded-full" />
-                  <div className="h-2.5 sm:h-3 w-40 sm:w-56 bg-[#4f80be] rounded-full" />
-                  <div className="h-2 sm:h-2.5 w-20 sm:w-24 bg-[#4f80be] rounded-full" />
-                </div>
+        {/* User profile and notification pills */}
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-slate-200 dark:bg-[#343b48] animate-pulse" />
+          <div className="w-8 h-8 rounded-xl bg-slate-200 dark:bg-[#343b48] animate-pulse" />
+          <div className="h-9 w-32 bg-slate-200 dark:bg-[#343b48] rounded-xl animate-pulse hidden sm:block" />
+        </div>
+      </header>
+
+      {/* Main Skeleton Body (Sidebar + Canvas) */}
+      <div className="relative z-10 flex flex-1 overflow-hidden">
+        {/* Left Sidebar Skeleton Rail */}
+        <aside className="w-16 md:w-56 border-r border-slate-200 dark:border-[#373e4b] bg-white/50 dark:bg-[#1c212b]/60 backdrop-blur-xs p-3 flex flex-col justify-between shrink-0">
+          <div className="space-y-2 pt-1">
+            {[...Array(7)].map((_, i) => (
+              <div
+                key={i}
+                className="h-10 rounded-xl bg-slate-100 dark:bg-[#282f3c] flex items-center px-3 gap-3 animate-pulse"
+                style={{ animationDelay: `${i * 80}ms` }}
+              >
+                <div className="w-4 h-4 rounded-md bg-slate-300 dark:bg-[#3e4858] shrink-0" />
+                <div className="h-2.5 w-24 bg-slate-200 dark:bg-[#343b48] rounded-md hidden md:block" />
               </div>
-              {/* Clean White Circle Badge */}
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white shadow-xs shrink-0 ml-3" />
-            </div>
+            ))}
+          </div>
 
-            {/* Sub-filter / Action Bar with 2 dots, line, and right rounded button */}
-            <div className="bg-white/80 rounded-2xl h-11 sm:h-12 flex items-center justify-between px-4 shadow-2xs">
+          <div className="p-2 border-t border-slate-200/60 dark:border-[#373e4b] hidden md:block">
+            <div className="h-10 rounded-xl bg-slate-100 dark:bg-[#282f3c] animate-pulse" />
+          </div>
+        </aside>
+
+        {/* Main Canvas Area Skeleton */}
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+          <div className="max-w-[1440px] mx-auto space-y-6">
+            {/* Top Greeting / Action Bar */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/70 dark:bg-[#252b35]/80 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-[#373e4b] shadow-xs">
+              <div className="space-y-2">
+                <div className="h-5 w-48 bg-slate-300 dark:bg-[#3e4858] rounded-lg animate-pulse" />
+                <div className="h-3 w-64 bg-slate-200 dark:bg-[#343b48] rounded-md animate-pulse" />
+              </div>
               <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-[#132c4e]" />
-                <div className="w-2.5 h-2.5 rounded-full bg-[#132c4e]" />
-                <div className="h-3 w-20 sm:w-32 bg-[#132c4e] rounded-full ml-1" />
-              </div>
-              <div className="h-7 sm:h-8 px-4 sm:px-5 rounded-full bg-[#5287c8] flex items-center gap-1.5">
-                <div className="h-2 w-4 sm:w-5 bg-white/50 rounded-full" />
-                <div className="h-2 w-4 sm:w-5 bg-white/50 rounded-full" />
+                <div className="h-9 w-28 rounded-xl bg-slate-200 dark:bg-[#343b48] animate-pulse" />
+                <div className="h-9 w-32 rounded-xl bg-emerald-600/30 animate-pulse" />
               </div>
             </div>
 
-            {/* Two Medium Cards Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-              {/* Left White Card */}
-              <div className="bg-white rounded-2xl p-4 space-y-3.5 shadow-2xs">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-[#5287c8]" />
-                    <div className="h-2.5 w-24 bg-slate-200 rounded-full" />
-                    <div className="h-2.5 w-12 bg-slate-200 rounded-full" />
+            {/* 4 Metric KPI Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[...Array(4)].map((_, i) => (
+                <div
+                  key={i}
+                  className="bg-white/80 dark:bg-[#252b35]/90 rounded-2xl p-4 border border-slate-200 dark:border-[#373e4b] shadow-xs space-y-3 animate-pulse"
+                  style={{ animationDelay: `${i * 120}ms` }}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="h-3 w-24 bg-slate-200 dark:bg-[#343b48] rounded-md" />
+                    <div className="w-8 h-8 rounded-xl bg-slate-200 dark:bg-[#343b48]" />
                   </div>
-                  <div className="h-2 w-32 bg-slate-100 rounded-full pl-5" />
+                  <div className="h-7 w-20 bg-slate-300 dark:bg-[#3e4858] rounded-lg" />
+                  <div className="h-2 w-32 bg-slate-100 dark:bg-[#282f3c] rounded-md" />
                 </div>
-                <div className="h-px bg-slate-100" />
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-[#5287c8]" />
-                    <div className="h-2.5 w-28 bg-slate-200 rounded-full" />
-                    <div className="h-2.5 w-14 bg-slate-200 rounded-full" />
-                  </div>
-                  <div className="h-2 w-20 bg-slate-100 rounded-full pl-5" />
-                </div>
-              </div>
-
-              {/* Right White Card */}
-              <div className="bg-white rounded-2xl p-4 space-y-3.5 shadow-2xs">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-[#5287c8]" />
-                    <div className="h-2.5 w-24 bg-slate-200 rounded-full" />
-                    <div className="h-2.5 w-12 bg-slate-200 rounded-full" />
-                  </div>
-                  <div className="h-2 w-32 bg-slate-100 rounded-full pl-5" />
-                </div>
-                <div className="h-px bg-slate-100" />
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-[#5287c8]" />
-                    <div className="h-2.5 w-28 bg-slate-200 rounded-full" />
-                    <div className="h-2.5 w-14 bg-slate-200 rounded-full" />
-                  </div>
-                  <div className="h-2 w-20 bg-slate-100 rounded-full pl-5" />
-                </div>
-              </div>
+              ))}
             </div>
 
-            {/* Bottom Row: 2 Colored Cards (Navy & Medium Blue) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-              {/* Navy Card */}
-              <div className="bg-[#132c4e] rounded-2xl p-4 text-white flex flex-col justify-between h-24 sm:h-28 shadow-2xs">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-full bg-[#5287c8] shrink-0" />
-                  <div className="h-2.5 w-24 bg-white/90 rounded-full" />
+            {/* Content Split: 2 Large Analytical / Schedule Containers */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Left 2 cols: Main Schedule / Directory Table Skeleton */}
+              <div className="lg:col-span-2 bg-white/80 dark:bg-[#252b35]/90 rounded-2xl p-5 border border-slate-200 dark:border-[#373e4b] shadow-xs space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#373e4b]">
+                  <div className="h-4 w-36 bg-slate-300 dark:bg-[#3e4858] rounded-md animate-pulse" />
+                  <div className="h-7 w-24 bg-slate-200 dark:bg-[#343b48] rounded-lg animate-pulse" />
                 </div>
-                <div className="h-2 w-36 bg-[#4f80be] rounded-full" />
-                <div className="h-2.5 w-14 bg-[#5287c8] rounded-full" />
+
+                {/* Table placeholder rows */}
+                <div className="space-y-3 pt-1">
+                  {[...Array(5)].map((_, idx) => (
+                    <div
+                      key={idx}
+                      className="h-12 rounded-xl bg-slate-50 dark:bg-[#202530] border border-slate-100 dark:border-[#2f3744] flex items-center justify-between px-4 gap-3 animate-pulse"
+                      style={{ animationDelay: `${idx * 100}ms` }}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-slate-200 dark:bg-[#343b48]" />
+                        <div className="space-y-1">
+                          <div className="h-2.5 w-28 bg-slate-300 dark:bg-[#3e4858] rounded-md" />
+                          <div className="h-2 w-20 bg-slate-200 dark:bg-[#343b48] rounded-md" />
+                        </div>
+                      </div>
+                      <div className="h-2.5 w-20 bg-slate-200 dark:bg-[#343b48] rounded-md hidden sm:block" />
+                      <div className="h-5 w-16 bg-slate-200 dark:bg-[#343b48] rounded-full" />
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              {/* Medium Blue Card */}
-              <div className="bg-[#5287c8] rounded-2xl p-4 text-white flex flex-col justify-between h-24 sm:h-28 shadow-2xs">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-full bg-[#a3c3e8] shrink-0" />
-                  <div className="h-2.5 w-24 bg-white rounded-full" />
+              {/* Right 1 col: Quick Access & Side Blocks */}
+              <div className="bg-white/80 dark:bg-[#252b35]/90 rounded-2xl p-5 border border-slate-200 dark:border-[#373e4b] shadow-xs space-y-4">
+                <div className="h-4 w-32 bg-slate-300 dark:bg-[#3e4858] rounded-md animate-pulse" />
+                <div className="grid grid-cols-2 gap-2.5 pt-1">
+                  {[...Array(6)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="h-18 rounded-xl bg-slate-50 dark:bg-[#202530] border border-slate-100 dark:border-[#2f3744] p-3 flex flex-col justify-between animate-pulse"
+                      style={{ animationDelay: `${i * 90}ms` }}
+                    >
+                      <div className="w-6 h-6 rounded-lg bg-slate-200 dark:bg-[#343b48]" />
+                      <div className="h-2 w-14 bg-slate-300 dark:bg-[#3e4858] rounded-md" />
+                    </div>
+                  ))}
                 </div>
-                <div className="h-2 w-40 bg-white/70 rounded-full" />
-                <div className="h-2.5 w-20 bg-white/80 rounded-full" />
               </div>
             </div>
           </div>
-
-          {/* Right Auxiliary Stack: 5 White Activity Cards */}
-          <div className="w-48 sm:w-56 space-y-3 hidden md:flex md:flex-col shrink-0">
-            {/* Card 1: Navy Circle */}
-            <div className="bg-white rounded-2xl p-3.5 flex items-center gap-3 shadow-2xs">
-              <div className="w-8 h-8 rounded-full bg-[#132c4e] shrink-0" />
-              <div className="space-y-1.5 flex-1 min-w-0">
-                <div className="h-2.5 w-20 bg-[#132c4e] rounded-full" />
-                <div className="h-2 w-14 bg-slate-200 rounded-full" />
-              </div>
-            </div>
-
-            {/* Card 2: Medium Blue Circle */}
-            <div className="bg-white rounded-2xl p-3.5 flex items-center gap-3 shadow-2xs">
-              <div className="w-8 h-8 rounded-full bg-[#5287c8] shrink-0" />
-              <div className="space-y-1.5 flex-1 min-w-0">
-                <div className="h-2.5 w-20 bg-[#5287c8] rounded-full" />
-                <div className="h-2 w-12 bg-slate-200 rounded-full" />
-              </div>
-            </div>
-
-            {/* Card 3: Light Blue Circle */}
-            <div className="bg-white rounded-2xl p-3.5 flex items-center gap-3 shadow-2xs">
-              <div className="w-8 h-8 rounded-full bg-[#a3c3e8] shrink-0" />
-              <div className="space-y-1.5 flex-1 min-w-0">
-                <div className="h-2.5 w-20 bg-[#a3c3e8] rounded-full" />
-                <div className="h-2 w-16 bg-slate-200 rounded-full" />
-              </div>
-            </div>
-
-            {/* Card 4: Navy Circle */}
-            <div className="bg-white rounded-2xl p-3.5 flex items-center gap-3 shadow-2xs">
-              <div className="w-8 h-8 rounded-full bg-[#132c4e] shrink-0" />
-              <div className="space-y-1.5 flex-1 min-w-0">
-                <div className="h-2.5 w-20 bg-[#132c4e] rounded-full" />
-                <div className="h-2 w-10 bg-slate-200 rounded-full" />
-              </div>
-            </div>
-
-            {/* Card 5: Medium Blue Circle */}
-            <div className="bg-white rounded-2xl p-3.5 flex items-center gap-3 shadow-2xs">
-              <div className="w-8 h-8 rounded-full bg-[#5287c8] shrink-0" />
-              <div className="space-y-1.5 flex-1 min-w-0">
-                <div className="h-2.5 w-20 bg-[#5287c8] rounded-full" />
-                <div className="h-2 w-14 bg-slate-200 rounded-full" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </motion.div>
+        </main>
+      </div>
     </div>
   );
 };

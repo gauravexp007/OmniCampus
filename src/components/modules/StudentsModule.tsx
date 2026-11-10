@@ -8,6 +8,15 @@ import {
   Trash2,
   Eye,
   X,
+  UserPlus,
+  CheckCircle2,
+  AlertCircle,
+  BookOpen,
+  Phone,
+  UserCheck,
+  CreditCard,
+  Award,
+  Sparkles,
 } from 'lucide-react';
 import { useERP } from '../../context/ERPContext';
 import { Student } from '../../types';
@@ -15,7 +24,7 @@ import { cn } from '../../lib/utils';
 import { SKETCH_STUDENT } from '../../utils/sketchAvatars';
 
 export const StudentsModule: React.FC = () => {
-  const { students, courses, results, addStudent, deleteStudent, role } = useERP();
+  const { students, courses, results, addStudent, deleteStudent, updateStudent, role } = useERP();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState<string>('All');
   const [selectedSemester, setSelectedSemester] = useState<number | 'All'>('All');
@@ -54,6 +63,16 @@ export const StudentsModule: React.FC = () => {
     }
 
     return (totalWeighted / totalCredits).toFixed(2);
+  };
+
+  // Get results for selected student in 360 overview
+  const getSelectedStudentResults = (student: Student) => {
+    return results.filter(
+      (r) =>
+        (r.enrollmentNo && r.enrollmentNo.toLowerCase() === student.enrollmentNo.toLowerCase()) ||
+        (r.studentName && r.studentName.toLowerCase() === student.name.toLowerCase()) ||
+        (r.studentId && r.studentId === student.id)
+    );
   };
 
   // New student form state
@@ -133,6 +152,16 @@ export const StudentsModule: React.FC = () => {
     });
   };
 
+  const handleToggleFeeStatus = (student: Student) => {
+    const updatedStatus = student.feeStatus === 'Paid' ? 'Overdue' : 'Paid';
+    const updatedStudent: Student = {
+      ...student,
+      feeStatus: updatedStatus,
+    };
+    updateStudent(updatedStudent);
+    setSelectedStudent(updatedStudent);
+  };
+
   const handleExportCSV = () => {
     if (students.length === 0) return;
     const csvContent =
@@ -156,138 +185,208 @@ export const StudentsModule: React.FC = () => {
 
   return (
     <div className="space-y-4 animate-in fade-in duration-150">
-      {/* Header */}
-      <div className="bg-white rounded-xl p-4 md:p-5 border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      {/* Top Banner / Actions Bar */}
+      <div className="bg-white dark:bg-[#252b35] rounded-2xl p-4 md:p-5 border border-slate-200 dark:border-[#373e4b] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <h2 className="text-lg font-bold text-slate-900">Student Directory</h2>
-            <span className="px-2 py-0.5 rounded-md text-xs font-semibold bg-slate-100 text-slate-700">
-              {students.length} {students.length === 1 ? 'Record' : 'Records'}
-            </span>
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-brand/10 dark:bg-brand/25 text-brand flex items-center justify-center">
+              <GraduationCap className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white">Student Directory</h2>
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 dark:bg-[#2c3342] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-[#373e4b]">
+                  {students.length} {students.length === 1 ? 'Record' : 'Records'}
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Manage registrations, 360° academic dossiers, attendance percentages, and fee status.
+              </p>
+            </div>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Student registrations, academic records, and department enrollment.
-          </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        {/* Action Buttons Zone: Uniquely Identifiable Primary Button & Secondary Tools */}
+        <div className="flex flex-wrap items-center gap-2.5 self-start md:self-auto">
           {students.length > 0 && (
             <button
               onClick={handleExportCSV}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-[#2c3342] dark:hover:bg-[#373e4b] text-slate-700 dark:text-slate-300 text-xs font-semibold transition-all cursor-pointer border border-slate-200/80 dark:border-[#373e4b]"
+              title="Download CSV database export"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Export CSV</span>
             </button>
           )}
 
+          {/* DEDICATED PRIMARY ADD STUDENT BUTTON - Uniquely Identifiable with Emerald High-Contrast Theme */}
           {(role === 'Admin' || role === 'Faculty') && (
             <button
               id="add-student-btn"
               onClick={() => setIsAddModalOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-brand hover:bg-brand-hover text-white text-xs font-semibold transition-colors cursor-pointer"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white text-xs font-extrabold shadow-md shadow-emerald-600/30 ring-2 ring-emerald-500/20 transition-all cursor-pointer group"
             >
-              <Plus className="w-4 h-4" />
-              <span>Add Student</span>
+              <div className="w-5 h-5 rounded-md bg-white/20 flex items-center justify-center group-hover:rotate-90 transition-transform">
+                <Plus className="w-3.5 h-3.5 stroke-[3]" />
+              </div>
+              <span>Add New Student</span>
             </button>
           )}
         </div>
       </div>
 
-      {/* Filter / Search Bar */}
-      <div className="bg-white rounded-xl p-3 border border-slate-200 shadow-xs flex flex-col sm:flex-row items-center gap-2.5">
-        <div className="relative flex-1 w-full">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            placeholder="Search by student name, enrollment ID, or email..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand focus:bg-white text-slate-800"
-          />
+      {/* Interactive Quick-Selector & Filter Controls Bar */}
+      <div className="bg-white dark:bg-[#252b35] rounded-2xl p-4 border border-slate-200 dark:border-[#373e4b] shadow-xs space-y-3">
+        {/* Row 1: Interactive Student 360° Quick-Selector Bar */}
+        <div className="bg-gradient-to-r from-indigo-50/70 via-slate-50 to-brand/5 dark:from-[#202530] dark:to-[#222938] rounded-xl p-3 border border-indigo-100 dark:border-[#373e4b] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="p-1.5 rounded-lg bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 shrink-0">
+              <Sparkles className="w-4 h-4" />
+            </span>
+            <div className="min-w-0">
+              <span className="text-xs font-bold text-slate-900 dark:text-white block">
+                Interactive Student Quick Selector
+              </span>
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 hidden md:block">
+                Select any student directly from this list to immediately open their 360° overview and academic records.
+              </span>
+            </div>
+          </div>
+
+          <div className="w-full sm:w-72 shrink-0">
+            <select
+              aria-label="Interactive option to select student for overview"
+              value={selectedStudent ? selectedStudent.id : ''}
+              onChange={(e) => {
+                const target = students.find((s) => s.id === e.target.value);
+                if (target) {
+                  setSelectedStudent(target);
+                }
+              }}
+              className="w-full px-3 py-2 text-xs font-semibold bg-white dark:bg-[#1a1f29] border-2 border-indigo-500/40 hover:border-indigo-500 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white cursor-pointer shadow-xs transition-colors"
+            >
+              <option value="" disabled>
+                ⚡ Choose student for 360° Overview...
+              </option>
+              {students.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name} ({s.enrollmentNo}) - Sem {s.semester}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <select
-            value={selectedDepartment}
-            onChange={(e) => setSelectedDepartment(e.target.value)}
-            aria-label="Filter by department"
-            className="w-full sm:w-44 px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-700"
-          >
-            {departments.map((dept) => (
-              <option key={dept} value={dept}>
-                {dept}
-              </option>
-            ))}
-          </select>
+        {/* Row 2: Search Query & Filtering by Department / Semester */}
+        <div className="flex flex-col sm:flex-row items-center gap-2.5">
+          <div className="relative flex-1 w-full">
+            <Search className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search by student name, enrollment ID, or email..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-xl focus:outline-hidden focus:ring-1 focus:ring-brand focus:bg-white dark:focus:bg-[#181c24] text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500"
+            />
+          </div>
 
-          <select
-            value={selectedSemester}
-            onChange={(e) => setSelectedSemester(e.target.value === 'All' ? 'All' : Number(e.target.value))}
-            aria-label="Filter by semester"
-            className="w-full sm:w-36 px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-700"
-          >
-            <option value="All">All Semesters</option>
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
-              <option key={sem} value={sem}>
-                Semester {sem}
-              </option>
-            ))}
-          </select>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <select
+              value={selectedDepartment}
+              onChange={(e) => setSelectedDepartment(e.target.value)}
+              aria-label="Filter by department"
+              className="w-full sm:w-48 px-3 py-2 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-xl focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-700 dark:text-slate-200 cursor-pointer"
+            >
+              {departments.map((dept) => (
+                <option key={dept} value={dept}>
+                  {dept}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={selectedSemester}
+              onChange={(e) => setSelectedSemester(e.target.value === 'All' ? 'All' : Number(e.target.value))}
+              aria-label="Filter by semester"
+              className="w-full sm:w-36 px-3 py-2 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-xl focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-700 dark:text-slate-200 cursor-pointer"
+            >
+              <option value="All">All Semesters</option>
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+                <option key={sem} value={sem}>
+                  Semester {sem}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
       {/* Main List / Table */}
       {filteredStudents.length > 0 ? (
-        <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+        <div className="bg-white dark:bg-[#252b35] rounded-2xl border border-slate-200 dark:border-[#373e4b] shadow-xs overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase text-[10px] tracking-wider">
+              <thead className="bg-slate-50 dark:bg-[#1e232d] border-b border-slate-200 dark:border-[#373e4b] text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px] tracking-wider">
                 <tr>
-                  <th className="px-4 py-3">Student</th>
-                  <th className="px-4 py-3">Enrollment ID</th>
-                  <th className="px-4 py-3">Department & Program</th>
-                  <th className="px-4 py-3">Semester</th>
-                  <th className="px-4 py-3">CGPA</th>
-                  <th className="px-4 py-3">Attendance</th>
-                  <th className="px-4 py-3">Fee Status</th>
-                  <th className="px-4 py-3 text-right">Actions</th>
+                  <th className="px-4 py-3.5">Student</th>
+                  <th className="px-4 py-3.5">Enrollment ID</th>
+                  <th className="px-4 py-3.5">Department & Program</th>
+                  <th className="px-4 py-3.5">Semester</th>
+                  <th className="px-4 py-3.5">CGPA</th>
+                  <th className="px-4 py-3.5">Attendance</th>
+                  <th className="px-4 py-3.5">Fee Status</th>
+                  <th className="px-4 py-3.5 text-right">Interactive Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
+              <tbody className="divide-y divide-slate-100 dark:divide-[#373e4b] text-slate-700 dark:text-slate-300">
                 {filteredStudents.map((student) => (
-                  <tr key={student.id} className="hover:bg-slate-50/70 transition-colors">
+                  <tr
+                    key={student.id}
+                    onClick={() => setSelectedStudent(student)}
+                    className="hover:bg-indigo-50/40 dark:hover:bg-[#2c3342]/60 transition-colors cursor-pointer group"
+                    title="Click row to open 360° Student Overview"
+                  >
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-brand-light text-brand flex items-center justify-center font-bold text-xs shrink-0">
+                        <div className="w-8 h-8 rounded-xl bg-brand/10 dark:bg-brand/25 text-brand flex items-center justify-center font-extrabold text-xs shrink-0 group-hover:scale-105 transition-transform">
                           {student.name.charAt(0)}
                         </div>
                         <div>
-                          <p className="font-semibold text-slate-900">{student.name}</p>
-                          <p className="text-[11px] text-slate-400">{student.email}</p>
+                          <p className="font-bold text-slate-900 dark:text-white group-hover:text-brand transition-colors">
+                            {student.name}
+                          </p>
+                          <p className="text-[11px] text-slate-400 dark:text-slate-500">{student.email}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3 font-mono text-[11px] text-slate-600">
+                    <td className="px-4 py-3 font-mono text-[11px] text-slate-600 dark:text-slate-400 font-semibold">
                       {student.enrollmentNo}
                     </td>
                     <td className="px-4 py-3">
-                      <p className="text-slate-800 font-medium">{student.department}</p>
-                      <p className="text-[10px] text-slate-400">{student.program}</p>
+                      <p className="text-slate-800 dark:text-slate-200 font-semibold">{student.department}</p>
+                      <p className="text-[10px] text-slate-400 dark:text-slate-500">{student.program}</p>
                     </td>
-                    <td className="px-4 py-3 font-medium">Sem {student.semester}</td>
-                    <td className="px-4 py-3 font-semibold text-slate-900">
+                    <td className="px-4 py-3 font-bold text-slate-800 dark:text-slate-200">
+                      Sem {student.semester}
+                    </td>
+                    <td className="px-4 py-3 font-semibold">
                       {getStudentCalculatedCGPA(student) === 'Pending' ? (
-                        <span className="text-[11px] font-normal text-slate-400 italic">Pending Exams</span>
+                        <span className="text-[11px] font-normal text-slate-400 dark:text-slate-500 italic">
+                          Pending Exams
+                        </span>
                       ) : (
-                        <span className="text-brand font-bold">{getStudentCalculatedCGPA(student)}</span>
+                        <span className="text-brand font-extrabold bg-brand/10 dark:bg-brand/20 px-2 py-0.5 rounded-md">
+                          {getStudentCalculatedCGPA(student)}
+                        </span>
                       )}
                     </td>
                     <td className="px-4 py-3">
                       <span
                         className={cn(
-                          'font-semibold text-[11px]',
-                          student.attendancePct >= 75 ? 'text-emerald-600' : 'text-rose-600'
+                          'font-bold text-[11px] px-2 py-0.5 rounded-md inline-block',
+                          student.attendancePct >= 75
+                            ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-800/50'
+                            : 'bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200/50 dark:border-rose-800/50'
                         )}
                       >
                         {student.attendancePct}%
@@ -296,29 +395,39 @@ export const StudentsModule: React.FC = () => {
                     <td className="px-4 py-3">
                       <span
                         className={cn(
-                          'px-2 py-0.5 rounded text-[10px] font-semibold',
+                          'px-2.5 py-1 rounded-md text-[10px] font-extrabold tracking-wide uppercase',
                           student.feeStatus === 'Paid'
-                            ? 'bg-emerald-50 text-emerald-700'
-                            : 'bg-rose-50 text-rose-700'
+                            ? 'bg-emerald-100/70 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300/60 dark:border-emerald-700/60'
+                            : 'bg-rose-100/70 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border border-rose-300/60 dark:border-rose-700/60'
                         )}
                       >
                         {student.feeStatus}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <div className="flex items-center justify-end gap-1.5">
+                      <div className="flex items-center justify-end gap-2">
+                        {/* UNIQUELY IDENTIFIABLE OVERVIEW BUTTON */}
                         <button
-                          onClick={() => setSelectedStudent(student)}
-                          title="View Details"
-                          className="p-1 rounded text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedStudent(student);
+                          }}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-600 text-indigo-700 hover:text-white dark:bg-indigo-950/60 dark:text-indigo-300 dark:hover:bg-indigo-600 dark:hover:text-white font-bold text-[11px] shadow-xs transition-all cursor-pointer border border-indigo-200 dark:border-indigo-800/60"
                         >
                           <Eye className="w-3.5 h-3.5" />
+                          <span>360° Overview</span>
                         </button>
+
                         {(role === 'Admin' || role === 'Faculty') && (
                           <button
-                            onClick={() => deleteStudent(student.id)}
-                            title="Delete Student"
-                            className="p-1 rounded text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteStudent(student.id);
+                            }}
+                            title="Delete Student Record"
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -332,21 +441,21 @@ export const StudentsModule: React.FC = () => {
           </div>
         </div>
       ) : (
-        /* Clean Minimalist Empty State */
-        <div className="bg-white rounded-xl border border-slate-200 p-12 text-center shadow-xs">
-          <div className="w-12 h-12 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+        /* Empty State */
+        <div className="bg-white dark:bg-[#252b35] rounded-2xl border border-slate-200 dark:border-[#373e4b] p-12 text-center shadow-xs">
+          <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-[#1e232d] text-slate-400 flex items-center justify-center mx-auto mb-3">
             <GraduationCap className="w-6 h-6" />
           </div>
-          <h3 className="text-sm font-bold text-slate-800">No Student Records Found</h3>
+          <h3 className="text-sm font-bold text-slate-800 dark:text-white">No Student Records Found</h3>
           <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1 mb-4">
             {searchQuery || selectedDepartment !== 'All'
-              ? 'No students match your active filter criteria.'
-              : 'There are no students in the database. Add a new student record to get started.'}
+              ? 'No students match your active search or filter criteria.'
+              : 'There are no students registered yet in the campus database.'}
           </p>
           {(role === 'Admin' || role === 'Faculty') && (
             <button
               onClick={() => setIsAddModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-brand hover:bg-brand-hover text-white text-xs font-semibold transition-colors cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Add First Student</span>
@@ -355,15 +464,37 @@ export const StudentsModule: React.FC = () => {
         </div>
       )}
 
+      {/* PERSISTENT FLOATING QUICK ADD BUTTON (Never get lost in long tables) */}
+      {(role === 'Admin' || role === 'Faculty') && (
+        <button
+          onClick={() => setIsAddModalOpen(true)}
+          className="fixed bottom-6 right-6 z-40 flex items-center gap-2 px-4 py-3 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-xl shadow-emerald-950/30 hover:scale-105 active:scale-95 transition-all cursor-pointer border-2 border-white/20"
+          title="Quick Add Student from anywhere"
+        >
+          <UserPlus className="w-4 h-4" />
+          <span className="hidden sm:inline">Add Student</span>
+        </button>
+      )}
+
       {/* Add Student Modal */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl border border-slate-200 shadow-xl max-w-lg w-full p-5 space-y-4 animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <h3 className="text-sm font-bold text-slate-900">Add New Student</h3>
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#252b35] rounded-2xl border border-slate-200 dark:border-[#373e4b] shadow-2xl max-w-lg w-full p-5 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#373e4b]">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-emerald-600/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                  <UserPlus className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">Add New Student</h3>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                    Create a university enrollment record with automatic ID generation.
+                  </p>
+                </div>
+              </div>
               <button
                 onClick={() => setIsAddModalOpen(false)}
-                className="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                className="p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#2c3342]"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -372,7 +503,7 @@ export const StudentsModule: React.FC = () => {
             <form onSubmit={handleAddStudent} className="space-y-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                  <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Full Name *
                   </label>
                   <input
@@ -381,12 +512,12 @@ export const StudentsModule: React.FC = () => {
                     placeholder="e.g. Jordan Miller"
                     value={newStudent.name}
                     onChange={(e) => setNewStudent({ ...newStudent, name: e.target.value })}
-                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-indigo-500 text-slate-800"
+                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-lg focus:outline-hidden focus:ring-1 focus:ring-emerald-500 text-slate-800 dark:text-slate-100"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                  <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Enrollment ID (Optional)
                   </label>
                   <input
@@ -396,12 +527,12 @@ export const StudentsModule: React.FC = () => {
                     onChange={(e) =>
                       setNewStudent({ ...newStudent, enrollmentNo: e.target.value })
                     }
-                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-indigo-500 text-slate-800"
+                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-lg focus:outline-hidden focus:ring-1 focus:ring-emerald-500 text-slate-800 dark:text-slate-100"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                  <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Email Address
                   </label>
                   <input
@@ -409,12 +540,12 @@ export const StudentsModule: React.FC = () => {
                     placeholder="student@university.edu"
                     value={newStudent.email}
                     onChange={(e) => setNewStudent({ ...newStudent, email: e.target.value })}
-                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-indigo-500 text-slate-800"
+                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-lg focus:outline-hidden focus:ring-1 focus:ring-emerald-500 text-slate-800 dark:text-slate-100"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                  <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Department
                   </label>
                   <select
@@ -422,7 +553,7 @@ export const StudentsModule: React.FC = () => {
                     onChange={(e) =>
                       setNewStudent({ ...newStudent, department: e.target.value })
                     }
-                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-indigo-500 text-slate-800"
+                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-lg focus:outline-hidden focus:ring-1 focus:ring-emerald-500 text-slate-800 dark:text-slate-100"
                   >
                     {departments
                       .filter((d) => d !== 'All')
@@ -435,7 +566,7 @@ export const StudentsModule: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                  <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Course / Degree Program
                   </label>
                   <select
@@ -449,7 +580,7 @@ export const StudentsModule: React.FC = () => {
                         setNewStudent({ ...newStudent, program: e.target.value });
                       }
                     }}
-                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800 cursor-pointer"
+                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-lg focus:outline-hidden focus:ring-1 focus:ring-emerald-500 text-slate-800 dark:text-slate-100 cursor-pointer"
                   >
                     {courses.length > 0 && (
                       <optgroup label="Registered Academic Courses">
@@ -482,14 +613,14 @@ export const StudentsModule: React.FC = () => {
                         setCustomProgramInput(e.target.value);
                         setNewStudent({ ...newStudent, program: e.target.value });
                       }}
-                      className="w-full mt-1.5 px-2.5 py-1.5 text-xs bg-white border border-brand rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800"
+                      className="w-full mt-1.5 px-2.5 py-1.5 text-xs bg-white dark:bg-[#181b22] border border-emerald-500 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-emerald-500 text-slate-800 dark:text-slate-100"
                       autoFocus
                     />
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                  <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Current Semester
                   </label>
                   <select
@@ -497,7 +628,7 @@ export const StudentsModule: React.FC = () => {
                     onChange={(e) =>
                       setNewStudent({ ...newStudent, semester: Number(e.target.value) })
                     }
-                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800 cursor-pointer"
+                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-lg focus:outline-hidden focus:ring-1 focus:ring-emerald-500 text-slate-800 dark:text-slate-100 cursor-pointer"
                   >
                     {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
                       <option key={s} value={s}>
@@ -508,7 +639,7 @@ export const StudentsModule: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                  <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Fee Status
                   </label>
                   <select
@@ -519,25 +650,38 @@ export const StudentsModule: React.FC = () => {
                         feeStatus: e.target.value as 'Paid' | 'Overdue',
                       })
                     }
-                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-indigo-500 text-slate-800"
+                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-lg focus:outline-hidden focus:ring-1 focus:ring-emerald-500 text-slate-800 dark:text-slate-100"
                   >
                     <option value="Paid">Paid</option>
                     <option value="Overdue">Overdue / Pending</option>
                   </select>
                 </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Contact Phone
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="+1 (555) 019-2834"
+                    value={newStudent.phone}
+                    onChange={(e) => setNewStudent({ ...newStudent, phone: e.target.value })}
+                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-lg focus:outline-hidden focus:ring-1 focus:ring-emerald-500 text-slate-800 dark:text-slate-100"
+                  />
+                </div>
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100 dark:border-[#373e4b]">
                 <button
                   type="button"
                   onClick={() => setIsAddModalOpen(false)}
-                  className="px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 text-xs font-semibold hover:bg-slate-50 transition-colors"
+                  className="px-3.5 py-1.5 rounded-xl border border-slate-200 dark:border-[#373e4b] text-slate-600 dark:text-slate-300 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-[#2c3342] transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-3.5 py-1.5 rounded-lg bg-brand hover:bg-brand-hover text-white text-xs font-semibold transition-colors"
+                  className="px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md cursor-pointer"
                 >
                   Save Student
                 </button>
@@ -547,82 +691,233 @@ export const StudentsModule: React.FC = () => {
         </div>
       )}
 
-      {/* Student Details Drawer/Modal */}
+      {/* COMPREHENSIVE 360° STUDENT OVERVIEW & DOSSIER MODAL */}
       {selectedStudent && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl border border-slate-200 shadow-xl max-w-md w-full p-5 space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <h3 className="text-sm font-bold text-slate-900">Student Profile</h3>
-              <button
-                onClick={() => setSelectedStudent(null)}
-                className="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="space-y-3 text-xs">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-brand-light text-brand font-bold text-base flex items-center justify-center">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#252b35] rounded-2xl border border-slate-200 dark:border-[#373e4b] shadow-2xl max-w-2xl w-full p-6 space-y-5 animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="flex items-start justify-between pb-4 border-b border-slate-100 dark:border-[#373e4b]">
+              <div className="flex items-center gap-3.5">
+                <div className="w-14 h-14 rounded-2xl bg-brand/10 dark:bg-brand/25 text-brand font-extrabold text-xl flex items-center justify-center shadow-inner">
                   {selectedStudent.name.charAt(0)}
                 </div>
                 <div>
-                  <h4 className="font-bold text-slate-900 text-sm">{selectedStudent.name}</h4>
-                  <p className="text-slate-400 font-mono text-[11px]">
-                    {selectedStudent.enrollmentNo}
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
+                      {selectedStudent.name}
+                    </h3>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60">
+                      Active Student
+                    </span>
+                  </div>
+                  <p className="text-slate-400 dark:text-slate-500 font-mono text-xs mt-0.5">
+                    Enrollment ID: <span className="font-bold text-slate-700 dark:text-slate-300">{selectedStudent.enrollmentNo}</span>
                   </p>
                 </div>
               </div>
 
-              <div className="bg-slate-50 rounded-lg p-3 space-y-1.5 border border-slate-100">
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Department:</span>
-                  <span className="font-semibold text-slate-800">
-                    {selectedStudent.department}
-                  </span>
+              <button
+                onClick={() => setSelectedStudent(null)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#2c3342] transition-colors"
+                title="Close Overview"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* 4 Analytical KPI Metric Tiles */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#1e232d] border border-slate-200/80 dark:border-[#373e4b]">
+                <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-[11px] font-semibold mb-1">
+                  <Award className="w-3.5 h-3.5 text-brand" />
+                  <span>Current CGPA</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Program:</span>
-                  <span className="font-semibold text-slate-800">{selectedStudent.program}</span>
+                <div className="text-base font-extrabold text-brand">
+                  {getStudentCalculatedCGPA(selectedStudent)}{' '}
+                  <span className="text-[10px] font-normal text-slate-400">/ 4.0</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Semester:</span>
-                  <span className="font-semibold text-slate-800">
-                    Semester {selectedStudent.semester}
-                  </span>
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#1e232d] border border-slate-200/80 dark:border-[#373e4b]">
+                <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-[11px] font-semibold mb-1">
+                  <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Attendance</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">CGPA:</span>
-                  <span className="font-semibold text-slate-800">
-                    {getStudentCalculatedCGPA(selectedStudent)} {getStudentCalculatedCGPA(selectedStudent) !== 'Pending' ? '/ 4.0' : ''}
-                  </span>
+                <div
+                  className={cn(
+                    'text-base font-extrabold',
+                    selectedStudent.attendancePct >= 75 ? 'text-emerald-600' : 'text-rose-600'
+                  )}
+                >
+                  {selectedStudent.attendancePct}%
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Attendance:</span>
-                  <span className="font-semibold text-emerald-600">
-                    {selectedStudent.attendancePct}%
-                  </span>
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#1e232d] border border-slate-200/80 dark:border-[#373e4b]">
+                <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-[11px] font-semibold mb-1">
+                  <BookOpen className="w-3.5 h-3.5 text-indigo-500" />
+                  <span>Semester</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Fee Status:</span>
-                  <span className="font-semibold text-slate-800">
-                    {selectedStudent.feeStatus}
-                  </span>
+                <div className="text-base font-extrabold text-slate-900 dark:text-white">
+                  Sem {selectedStudent.semester}
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Email:</span>
-                  <span className="font-semibold text-slate-800">{selectedStudent.email}</span>
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#1e232d] border border-slate-200/80 dark:border-[#373e4b]">
+                <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-[11px] font-semibold mb-1">
+                  <CreditCard className="w-3.5 h-3.5 text-amber-500" />
+                  <span>Fee Status</span>
+                </div>
+                <div
+                  className={cn(
+                    'text-xs font-extrabold px-2 py-0.5 rounded-md inline-block uppercase tracking-wider',
+                    selectedStudent.feeStatus === 'Paid'
+                      ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                      : 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'
+                  )}
+                >
+                  {selectedStudent.feeStatus}
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-end pt-2">
-              <button
-                onClick={() => setSelectedStudent(null)}
-                className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold"
-              >
-                Close
-              </button>
+            {/* Academic & Personal Dossier Breakdown */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              {/* Left Column: Academic Details */}
+              <div className="space-y-2 bg-slate-50 dark:bg-[#1e232d] p-3.5 rounded-xl border border-slate-200/80 dark:border-[#373e4b]">
+                <h4 className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5 mb-2">
+                  <GraduationCap className="w-4 h-4 text-brand" />
+                  <span>Academic Profile</span>
+                </h4>
+                <div className="flex justify-between py-1 border-b border-slate-200/60 dark:border-[#2f3744]">
+                  <span className="text-slate-500 dark:text-slate-400">Department:</span>
+                  <span className="font-semibold text-slate-800 dark:text-slate-200 text-right">
+                    {selectedStudent.department}
+                  </span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-slate-200/60 dark:border-[#2f3744]">
+                  <span className="text-slate-500 dark:text-slate-400">Program:</span>
+                  <span className="font-semibold text-slate-800 dark:text-slate-200 text-right">
+                    {selectedStudent.program}
+                  </span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-slate-200/60 dark:border-[#2f3744]">
+                  <span className="text-slate-500 dark:text-slate-400">Section:</span>
+                  <span className="font-semibold text-slate-800 dark:text-slate-200">
+                    Section {selectedStudent.section || 'A'}
+                  </span>
+                </div>
+                <div className="flex justify-between py-1">
+                  <span className="text-slate-500 dark:text-slate-400">Admission Year:</span>
+                  <span className="font-semibold text-slate-800 dark:text-slate-200">
+                    {selectedStudent.admissionYear || 2026}
+                  </span>
+                </div>
+              </div>
+
+              {/* Right Column: Contact & Mentor */}
+              <div className="space-y-2 bg-slate-50 dark:bg-[#1e232d] p-3.5 rounded-xl border border-slate-200/80 dark:border-[#373e4b]">
+                <h4 className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5 mb-2">
+                  <UserCheck className="w-4 h-4 text-emerald-600" />
+                  <span>Advisory & Contact</span>
+                </h4>
+                <div className="flex justify-between py-1 border-b border-slate-200/60 dark:border-[#2f3744]">
+                  <span className="text-slate-500 dark:text-slate-400">Assigned Mentor:</span>
+                  <span className="font-semibold text-slate-800 dark:text-slate-200">
+                    {selectedStudent.mentor || 'Prof. Marcus Vance'}
+                  </span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-slate-200/60 dark:border-[#2f3744]">
+                  <span className="text-slate-500 dark:text-slate-400">Student Email:</span>
+                  <span className="font-semibold text-slate-800 dark:text-slate-200 truncate max-w-[180px]">
+                    {selectedStudent.email}
+                  </span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-slate-200/60 dark:border-[#2f3744]">
+                  <span className="text-slate-500 dark:text-slate-400">Phone:</span>
+                  <span className="font-semibold text-slate-800 dark:text-slate-200">
+                    {selectedStudent.phone || '+1 (555) 019-2834'}
+                  </span>
+                </div>
+                <div className="flex justify-between py-1">
+                  <span className="text-slate-500 dark:text-slate-400">Campus Status:</span>
+                  <span className="font-semibold text-emerald-600 flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3" />
+                    <span>Good Standing</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Examination & Marks Records for this Student */}
+            <div className="bg-slate-50 dark:bg-[#1e232d] p-3.5 rounded-xl border border-slate-200/80 dark:border-[#373e4b] space-y-2.5">
+              <div className="flex items-center justify-between">
+                <h4 className="font-bold text-slate-900 dark:text-white text-xs flex items-center gap-1.5">
+                  <BookOpen className="w-4 h-4 text-brand" />
+                  <span>Examination & Grades Snapshot</span>
+                </h4>
+                <span className="text-[10px] text-slate-400 font-medium">
+                  {getSelectedStudentResults(selectedStudent).length} Record(s) Found
+                </span>
+              </div>
+
+              {getSelectedStudentResults(selectedStudent).length > 0 ? (
+                <div className="space-y-1.5 pt-1">
+                  {getSelectedStudentResults(selectedStudent).map((res) => (
+                    <div
+                      key={res.id}
+                      className="flex items-center justify-between bg-white dark:bg-[#252b35] p-2.5 rounded-lg border border-slate-200/60 dark:border-[#2f3744] text-xs"
+                    >
+                      <div>
+                        <span className="font-bold text-slate-900 dark:text-white">
+                          {res.examTitle || 'Semester Examination'}
+                        </span>
+                        <span className="text-[11px] text-slate-400 ml-2">Sem {res.semester}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-xs font-bold text-brand bg-brand/10 dark:bg-brand/20 px-2 py-0.5 rounded">
+                          SGPA: {res.sgpa}
+                        </span>
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400">
+                          {res.creditsCompleted || 20} Credits
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-[11px] text-slate-400 py-2 italic text-center">
+                  No published exam transcripts on file. SGPA will automatically sync after grading.
+                </p>
+              )}
+            </div>
+
+            {/* Modal Bottom Action Bar */}
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100 dark:border-[#373e4b]">
+              <div className="flex items-center gap-2">
+                {(role === 'Admin' || role === 'Faculty') && (
+                  <button
+                    type="button"
+                    onClick={() => handleToggleFeeStatus(selectedStudent)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-[#373e4b] hover:bg-slate-100 dark:hover:bg-[#2c3342] text-slate-700 dark:text-slate-300 text-xs font-bold transition-colors cursor-pointer"
+                  >
+                    <CreditCard className="w-3.5 h-3.5 text-amber-500" />
+                    <span>
+                      Toggle Fee Status to {selectedStudent.feeStatus === 'Paid' ? 'Overdue' : 'Paid'}
+                    </span>
+                  </button>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setSelectedStudent(null)}
+                  className="px-4 py-1.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
+                >
+                  Close Dossier
+                </button>
+              </div>
             </div>
           </div>
         </div>
