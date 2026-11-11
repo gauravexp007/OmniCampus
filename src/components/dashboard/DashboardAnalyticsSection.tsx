@@ -39,6 +39,7 @@ import {
   ChevronDown,
   Search,
   Star,
+  UserCheck,
 } from 'lucide-react';
 import { useERP } from '../../context/ERPContext';
 import { ERPModuleId, Student, StudentAttendanceRecord, AttendanceRecord, ResultRecord } from '../../types';
@@ -612,57 +613,61 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
 
         {/* Global Controls: Student Selector & Timeframe Switcher */}
         <div className="flex items-center gap-3 flex-wrap">
-          {/* UNIQUELY IDENTIFIABLE MODERN STUDENT INSPECTOR DROPDOWN (AS REQUESTED IN IMAGE 2) */}
+          {/* MODULAR ARCHITECTURAL STUDENT SELECTOR CONTROL */}
           <div className="relative" ref={studentDropdownRef}>
-            <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-gradient-to-r from-amber-500/20 via-brand/15 to-indigo-500/20 dark:from-amber-950/50 dark:via-brand/25 dark:to-indigo-950/50 border-2 border-amber-400/60 dark:border-amber-400/40 shadow-xs hover:border-amber-500 transition-all">
+            <div className="flex items-center p-1 rounded-xl bg-slate-100 dark:bg-[#181d26] border border-slate-300 dark:border-[#384252] shadow-xs hover:border-slate-400 dark:hover:border-slate-500 transition-all">
               <button
                 type="button"
                 onClick={() => setIsStudentDropdownOpen((prev) => !prev)}
-                className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white dark:bg-[#1a1f29] border border-amber-200/80 dark:border-amber-500/30 text-slate-900 dark:text-white shadow-2xs hover:shadow-xs transition-all cursor-pointer group"
-                title="Click to inspect individual student or view class turnout"
+                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-white dark:bg-[#1f2633] text-slate-900 dark:text-white border border-slate-200/90 dark:border-[#2d3748] shadow-2xs hover:shadow-xs transition-all cursor-pointer group"
+                title="Select student or class cohort analytics"
               >
-                {/* Standout Glowing Badge */}
-                <span className="px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-xs shrink-0">
-                  <Sparkles className="w-3 h-3 text-slate-950" />
-                  <span>Inspect</span>
-                </span>
-
-                {/* Avatar / Icon preview */}
-                <div className="w-6 h-6 rounded-full bg-brand text-white font-black text-[11px] flex items-center justify-center shrink-0 ring-2 ring-brand/20">
-                  {isIndividualStudentView && activeStudent ? (
-                    activeStudent.name.charAt(0)
-                  ) : (
-                    <Users className="w-3.5 h-3.5" />
-                  )}
+                {/* Modular Segment 1: Bold Mode Tag */}
+                <div className="px-2.5 py-1 rounded-md bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-950 text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 shrink-0 shadow-2xs">
+                  <UserCheck className="w-3.5 h-3.5 text-brand dark:text-brand-dark" />
+                  <span>STUDENT</span>
                 </div>
 
-                {/* Student Details Preview */}
-                <div className="text-left flex flex-col justify-center min-w-0 pr-1">
-                  <span className="text-xs font-black truncate max-w-[150px] sm:max-w-[200px] text-slate-900 dark:text-white group-hover:text-amber-500 dark:group-hover:text-amber-400 transition-colors flex items-center gap-1">
-                    {selectedStudentEnrollment === 'all-class' ? (
-                      <span>All Students (Class Turnout)</span>
+                {/* Modular Divider */}
+                <div className="w-px h-5 bg-slate-200 dark:bg-slate-700 shrink-0 mx-0.5" />
+
+                {/* Modular Segment 2: Avatar & Active Details */}
+                <div className="flex items-center gap-2 min-w-0 pr-1">
+                  <div className="w-6 h-6 rounded-md bg-brand/15 dark:bg-brand/25 text-brand font-black text-[11px] flex items-center justify-center shrink-0 border border-brand/30">
+                    {isIndividualStudentView && activeStudent ? (
+                      activeStudent.name.charAt(0)
                     ) : (
-                      <>
-                        <Star className="w-3 h-3 text-amber-500 fill-amber-500 shrink-0" />
-                        <span className="truncate">{activeStudent?.name || 'Aayush Verma'}</span>
-                      </>
+                      <Users className="w-3.5 h-3.5" />
                     )}
-                  </span>
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono leading-none">
-                    {selectedStudentEnrollment === 'all-class'
-                      ? 'Cohort Analytics'
-                      : activeStudent
-                      ? `${activeStudent.enrollmentNo} • Sem ${activeStudent.semester}`
-                      : '230101010001'}
-                  </span>
+                  </div>
+
+                  <div className="text-left flex flex-col justify-center min-w-0">
+                    <span className="text-xs font-black truncate max-w-[150px] sm:max-w-[210px] text-slate-950 dark:text-white tracking-tight flex items-center gap-1">
+                      {selectedStudentEnrollment === 'all-class' ? (
+                        <span>All Students (Class Turnout)</span>
+                      ) : (
+                        <span className="truncate">{activeStudent?.name || 'Aayush Verma'}</span>
+                      )}
+                    </span>
+                    <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 font-mono leading-none">
+                      {selectedStudentEnrollment === 'all-class'
+                        ? 'Cohort Overview'
+                        : activeStudent
+                        ? `${activeStudent.enrollmentNo} • Sem ${activeStudent.semester}`
+                        : '230101010001'}
+                    </span>
+                  </div>
                 </div>
 
-                <ChevronDown
-                  className={cn(
-                    'w-4 h-4 text-amber-500 dark:text-amber-400 transition-transform duration-200 shrink-0 ml-1',
-                    isStudentDropdownOpen ? 'rotate-180' : ''
-                  )}
-                />
+                {/* Modular Segment 3: Chevron Action Box */}
+                <div className="p-1 rounded-md bg-slate-100 dark:bg-[#151a23] border border-slate-200 dark:border-slate-700/80 text-slate-600 dark:text-slate-300 group-hover:text-slate-950 dark:group-hover:text-white transition-colors shrink-0 ml-1">
+                  <ChevronDown
+                    className={cn(
+                      'w-3.5 h-3.5 transition-transform duration-200',
+                      isStudentDropdownOpen ? 'rotate-180' : ''
+                    )}
+                  />
+                </div>
               </button>
             </div>
 
@@ -683,7 +688,7 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
               ))}
             </select>
 
-            {/* Unique Modern Popover Menu */}
+            {/* Modular Popover Menu */}
             <AnimatePresence>
               {isStudentDropdownOpen && (
                 <motion.div
@@ -691,7 +696,7 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 8, scale: 0.96 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute top-full left-0 mt-2 z-50 w-80 sm:w-96 bg-white dark:bg-[#1f242e] rounded-2xl shadow-2xl border-2 border-amber-400/50 dark:border-amber-400/30 p-3 space-y-2.5 backdrop-blur-md"
+                  className="absolute top-full left-0 mt-2 z-50 w-80 sm:w-96 bg-white dark:bg-[#1c222c] rounded-2xl shadow-2xl border border-slate-300 dark:border-[#384252] p-3 space-y-2.5 backdrop-blur-md"
                 >
                   {/* Search box */}
                   <div className="relative">
@@ -701,7 +706,7 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
                       placeholder="Search student by name, roll no, department..."
                       value={studentDropdownSearch}
                       onChange={(e) => setStudentDropdownSearch(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 dark:bg-[#181c24] border border-slate-200 dark:border-[#373e4b] rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                      className="w-full pl-9 pr-3 py-2 text-xs font-semibold bg-slate-50 dark:bg-[#141820] border border-slate-200 dark:border-[#373e4b] rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-brand font-medium"
                       autoFocus
                     />
                   </div>
@@ -718,29 +723,29 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
                       className={cn(
                         'w-full flex items-center justify-between p-2.5 rounded-xl text-left text-xs transition-colors cursor-pointer',
                         selectedStudentEnrollment === 'all-class'
-                          ? 'bg-amber-500/15 border border-amber-500/40 text-amber-900 dark:text-amber-200 font-bold'
-                          : 'hover:bg-slate-100 dark:hover:bg-[#2c3342] text-slate-800 dark:text-slate-200'
+                          ? 'bg-brand/10 dark:bg-brand/20 border border-brand/40 text-brand font-black'
+                          : 'hover:bg-slate-100 dark:hover:bg-[#252c38] text-slate-800 dark:text-slate-200 font-bold'
                       )}
                     >
                       <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-200">
+                        <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 shrink-0">
                           <Users className="w-4 h-4" />
                         </div>
                         <div>
-                          <p className="font-bold text-slate-900 dark:text-white">👥 All Students (Class Turnout)</p>
-                          <p className="text-[10px] text-slate-500 dark:text-slate-400">Class aggregate attendance & average scores</p>
+                          <p className="font-black text-xs text-slate-900 dark:text-white">All Students (Class Turnout)</p>
+                          <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400">Class aggregate attendance & average scores</p>
                         </div>
                       </div>
-                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                      <span className="text-[10px] font-mono font-black px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
                         {students.length} Total
                       </span>
                     </button>
 
                     {/* Section: Featured Students with Saved Logs */}
                     <div className="pt-1.5">
-                      <p className="text-[10px] font-black text-amber-600 dark:text-amber-400 uppercase tracking-wider px-2 pb-1 flex items-center gap-1">
-                        <Sparkles className="w-3 h-3" />
-                        <span>Students with Live Saved Data</span>
+                      <p className="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider px-2 pb-1 flex items-center gap-1.5">
+                        <UserCheck className="w-3.5 h-3.5 text-brand" />
+                        <span>STUDENTS WITH SAVED RECORDS</span>
                       </p>
                       {filteredDropdownStudents
                         .filter((s) => s.hasSaved || s.student.enrollmentNo === '230101010001')
@@ -755,28 +760,25 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
                             className={cn(
                               'w-full flex items-center justify-between p-2 rounded-xl text-left text-xs transition-colors cursor-pointer',
                               selectedStudentEnrollment === student.enrollmentNo
-                                ? 'bg-amber-500/15 border border-amber-500/40 text-amber-900 dark:text-amber-200 font-bold'
-                                : 'hover:bg-slate-100 dark:hover:bg-[#2c3342] text-slate-800 dark:text-slate-200'
+                                ? 'bg-brand/10 dark:bg-brand/20 border border-brand/40 text-brand font-black'
+                                : 'hover:bg-slate-100 dark:hover:bg-[#252c38] text-slate-800 dark:text-slate-200'
                             )}
                           >
                             <div className="flex items-center gap-2.5 min-w-0">
-                              <div className="w-8 h-8 rounded-lg bg-brand/10 dark:bg-brand/20 text-brand flex items-center justify-center font-bold text-xs shrink-0">
+                              <div className="w-8 h-8 rounded-lg bg-brand/10 dark:bg-brand/20 text-brand flex items-center justify-center font-black text-xs shrink-0 border border-brand/30">
                                 {student.name.charAt(0)}
                               </div>
                               <div className="min-w-0">
-                                <p className="font-bold truncate text-slate-900 dark:text-white flex items-center gap-1">
-                                  {student.enrollmentNo === '230101010001' && (
-                                    <Star className="w-3 h-3 text-amber-500 fill-amber-500 shrink-0" />
-                                  )}
+                                <p className="font-black text-xs truncate text-slate-900 dark:text-white flex items-center gap-1">
                                   <span className="truncate">{student.name}</span>
                                 </p>
-                                <p className="text-[10px] text-slate-400 font-mono truncate">
+                                <p className="text-[10px] text-slate-400 font-mono font-bold truncate">
                                   {student.enrollmentNo} • Sem {student.semester}
                                 </p>
                               </div>
                             </div>
                             <div className="flex items-center gap-1 shrink-0 ml-2">
-                              <span className="text-[10px] px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-extrabold border border-emerald-200/50 dark:border-emerald-800/50">
+                              <span className="text-[10px] px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-black border border-emerald-200/50 dark:border-emerald-800/50">
                                 {student.attendancePct}% Att
                               </span>
                             </div>
@@ -787,8 +789,8 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
                     {/* Section: Other Students */}
                     {filteredDropdownStudents.filter((s) => !s.hasSaved && s.student.enrollmentNo !== '230101010001').length > 0 && (
                       <div className="pt-2">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-2 pb-1">
-                          Other Enrolled Students
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider px-2 pb-1">
+                          OTHER ENROLLED STUDENTS
                         </p>
                         {filteredDropdownStudents
                           .filter((s) => !s.hasSaved && s.student.enrollmentNo !== '230101010001')
@@ -803,20 +805,20 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
                               className={cn(
                                 'w-full flex items-center justify-between p-2 rounded-xl text-left text-xs transition-colors cursor-pointer',
                                 selectedStudentEnrollment === student.enrollmentNo
-                                  ? 'bg-amber-500/15 border border-amber-500/40 text-amber-900 dark:text-amber-200 font-bold'
-                                  : 'hover:bg-slate-100 dark:hover:bg-[#2c3342] text-slate-800 dark:text-slate-200'
+                                  ? 'bg-brand/10 dark:bg-brand/20 border border-brand/40 text-brand font-black'
+                                  : 'hover:bg-slate-100 dark:hover:bg-[#252c38] text-slate-800 dark:text-slate-200'
                               )}
                             >
                               <div className="flex items-center gap-2 min-w-0">
-                                <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center font-bold text-xs shrink-0">
+                                <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center font-black text-xs shrink-0">
                                   {student.name.charAt(0)}
                                 </div>
                                 <div className="min-w-0">
-                                  <p className="font-semibold truncate text-slate-800 dark:text-slate-200">{student.name}</p>
-                                  <p className="text-[10px] text-slate-400 font-mono truncate">{student.enrollmentNo}</p>
+                                  <p className="font-black text-xs truncate text-slate-800 dark:text-slate-200">{student.name}</p>
+                                  <p className="text-[10px] text-slate-400 font-mono font-bold truncate">{student.enrollmentNo}</p>
                                 </div>
                               </div>
-                              <span className="text-[10px] text-slate-500 dark:text-slate-400">
+                              <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400">
                                 Sem {student.semester}
                               </span>
                             </button>
