@@ -83,9 +83,6 @@ export const ReportsModule: React.FC = () => {
               <div className="flex items-center gap-2">
                 <h2 className="text-lg font-bold text-slate-900">Institutional Analytics & Reports</h2>
               </div>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Real-time metric summaries across students, faculty, admissions, courses, and revenue.
-              </p>
             </div>
 
             <button

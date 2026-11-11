@@ -417,9 +417,6 @@ export const FacultyAttendanceRegister: React.FC = () => {
                 <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
                   Classroom Attendance Register
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                  Record real-time attendance, monitor session turnout, and manage student enrollment.
-                </p>
               </div>
             </div>
           </div>
@@ -478,11 +475,6 @@ export const FacultyAttendanceRegister: React.FC = () => {
                   ID: {currentAssignedFaculty.employeeId}
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                {role === 'Admin'
-                  ? 'Admin assignment: Choose unique Faculty ID to delegate classroom attendance records'
-                  : `Official register session assigned to ${currentAssignedFaculty.name}`}
-              </p>
             </div>
           </div>
 

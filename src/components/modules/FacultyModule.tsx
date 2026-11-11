@@ -132,9 +132,6 @@ export const FacultyModule: React.FC = () => {
               {faculty.length} {faculty.length === 1 ? 'Member' : 'Members'}
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Teaching staff, department chairs, and faculty profiles.
-          </p>
         </div>
 
         {(role === 'Admin' || role === 'Faculty') && (
@@ -335,7 +332,7 @@ export const FacultyModule: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    placeholder="Auto-generated if empty"
+                    placeholder="e.g. FAC-2026-CS-01"
                     value={newFaculty.employeeId}
                     onChange={(e) => setNewFaculty({ ...newFaculty, employeeId: e.target.value })}
                     className="w-full px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-indigo-500 text-slate-800"
@@ -427,12 +424,9 @@ export const FacultyModule: React.FC = () => {
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                    Assigned Teaching Subjects (Authorized for Attendance Marking)
+                  <label className="block text-[11px] font-semibold text-slate-700 mb-1.5">
+                    Assigned Teaching Subjects
                   </label>
-                  <p className="text-[10px] text-slate-400 mb-2">
-                    Select the subject(s) this faculty member is authorized to mark attendance for.
-                  </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-36 overflow-y-auto p-2 border border-slate-200 rounded-lg bg-slate-50">
                     {catalogCourses.map((c) => {
                       const isChecked = newFaculty.coursesAssigned.includes(c.code);

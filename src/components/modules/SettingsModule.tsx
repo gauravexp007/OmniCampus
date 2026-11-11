@@ -182,9 +182,6 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onNavigate }) =>
               <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                 Display Appearance (Light & Dark Mode)
               </h3>
-              <p className="text-[11px] text-slate-500 mt-0.5">
-                Toggle seamlessly between bright daylight mode and ultra-comfortable deep dark mode across all campus modules.
-              </p>
             </div>
           </div>
           <div className="flex items-center gap-3 shrink-0 bg-slate-50 p-2.5 rounded-xl border border-slate-200/80">
@@ -207,25 +204,12 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onNavigate }) =>
               <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                 Theme & Color Combinations
               </h3>
-              <p className="text-[11px] text-slate-500 mt-0.5">
-                Choose your preferred primary color palette for buttons, tabs, charts, badges, and all campus records.
-              </p>
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-brand text-white shadow-xs">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Active Theme</span>
-            </span>
-          </div>
-        </div>
-
-        {/* Informative Callout Banner */}
-        <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 flex items-center justify-between text-xs text-slate-600">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-brand ring-2 ring-brand/20 shrink-0" />
-            <span>
-              Applied across <strong>Overview</strong>, <strong>Students</strong>, <strong>Timetable</strong>, <strong>Academics</strong>, <strong>Finance</strong>, and all modules. The sidebar remains in its fixed Steel Slate tone.
             </span>
           </div>
         </div>
@@ -319,9 +303,6 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onNavigate }) =>
                   Fully Modular
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 dark:text-[#a0a0a0] mt-0.5">
-                Place Quick Access, Graphs, KPIs, Timetable, Examinations, Operations, and Facilities anywhere on the dashboard. Adjust widths and reorder blocks freely.
-              </p>
             </div>
           </div>
 
@@ -366,9 +347,6 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onNavigate }) =>
               <span className="text-xs font-bold text-slate-900 dark:text-white block">
                 1. Dashboard Blocks & Placement Manager
               </span>
-              <p className="text-[11px] text-slate-500 dark:text-[#a0a0a0]">
-                Move blocks up or down to place Quick Access, Graphs, or Schedules anywhere on the dashboard. Adjust each block's column width span.
-              </p>
             </div>
 
             <div className="flex items-center gap-2">
@@ -532,9 +510,6 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onNavigate }) =>
                 <span className="text-xs font-bold text-slate-900 dark:text-white">Hybrid (Default)</span>
                 <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1 rounded">Preset</span>
               </div>
-              <p className="text-[10px] text-slate-500 dark:text-[#a3f7bf] mt-0.5">
-                4 Big Squares (Image 1) + 7 Small Rectangle Bars (Image 2)
-              </p>
             </button>
             <button
               type="button"
@@ -542,9 +517,6 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onNavigate }) =>
               className="p-2.5 text-left rounded-xl border border-slate-200 dark:border-[#55666d] hover:border-brand bg-slate-50 dark:bg-[#354146] hover:bg-white dark:hover:bg-[#4e5c61] transition-all cursor-pointer"
             >
               <span className="text-xs font-bold text-slate-900 dark:text-white block">All Small Bars</span>
-              <p className="text-[10px] text-slate-500 dark:text-[#a3f7bf] mt-0.5">
-                All 11 modules as sleek horizontal rectangle bars (like Image 2)
-              </p>
             </button>
             <button
               type="button"
@@ -552,9 +524,6 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onNavigate }) =>
               className="p-2.5 text-left rounded-xl border border-slate-200 dark:border-[#55666d] hover:border-brand bg-slate-50 dark:bg-[#354146] hover:bg-white dark:hover:bg-[#4e5c61] transition-all cursor-pointer"
             >
               <span className="text-xs font-bold text-slate-900 dark:text-white block">All Big Squares</span>
-              <p className="text-[10px] text-slate-500 dark:text-[#a3f7bf] mt-0.5">
-                All 11 modules as classic square cards (like Image 1)
-              </p>
             </button>
             <button
               type="button"
@@ -562,9 +531,6 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onNavigate }) =>
               className="p-2.5 text-left rounded-xl border border-slate-200 dark:border-[#55666d] hover:border-brand bg-slate-50 dark:bg-[#354146] hover:bg-white dark:hover:bg-[#4e5c61] transition-all cursor-pointer"
             >
               <span className="text-xs font-bold text-slate-900 dark:text-white block">Circles & Bars</span>
-              <p className="text-[10px] text-slate-500 dark:text-[#a3f7bf] mt-0.5">
-                Small tactile circular launchers with rectangle bars
-              </p>
             </button>
           </div>
         </div>
@@ -868,9 +834,6 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onNavigate }) =>
               <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                 Cloud Firestore Database Persistence & Session Sync
               </h3>
-              <p className="text-[11px] text-slate-500 mt-0.5">
-                All records added by users and faculty are saved directly to Cloud Firestore and automatically restored across every login and logout.
-              </p>
             </div>
           </div>
 
@@ -944,9 +907,6 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onNavigate }) =>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-slate-50 rounded-lg border border-slate-100 text-xs">
             <div>
               <p className="font-semibold text-slate-800">Clear Local Database</p>
-              <p className="text-[11px] text-slate-500">
-                Purge all locally added ERP records and reset the system.
-              </p>
             </div>
             <button
               type="button"
@@ -969,9 +929,6 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onNavigate }) =>
               <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                 Institutional Mail Service & Security Gateway
               </h3>
-              <p className="text-[11px] text-slate-500 mt-0.5">
-                Integrated formal email dispatch service for legitimate password resets and credential recovery.
-              </p>
             </div>
           </div>
 
@@ -983,9 +940,6 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onNavigate }) =>
                   OmniCampus Institutional Mail Relay: Active
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500">
-                Connected via Firebase Auth verified mailer & campus SMTP protocol. Formatted with formal institutional letterhead.
-              </p>
             </div>
             <button
               type="button"

@@ -199,9 +199,6 @@ export const StudentsModule: React.FC = () => {
                   {students.length} {students.length === 1 ? 'Record' : 'Records'}
                 </span>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Manage registrations, 360° academic dossiers, attendance percentages, and fee status.
-              </p>
             </div>
           </div>
         </div>
@@ -243,14 +240,9 @@ export const StudentsModule: React.FC = () => {
             <span className="p-1.5 rounded-lg bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 shrink-0">
               <Sparkles className="w-4 h-4" />
             </span>
-            <div className="min-w-0">
-              <span className="text-xs font-bold text-slate-900 dark:text-white block">
-                Interactive Student Quick Selector
-              </span>
-              <span className="text-[11px] text-slate-500 dark:text-slate-400 hidden md:block">
-                Select any student directly from this list to immediately open their 360° overview and academic records.
-              </span>
-            </div>
+            <span className="text-xs font-bold text-slate-900 dark:text-white">
+              Student Quick Selector
+            </span>
           </div>
 
           <div className="w-full sm:w-72 shrink-0">
@@ -487,9 +479,6 @@ export const StudentsModule: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-900 dark:text-white">Add New Student</h3>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                    Create a university enrollment record with automatic ID generation.
-                  </p>
                 </div>
               </div>
               <button
@@ -522,7 +511,7 @@ export const StudentsModule: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    placeholder="Auto-generated if empty"
+                    placeholder="e.g. STU-2026-CS-101"
                     value={newStudent.enrollmentNo}
                     onChange={(e) =>
                       setNewStudent({ ...newStudent, enrollmentNo: e.target.value })
