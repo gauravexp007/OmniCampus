@@ -264,12 +264,70 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
   const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
   const [isCustomizationMenuOpen, setIsCustomizationMenuOpen] = useState(false);
   const customizationMenuRef = useRef<HTMLDivElement>(null);
+  const dropdownMenuRef = useRef<HTMLDivElement>(null);
+  const [dropdownPosition, setDropdownPosition] = useState<{
+    top: number;
+    left: number;
+    width: number;
+    maxHeight: number;
+  } | null>(null);
+
+  useEffect(() => {
+    if (!isCustomizationMenuOpen || !customizationMenuRef.current) return;
+
+    const updatePosition = () => {
+      if (!customizationMenuRef.current) return;
+      const rect = customizationMenuRef.current.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const margin = 12;
+      const desiredWidth = Math.min(320, viewportWidth - margin * 2);
+
+      // Attempt to align right edge of menu with right edge of 3-dot button
+      let left = rect.right - desiredWidth;
+      // Clamp horizontally so it NEVER overflows left or right screen edges
+      if (left < margin) {
+        left = margin;
+      }
+      if (left + desiredWidth > viewportWidth - margin) {
+        left = Math.max(margin, viewportWidth - margin - desiredWidth);
+      }
+
+      // Check vertical space: place below button if space allows, otherwise above
+      let top = rect.bottom + 8;
+      let maxHeight = viewportHeight - top - margin;
+      if (maxHeight < 240 && rect.top > 240) {
+        maxHeight = Math.min(480, rect.top - margin - 8);
+        top = Math.max(margin, rect.top - maxHeight - 8);
+      } else {
+        maxHeight = Math.min(520, maxHeight);
+      }
+
+      setDropdownPosition({
+        top,
+        left,
+        width: desiredWidth,
+        maxHeight,
+      });
+    };
+
+    updatePosition();
+    window.addEventListener('resize', updatePosition);
+    window.addEventListener('scroll', updatePosition, true);
+    return () => {
+      window.removeEventListener('resize', updatePosition);
+      window.removeEventListener('scroll', updatePosition, true);
+    };
+  }, [isCustomizationMenuOpen]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as Node;
       if (
         customizationMenuRef.current &&
-        !customizationMenuRef.current.contains(e.target as Node)
+        !customizationMenuRef.current.contains(target) &&
+        dropdownMenuRef.current &&
+        !dropdownMenuRef.current.contains(target)
       ) {
         setIsCustomizationMenuOpen(false);
       }
@@ -433,22 +491,37 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
               <MoreVertical className="w-4 h-4 stroke-[2.5]" />
             </button>
 
-            {/* Dropdown Menu for All Customization - Renders at TOP LAYER */}
+            {/* Dropdown Menu for All Customization - Renders FIXED at TOP LAYER clamped inside viewport */}
             <AnimatePresence>
-              {isCustomizationMenuOpen && (
+              {isCustomizationMenuOpen && dropdownPosition && (
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.95, y: 6 }}
+                  ref={dropdownMenuRef}
+                  initial={{ opacity: 0, scale: 0.95, y: -4 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95, y: 6 }}
+                  exit={{ opacity: 0, scale: 0.95, y: -4 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute right-0 top-full mt-2 w-72 sm:w-84 bg-white dark:bg-[#252b35] rounded-2xl shadow-2xl border-2 border-slate-300 dark:border-[#55666d] p-2.5 z-[100] origin-top-right text-slate-900 dark:text-white backdrop-blur-xl ring-2 ring-black/10"
+                  style={{
+                    position: 'fixed',
+                    top: dropdownPosition.top,
+                    left: dropdownPosition.left,
+                    width: dropdownPosition.width,
+                    maxHeight: dropdownPosition.maxHeight,
+                  }}
+                  className="bg-white dark:bg-[#252b35] rounded-2xl shadow-2xl border-2 border-slate-300 dark:border-[#55666d] p-2.5 z-[9999] text-slate-900 dark:text-white backdrop-blur-xl ring-2 ring-black/15 overflow-y-auto"
                 >
-                  <div className="px-3 py-2 border-b border-slate-100 dark:border-[#435055] flex items-center justify-between">
+                  <div className="px-3 py-2 border-b border-slate-100 dark:border-[#435055] flex items-center justify-between sticky top-0 bg-white/95 dark:bg-[#252b35]/95 backdrop-blur-sm -mt-1 pt-1 z-10">
                     <div className="flex items-center gap-1.5">
                       <Sliders className="w-3.5 h-3.5 text-[#29a19c]" />
                       <span className="text-xs font-bold text-slate-900 dark:text-white">Customization Center</span>
                     </div>
-                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Top Layer</span>
+                    <button
+                      type="button"
+                      onClick={() => setIsCustomizationMenuOpen(false)}
+                      className="text-slate-400 hover:text-slate-600 dark:hover:text-white p-1 rounded-md transition-colors cursor-pointer"
+                      title="Close menu"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
                   </div>
 
                   <div className="py-2 space-y-1.5">
