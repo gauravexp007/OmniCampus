@@ -971,16 +971,25 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
     // 1. BIG SQUARE FORMAT
     if (format === 'square') {
       return (
-        <motion.button
+        <motion.div
           key={id}
           layout
-          type="button"
+          role="button"
+          tabIndex={0}
           onClick={() => {
             if (!isEditMode) onNavigate(id);
           }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              if (!isEditMode) {
+                e.preventDefault();
+                onNavigate(id);
+              }
+            }
+          }}
           className={cn(
             'group relative overflow-hidden p-4 sm:p-5 rounded-3xl border border-slate-200/90 dark:border-[#55666d] bg-white dark:bg-[#354146]',
-            'transition-all duration-300 ease-out cursor-pointer hover:-translate-y-1',
+            'transition-all duration-300 ease-out cursor-pointer hover:-translate-y-1 select-none',
             'flex flex-col items-center justify-center text-center gap-2 shadow-2xs min-h-[135px] sm:min-h-[150px] w-full',
             meta.hoverBorder,
             meta.hoverShadow
@@ -1016,22 +1025,31 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
           <span className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white group-hover:text-brand transition-colors duration-200 text-center max-w-full px-1 mt-1 leading-snug break-words">
             {meta.title}
           </span>
-        </motion.button>
+        </motion.div>
       );
     }
 
     // 2. SMALL RECTANGLE BAR FORMAT
     if (format === 'bar') {
       return (
-        <motion.button
+        <motion.div
           key={id}
           layout
-          type="button"
+          role="button"
+          tabIndex={0}
           onClick={() => {
             if (!isEditMode) onNavigate(id);
           }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              if (!isEditMode) {
+                e.preventDefault();
+                onNavigate(id);
+              }
+            }
+          }}
           className={cn(
-            'group relative overflow-hidden text-left px-3.5 py-3 rounded-2xl cursor-pointer neumorph-bar',
+            'group relative overflow-hidden text-left px-3.5 py-3 rounded-2xl cursor-pointer neumorph-bar select-none',
             'flex items-center justify-between gap-3 transition-all duration-200 bg-white dark:bg-[#354146] border border-slate-200/90 dark:border-[#55666d]'
           )}
         >
@@ -1059,7 +1077,7 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
           ) : (
             <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-brand group-hover:translate-x-0.5 transition-all shrink-0" />
           )}
-        </motion.button>
+        </motion.div>
       );
     }
 
