@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   CalendarCheck2,
   FileSpreadsheet,
@@ -26,6 +26,7 @@ import {
   Check,
   ChevronRight,
   ArrowUpDown,
+  MoreVertical,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useERP } from '../../context/ERPContext';
@@ -94,6 +95,19 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
   } = useDashboardLayout();
 
   const [activeTab, setActiveTab] = useState<TabFilter>('all');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   // Section ordering: can move Squares and Bars up and down
   const [sectionOrder, setSectionOrder] = useState<('squares' | 'circles' | 'bars')[]>([
     'squares',
@@ -356,31 +370,129 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
             ]}
           />
 
-          {/* Dedicated Customize Button on Quick Access (Black text over grey when idle, Brand when active) */}
-          <button
-            type="button"
-            id="quick-access-customize-btn"
-            onClick={toggleEditMode}
-            className={cn(
-              'px-3.5 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5 transition-all cursor-pointer shadow-xs border',
-              isEditMode
-                ? 'bg-brand text-white border-brand shadow-sm ring-2 ring-brand/30 scale-102'
-                : 'bg-[#CBD5E1] dark:bg-[#CBD5E1] hover:bg-slate-300 dark:hover:bg-slate-200 text-black dark:text-black border-slate-400'
-            )}
-            title={isEditMode ? 'Finish Quick Access customization' : 'Customize layout, order & hover circle-to-square shapes'}
-          >
-            {isEditMode ? (
-              <>
-                <Check className="w-3.5 h-3.5 stroke-[2.5]" />
-                <span>Done</span>
-              </>
-            ) : (
-              <>
-                <Sliders className="w-3.5 h-3.5 text-black stroke-[2.5]" />
-                <span className="text-black font-black">Customize</span>
-              </>
-            )}
-          </button>
+          {/* If edit mode active, show a clean Done button */}
+          {isEditMode && (
+            <button
+              type="button"
+              id="quick-access-done-btn"
+              onClick={toggleEditMode}
+              className="px-3 py-1.5 rounded-xl bg-brand hover:bg-brand-hover text-white text-xs font-black flex items-center gap-1.5 shadow-sm ring-2 ring-brand/30 cursor-pointer transition-all"
+              title="Finish Quick Access customization"
+            >
+              <Check className="w-3.5 h-3.5 stroke-[2.5]" />
+              <span>Done</span>
+            </button>
+          )}
+
+          {/* 3 VERTICAL DOTS AT RIGHT CORNER FOR ALL CUSTOMIZATION */}
+          <div className="relative shrink-0" ref={menuRef}>
+            <button
+              type="button"
+              id="quick-access-3dot-btn"
+              onClick={() => setIsMenuOpen((prev) => !prev)}
+              className={cn(
+                'p-2 rounded-xl border transition-all cursor-pointer flex items-center justify-center shadow-xs',
+                isMenuOpen
+                  ? 'bg-slate-900 text-white dark:bg-brand border-transparent ring-2 ring-slate-900/20 dark:ring-brand/40'
+                  : 'bg-[#CBD5E1] dark:bg-[#CBD5E1] hover:bg-slate-300 dark:hover:bg-slate-200 text-black border-slate-400'
+              )}
+              title="Quick Access Customization Menu (Shortcuts, Presets & Shapes)"
+              aria-label="Quick Access Customization Menu"
+            >
+              <MoreVertical className="w-4 h-4 text-black stroke-[2.5]" />
+            </button>
+
+            {/* Dropdown Menu for Customization */}
+            <AnimatePresence>
+              {isMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: 6 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 6 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-[#354146] rounded-2xl shadow-2xl border border-slate-200 dark:border-[#55666d] p-2 z-50 origin-top-right text-slate-900 dark:text-white backdrop-blur-md"
+                >
+                  <div className="px-3 py-2 border-b border-slate-100 dark:border-[#435055] flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-900 dark:text-white">Quick Access Customizer</span>
+                    <span className="text-[10px] font-mono text-slate-400 font-bold uppercase">Shortcuts</span>
+                  </div>
+
+                  <div className="py-1 space-y-1">
+                    <button
+                      type="button"
+                      id="menu-toggle-quick-access-edit"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        toggleEditMode();
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer group"
+                    >
+                      <div className="w-7 h-7 rounded-lg bg-brand text-white flex items-center justify-center shrink-0">
+                        <Sliders className="w-3.5 h-3.5" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-bold text-slate-900 dark:text-white flex items-center justify-between">
+                          <span>{isEditMode ? 'Exit Customization' : 'Customize Tiles'}</span>
+                          <span className="text-[10px] font-bold text-brand uppercase">{isEditMode ? 'Close' : 'Edit'}</span>
+                        </p>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-300 truncate">
+                          Reorder tiles & hover circle-to-square
+                        </p>
+                      </div>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        applyPreset('all-squares');
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer"
+                    >
+                      <Square className="w-3.5 h-3.5 text-slate-500" />
+                      <span className="text-xs font-medium text-slate-700 dark:text-slate-200">Preset: All Large Squares</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        applyPreset('all-bars');
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer"
+                    >
+                      <RectangleHorizontal className="w-3.5 h-3.5 text-slate-500" />
+                      <span className="text-xs font-medium text-slate-700 dark:text-slate-200">Preset: All Wide Bars</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        applyPreset('compact-circles');
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer"
+                    >
+                      <CircleDot className="w-3.5 h-3.5 text-slate-500" />
+                      <span className="text-xs font-medium text-slate-700 dark:text-slate-200">Preset: Compact Circles</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        resetLayout();
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer border-t border-slate-100 dark:border-[#435055] pt-1.5"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5 text-amber-600" />
+                      <span className="text-xs font-medium text-slate-700 dark:text-slate-200">Reset Shortcuts Layout</span>
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
 

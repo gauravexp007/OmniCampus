@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   GraduationCap,
@@ -23,6 +23,8 @@ import {
   ArrowUpDown,
   ArrowLeftRight,
   Check,
+  MoreVertical,
+  LayoutGrid,
 } from 'lucide-react';
 import { useERP } from '../../context/ERPContext';
 import { ERPModuleId } from '../../types';
@@ -257,10 +259,24 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
     });
   }, [role]);
 
-  // Drag and drop state
   const [draggedBlockId, setDraggedBlockId] = useState<string | null>(null);
   const [dragOverBlockId, setDragOverBlockId] = useState<string | null>(null);
   const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
+  const [isCustomizationMenuOpen, setIsCustomizationMenuOpen] = useState(false);
+  const customizationMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        customizationMenuRef.current &&
+        !customizationMenuRef.current.contains(e.target as Node)
+      ) {
+        setIsCustomizationMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Graphs section customization (Order & Layout)
   const [graphOrder, setGraphOrder] = useState<'attendance-first' | 'marks-first'>(() => {
@@ -374,21 +390,12 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
           </p>
         </div>
 
-        {/* Action Controls - Strictly ONE Customize button as requested */}
+        {/* Action Controls - Customization inside 3 vertical dots at right corner */}
         <div className="flex items-center gap-2 shrink-0 flex-wrap relative z-10">
           <button
-            type="button"
-            onClick={() => setIsCustomizeOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-[#29a19c] dark:hover:bg-[#248f8a] text-white text-xs font-bold transition-all shadow-xs cursor-pointer border border-transparent dark:border-[#29a19c]"
-            title="Customize Dashboard Layout & Presets"
-          >
-            <Sliders className="w-3.5 h-3.5 text-white/90" />
-            <span>Customize</span>
-          </button>
-
-          <button
             onClick={() => onNavigate('userfiles')}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-[#354146] hover:bg-slate-200 dark:hover:bg-[#4e5c61] text-slate-800 dark:text-white text-xs font-bold transition-all cursor-pointer border border-slate-200 dark:border-[#55666d]"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-[#354146] hover:bg-slate-200 dark:hover:bg-[#4e5c61] text-slate-800 dark:text-white text-xs font-bold transition-all cursor-pointer border border-slate-200 dark:border-[#55666d]"
+            title="Institutional Document Vault"
           >
             <HardDrive className="w-3.5 h-3.5 text-slate-600 dark:text-[#a3f7bf]" />
             <span>Vault</span>
@@ -396,11 +403,152 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
 
           <button
             onClick={onOpenAiCopilot}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-[#354146] hover:bg-slate-200 dark:hover:bg-[#4e5c61] text-slate-800 dark:text-white text-xs font-bold transition-all border border-slate-200 dark:border-[#55666d] cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-[#354146] hover:bg-slate-200 dark:hover:bg-[#4e5c61] text-slate-800 dark:text-white text-xs font-bold transition-all border border-slate-200 dark:border-[#55666d] cursor-pointer"
+            title="Campus Operations & Help Desk"
           >
             <HelpCircle className="w-3.5 h-3.5 text-slate-500 dark:text-[#a3f7bf]" />
             <span>Campus Desk</span>
           </button>
+
+          {/* 3 VERTICAL DOTS AT RIGHT CORNER FOR ALL CUSTOMIZATION */}
+          <div className="relative shrink-0" ref={customizationMenuRef}>
+            <button
+              type="button"
+              id="dashboard-customization-3dot-btn"
+              onClick={() => setIsCustomizationMenuOpen((prev) => !prev)}
+              className={cn(
+                'p-2 rounded-xl border transition-all cursor-pointer flex items-center justify-center shadow-xs',
+                isCustomizationMenuOpen
+                  ? 'bg-slate-900 text-white dark:bg-[#29a19c] border-transparent ring-2 ring-slate-900/20 dark:ring-[#29a19c]/40'
+                  : 'bg-slate-100 hover:bg-slate-200 dark:bg-[#354146] dark:hover:bg-[#4e5c61] text-slate-800 dark:text-white border-slate-200 dark:border-[#55666d]'
+              )}
+              title="Customization Options (Dashboard, KPI Blocks, Graphs & Presets)"
+              aria-label="Customization Menu"
+            >
+              <MoreVertical className="w-4 h-4 stroke-[2.5]" />
+            </button>
+
+            {/* Dropdown Menu for All Customization */}
+            <AnimatePresence>
+              {isCustomizationMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: 6 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 6 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 top-full mt-2 w-72 sm:w-80 bg-white dark:bg-[#354146] rounded-2xl shadow-2xl border border-slate-200 dark:border-[#55666d] p-2 z-50 origin-top-right text-slate-900 dark:text-white backdrop-blur-md"
+                >
+                  <div className="px-3 py-2 border-b border-slate-100 dark:border-[#435055] flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <Sliders className="w-3.5 h-3.5 text-[#29a19c]" />
+                      <span className="text-xs font-bold text-slate-900 dark:text-white">Customization Center</span>
+                    </div>
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Dashboard</span>
+                  </div>
+
+                  <div className="py-1 space-y-1">
+                    {/* 1. Customize Dashboard Button */}
+                    <button
+                      type="button"
+                      id="menu-customize-dashboard-btn"
+                      onClick={() => {
+                        setIsCustomizationMenuOpen(false);
+                        setIsCustomizeOpen(true);
+                      }}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer group"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-slate-900 text-white dark:bg-[#29a19c] flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
+                        <Sliders className="w-4 h-4" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-bold text-slate-900 dark:text-white flex items-center justify-between">
+                          <span>Customize Dashboard</span>
+                          <span className="text-[10px] font-black text-[#29a19c] uppercase">Customize</span>
+                        </p>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-300 truncate">
+                          Reorder KPI blocks, graphs & layout presets
+                        </p>
+                      </div>
+                    </button>
+
+                    {/* 2. Customize Quick Access */}
+                    <button
+                      type="button"
+                      id="menu-customize-quick-access-btn"
+                      onClick={() => {
+                        setIsCustomizationMenuOpen(false);
+                        const el = document.getElementById('quick-access-section');
+                        el?.scrollIntoView({ behavior: 'smooth' });
+                        const btn = document.getElementById('quick-access-customize-btn') || document.getElementById('quick-access-3dot-btn');
+                        btn?.click();
+                      }}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer group"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
+                        <LayoutGrid className="w-4 h-4" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-bold text-slate-900 dark:text-white">
+                          Customize Quick Access
+                        </p>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-300 truncate">
+                          Reorder shortcuts & hover morph shapes
+                        </p>
+                      </div>
+                    </button>
+
+                    {/* 3. Reset All Customizations */}
+                    <button
+                      type="button"
+                      id="menu-reset-customizations-btn"
+                      onClick={() => {
+                        setIsCustomizationMenuOpen(false);
+                        resetDashboardBlocks();
+                        resetBlockOrder();
+                        applyPreset('default-hybrid');
+                      }}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer group"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800 flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
+                        <RotateCcw className="w-4 h-4" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-bold text-slate-900 dark:text-white">
+                          Reset All Layouts
+                        </p>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-300 truncate">
+                          Restore original factory dashboard layout
+                        </p>
+                      </div>
+                    </button>
+
+                    {/* 4. Full Settings */}
+                    <button
+                      type="button"
+                      id="menu-all-settings-btn"
+                      onClick={() => {
+                        setIsCustomizationMenuOpen(false);
+                        onNavigate('settings');
+                      }}
+                      className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer group border-t border-slate-100 dark:border-[#435055] pt-2"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-[#435055] text-slate-600 dark:text-slate-300 flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
+                        <Settings className="w-4 h-4" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-bold text-slate-900 dark:text-white">
+                          All System Customizations
+                        </p>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-300 truncate">
+                          Advanced appearance & layout settings
+                        </p>
+                      </div>
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
 
