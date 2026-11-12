@@ -408,8 +408,8 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
               <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white tracking-tight">
                 Quick Access
               </h3>
-              {/* Badge with genuine black text over grey background */}
-              <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-[#CBD5E1] dark:bg-[#CBD5E1] text-black border border-slate-400 shadow-2xs">
+              {/* Badge with clean theme-aware styling */}
+              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-[#354146] text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-[#55666d] shadow-2xs">
                 {bigSquaresCount} Squares &bull; {smallBarsCount} Bars
               </span>
             </div>
@@ -454,12 +454,12 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
                 'p-2 rounded-xl border transition-all cursor-pointer flex items-center justify-center shadow-xs',
                 isMenuOpen
                   ? 'bg-slate-900 text-white dark:bg-brand border-transparent ring-2 ring-slate-900/20 dark:ring-brand/40'
-                  : 'bg-[#CBD5E1] dark:bg-[#CBD5E1] hover:bg-slate-300 dark:hover:bg-slate-200 text-black border-slate-400'
+                  : 'bg-white dark:bg-[#354146] hover:bg-slate-100 dark:hover:bg-[#435055] text-slate-800 dark:text-white border-slate-300 dark:border-[#55666d]'
               )}
-              title="Quick Access Customization Menu (Shortcuts, Presets & Shapes)"
+              title="Quick Access Customization Menu"
               aria-label="Quick Access Customization Menu"
             >
-              <MoreVertical className="w-4 h-4 text-black stroke-[2.5]" />
+              <MoreVertical className="w-4 h-4 text-slate-800 dark:text-white stroke-[2.5]" />
             </button>
 
             {/* Dropdown Menu for Customization - FIXED at TOP LAYER clamped inside viewport */}
@@ -493,7 +493,7 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
                   </div>
 
                   <div className="py-2 space-y-1.5">
-                    {/* PRIMARY CUSTOMIZE TILES BUTTON */}
+                    {/* PRIMARY CUSTOMIZE TILES BUTTON (Clean, without extra descriptions) */}
                     <button
                       type="button"
                       id="menu-toggle-quick-access-edit"
@@ -501,22 +501,19 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
                         setIsMenuOpen(false);
                         toggleEditMode();
                       }}
-                      className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-brand hover:bg-brand-hover text-white transition-all cursor-pointer shadow-md group"
+                      className="w-full flex items-center justify-between gap-3 p-2.5 rounded-xl bg-brand hover:bg-brand-hover text-white transition-all cursor-pointer shadow-md group"
                     >
-                      <div className="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
-                        <Sliders className="w-3.5 h-3.5 text-white" />
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+                          <Sliders className="w-3.5 h-3.5 text-white" />
+                        </div>
+                        <span className="text-xs font-bold text-white">
+                          {isEditMode ? 'Exit Customization' : 'Customize Tiles'}
+                        </span>
                       </div>
-                      <div className="min-w-0 flex-1 text-left">
-                        <p className="text-xs font-black flex items-center justify-between text-white">
-                          <span>{isEditMode ? 'Exit Customization' : 'Customize Tiles'}</span>
-                          <span className="text-[10px] font-mono uppercase bg-white/20 px-1.5 py-0.5 rounded font-black">
-                            {isEditMode ? 'Done' : 'Customize'}
-                          </span>
-                        </p>
-                        <p className="text-[10px] text-white/80 truncate font-medium">
-                          Reorder shortcuts & morph circle-to-square
-                        </p>
-                      </div>
+                      <span className="text-[10px] font-mono uppercase bg-white/20 px-1.5 py-0.5 rounded font-black">
+                        {isEditMode ? 'Done' : 'Customize'}
+                      </span>
                     </button>
 
                     <button
@@ -525,10 +522,10 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
                         setIsMenuOpen(false);
                         applyPreset('all-squares');
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer"
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer"
                     >
-                      <Square className="w-3.5 h-3.5 text-slate-500" />
-                      <span className="text-xs font-medium text-slate-700 dark:text-slate-200">Preset: All Large Squares</span>
+                      <Square className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+                      <span className="text-xs font-bold text-slate-700 dark:text-slate-200">All Large Squares</span>
                     </button>
 
                     <button
@@ -537,10 +534,10 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
                         setIsMenuOpen(false);
                         applyPreset('all-bars');
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer"
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer"
                     >
-                      <RectangleHorizontal className="w-3.5 h-3.5 text-slate-500" />
-                      <span className="text-xs font-medium text-slate-700 dark:text-slate-200">Preset: All Wide Bars</span>
+                      <RectangleHorizontal className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+                      <span className="text-xs font-bold text-slate-700 dark:text-slate-200">All Wide Bars</span>
                     </button>
 
                     <button
@@ -549,10 +546,10 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
                         setIsMenuOpen(false);
                         applyPreset('compact-circles');
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer"
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer"
                     >
-                      <CircleDot className="w-3.5 h-3.5 text-slate-500" />
-                      <span className="text-xs font-medium text-slate-700 dark:text-slate-200">Preset: Compact Circles</span>
+                      <CircleDot className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+                      <span className="text-xs font-bold text-slate-700 dark:text-slate-200">Compact Circles</span>
                     </button>
 
                     <button
@@ -561,10 +558,10 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
                         setIsMenuOpen(false);
                         resetLayout();
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer border-t border-slate-100 dark:border-[#435055] pt-1.5"
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer border-t border-slate-100 dark:border-[#435055] pt-2"
                     >
-                      <RotateCcw className="w-3.5 h-3.5 text-amber-600" />
-                      <span className="text-xs font-medium text-slate-700 dark:text-slate-200">Reset Shortcuts Layout</span>
+                      <RotateCcw className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                      <span className="text-xs font-bold text-slate-700 dark:text-slate-200">Reset Shortcuts Layout</span>
                     </button>
                   </div>
                 </motion.div>
@@ -581,83 +578,82 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="p-3.5 bg-[#CBD5E1] dark:bg-[#CBD5E1] border-2 border-slate-400 rounded-2xl space-y-2.5 text-black text-xs shadow-sm overflow-hidden"
+            className="p-3.5 bg-slate-100 dark:bg-[#1a202c] border-2 border-slate-300 dark:border-slate-700 rounded-2xl space-y-2.5 text-slate-900 dark:text-white text-xs shadow-sm overflow-hidden"
           >
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-brand animate-ping shrink-0" />
-                <span className="font-bold text-black text-xs">
-                  <strong>Quick Access Customizer Active:</strong> Move tiles up/down, reorder sections, and <em>hover over circles to morph them into squares</em>!
+                <span className="w-2 h-2 rounded-full bg-brand shrink-0" />
+                <span className="font-extrabold text-xs uppercase tracking-wider text-slate-900 dark:text-white">
+                  Quick Access Customizer
                 </span>
               </div>
               <div className="flex items-center gap-1.5 flex-wrap self-end sm:self-auto shrink-0">
                 <button
                   type="button"
                   onClick={() => applyPreset('default-hybrid')}
-                  className="px-2.5 py-1 rounded-lg bg-white hover:bg-slate-100 text-black font-black text-[11px] border border-slate-300 shadow-2xs cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-white dark:bg-[#252c38] hover:bg-slate-50 dark:hover:bg-[#323d49] text-slate-900 dark:text-white font-bold text-[11px] border border-slate-300 dark:border-slate-600 shadow-2xs cursor-pointer transition-colors"
                 >
                   Reset Default
                 </button>
                 <button
                   type="button"
                   onClick={toggleEditMode}
-                  className="px-3 py-1 rounded-lg bg-black text-white hover:bg-slate-800 font-bold text-[11px] shadow-xs cursor-pointer"
+                  className="px-3 py-1 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-slate-100 font-bold text-[11px] shadow-xs cursor-pointer transition-colors"
                 >
                   Save & Exit
                 </button>
               </div>
             </div>
 
-            {/* Quick Shape & Move Controls */}
-            <div className="pt-2 border-t border-slate-300 flex items-center justify-between gap-2 flex-wrap text-[11px]">
+            {/* Quick Shape & Move Controls (All custom up/down buttons are white in dark theme) */}
+            <div className="pt-2 border-t border-slate-200 dark:border-slate-700/80 flex items-center justify-between gap-2 flex-wrap text-[11px]">
               <div className="flex items-center gap-1.5 flex-wrap">
-                <span className="font-extrabold text-black">Section Flow:</span>
+                <span className="font-extrabold text-slate-700 dark:text-slate-200">Section Flow:</span>
                 <button
                   type="button"
                   onClick={() => moveSection('squares', 'up')}
-                  className="px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-black font-bold border border-slate-300 flex items-center gap-1 cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-white dark:bg-[#252c38] hover:bg-slate-50 dark:hover:bg-[#323d49] text-slate-900 dark:text-white font-bold border border-slate-300 dark:border-slate-600 flex items-center gap-1.5 cursor-pointer shadow-2xs transition-colors"
                   title="Move Squares Section Earlier"
                 >
-                  <MoveUp className="w-3 h-3 text-black" />
-                  <span>Squares Up</span>
+                  <MoveUp className="w-3.5 h-3.5 text-slate-900 dark:text-white" />
+                  <span className="text-slate-900 dark:text-white">Squares Up</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => moveSection('bars', 'up')}
-                  className="px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-black font-bold border border-slate-300 flex items-center gap-1 cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-white dark:bg-[#252c38] hover:bg-slate-50 dark:hover:bg-[#323d49] text-slate-900 dark:text-white font-bold border border-slate-300 dark:border-slate-600 flex items-center gap-1.5 cursor-pointer shadow-2xs transition-colors"
                   title="Move Bars Section Earlier"
                 >
-                  <MoveUp className="w-3 h-3 text-black" />
-                  <span>Bars Up</span>
+                  <MoveUp className="w-3.5 h-3.5 text-slate-900 dark:text-white" />
+                  <span className="text-slate-900 dark:text-white">Bars Up</span>
                 </button>
               </div>
 
               <div className="flex items-center gap-1.5 flex-wrap">
-                <span className="font-extrabold text-black">Shapes:</span>
+                <span className="font-extrabold text-slate-700 dark:text-slate-200">Shapes:</span>
                 <button
                   type="button"
                   onClick={makeSomeCirclesForTesting}
-                  className="px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-black font-bold border border-slate-300 flex items-center gap-1 cursor-pointer"
-                  title="Make tiles circles so you can hover to morph into squares"
+                  className="px-2.5 py-1 rounded-lg bg-white dark:bg-[#252c38] hover:bg-slate-50 dark:hover:bg-[#323d49] text-slate-900 dark:text-white font-bold border border-slate-300 dark:border-slate-600 flex items-center gap-1 cursor-pointer transition-colors shadow-2xs"
                 >
-                  <CircleDot className="w-3 h-3 text-brand" />
-                  <span>Test Circles (Hover Morph)</span>
+                  <CircleDot className="w-3.5 h-3.5 text-brand" />
+                  <span className="text-slate-900 dark:text-white">Circles</span>
                 </button>
                 <button
                   type="button"
                   onClick={makeAllSquares}
-                  className="px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-black font-bold border border-slate-300 flex items-center gap-1 cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-white dark:bg-[#252c38] hover:bg-slate-50 dark:hover:bg-[#323d49] text-slate-900 dark:text-white font-bold border border-slate-300 dark:border-slate-600 flex items-center gap-1 cursor-pointer transition-colors shadow-2xs"
                 >
-                  <Square className="w-3 h-3 text-black" />
-                  <span>All Squares</span>
+                  <Square className="w-3.5 h-3.5 text-slate-900 dark:text-white" />
+                  <span className="text-slate-900 dark:text-white">All Squares</span>
                 </button>
                 <button
                   type="button"
                   onClick={makeAllBars}
-                  className="px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-black font-bold border border-slate-300 flex items-center gap-1 cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-white dark:bg-[#252c38] hover:bg-slate-50 dark:hover:bg-[#323d49] text-slate-900 dark:text-white font-bold border border-slate-300 dark:border-slate-600 flex items-center gap-1 cursor-pointer transition-colors shadow-2xs"
                 >
-                  <RectangleHorizontal className="w-3 h-3 text-black" />
-                  <span>All Bars</span>
+                  <RectangleHorizontal className="w-3.5 h-3.5 text-slate-900 dark:text-white" />
+                  <span className="text-slate-900 dark:text-white">All Bars</span>
                 </button>
               </div>
             </div>
@@ -677,23 +673,23 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
               <div key="squares-section" className="space-y-1.5">
                 {isEditMode && (
                   <div className="flex items-center justify-between text-[11px] font-black text-slate-700 dark:text-slate-200 px-1">
-                    <span className="uppercase tracking-wider">Square Cards Section ({bigSquareTiles.length})</span>
+                    <span className="uppercase tracking-wider">Square Cards ({bigSquareTiles.length})</span>
                     <div className="flex items-center gap-1">
                       <button
                         type="button"
                         onClick={() => moveSection('squares', 'up')}
-                        className="p-1 rounded bg-[#CBD5E1] dark:bg-[#CBD5E1] text-black hover:bg-slate-300 cursor-pointer"
+                        className="p-1.5 rounded-lg bg-white dark:bg-[#1a202c] text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-[#252c38] cursor-pointer shadow-2xs transition-colors flex items-center justify-center"
                         title="Move Section Up"
                       >
-                        <MoveUp className="w-3 h-3" />
+                        <MoveUp className="w-3.5 h-3.5 text-slate-900 dark:text-white" />
                       </button>
                       <button
                         type="button"
                         onClick={() => moveSection('squares', 'down')}
-                        className="p-1 rounded bg-[#CBD5E1] dark:bg-[#CBD5E1] text-black hover:bg-slate-300 cursor-pointer"
+                        className="p-1.5 rounded-lg bg-white dark:bg-[#1a202c] text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-[#252c38] cursor-pointer shadow-2xs transition-colors flex items-center justify-center"
                         title="Move Section Down"
                       >
-                        <MoveDown className="w-3 h-3" />
+                        <MoveDown className="w-3.5 h-3.5 text-slate-900 dark:text-white" />
                       </button>
                     </div>
                   </div>
@@ -711,29 +707,32 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
                 {isEditMode && (
                   <div className="flex items-center justify-between text-[11px] font-black text-slate-700 dark:text-slate-200 px-1">
                     <span className="uppercase tracking-wider">
-                      Circle Buttons (Hover to Morph into Square) ({smallCircleTiles.length})
+                      Circles ({smallCircleTiles.length})
                     </span>
                     <div className="flex items-center gap-1">
                       <button
                         type="button"
                         onClick={() => moveSection('circles', 'up')}
-                        className="p-1 rounded bg-[#CBD5E1] dark:bg-[#CBD5E1] text-black hover:bg-slate-300 cursor-pointer"
+                        className="p-1.5 rounded-lg bg-white dark:bg-[#1a202c] text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-[#252c38] cursor-pointer shadow-2xs transition-colors flex items-center justify-center"
                         title="Move Section Up"
                       >
-                        <MoveUp className="w-3 h-3" />
+                        <MoveUp className="w-3.5 h-3.5 text-slate-900 dark:text-white" />
                       </button>
                       <button
                         type="button"
                         onClick={() => moveSection('circles', 'down')}
-                        className="p-1 rounded bg-[#CBD5E1] dark:bg-[#CBD5E1] text-black hover:bg-slate-300 cursor-pointer"
+                        className="p-1.5 rounded-lg bg-white dark:bg-[#1a202c] text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-[#252c38] cursor-pointer shadow-2xs transition-colors flex items-center justify-center"
                         title="Move Section Down"
                       >
-                        <MoveDown className="w-3 h-3" />
+                        <MoveDown className="w-3.5 h-3.5 text-slate-900 dark:text-white" />
                       </button>
                     </div>
                   </div>
                 )}
-                <div className="flex items-center gap-3.5 flex-wrap p-3 bg-slate-100 dark:bg-[#354146] rounded-2xl border border-slate-200/90 dark:border-[#55666d]">
+                <div className={cn(
+                  "flex items-center flex-wrap p-3.5 bg-slate-100 dark:bg-[#354146] rounded-2xl border border-slate-200/90 dark:border-[#55666d] transition-all",
+                  isEditMode ? "gap-x-8 gap-y-7 pt-7 pb-3" : "gap-3.5"
+                )}>
                   {smallCircleTiles.map((id) => renderTile(id, 'circle'))}
                 </div>
               </div>
@@ -745,23 +744,23 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
               <div key="bars-section" className="space-y-1.5">
                 {isEditMode && (
                   <div className="flex items-center justify-between text-[11px] font-black text-slate-700 dark:text-slate-200 px-1">
-                    <span className="uppercase tracking-wider">Rectangle Bars Section ({smallBarTiles.length})</span>
+                    <span className="uppercase tracking-wider">Rectangle Bars ({smallBarTiles.length})</span>
                     <div className="flex items-center gap-1">
                       <button
                         type="button"
                         onClick={() => moveSection('bars', 'up')}
-                        className="p-1 rounded bg-[#CBD5E1] dark:bg-[#CBD5E1] text-black hover:bg-slate-300 cursor-pointer"
+                        className="p-1.5 rounded-lg bg-white dark:bg-[#1a202c] text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-[#252c38] cursor-pointer shadow-2xs transition-colors flex items-center justify-center"
                         title="Move Section Up"
                       >
-                        <MoveUp className="w-3 h-3" />
+                        <MoveUp className="w-3.5 h-3.5 text-slate-900 dark:text-white" />
                       </button>
                       <button
                         type="button"
                         onClick={() => moveSection('bars', 'down')}
-                        className="p-1 rounded bg-[#CBD5E1] dark:bg-[#CBD5E1] text-black hover:bg-slate-300 cursor-pointer"
+                        className="p-1.5 rounded-lg bg-white dark:bg-[#1a202c] text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-[#252c38] cursor-pointer shadow-2xs transition-colors flex items-center justify-center"
                         title="Move Section Down"
                       >
-                        <MoveDown className="w-3 h-3" />
+                        <MoveDown className="w-3.5 h-3.5 text-slate-900 dark:text-white" />
                       </button>
                     </div>
                   </div>
@@ -792,42 +791,42 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
     const config = tileConfigs[id];
     const Icon = meta.icon;
 
-    // Mini in-card format controls when editing (Black text over grey background)
-    const renderEditToolbar = () => {
+    // Full in-card format controls for Square cards (Clean white-in-dark theme, high contrast)
+    const renderSquareEditToolbar = () => {
       if (!isEditMode) return null;
       return (
         <div
           onClick={(e) => e.stopPropagation()}
-          className="absolute top-1.5 right-1.5 z-30 flex items-center gap-1 bg-[#CBD5E1] dark:bg-[#CBD5E1] backdrop-blur-md p-1 rounded-xl border-2 border-slate-400 shadow-lg text-black"
+          className="absolute top-2 right-2 z-30 flex items-center gap-1 bg-white/95 dark:bg-[#1a202c]/95 backdrop-blur-md p-1 rounded-xl border border-slate-300 dark:border-slate-600 shadow-md text-slate-900 dark:text-white"
         >
           {/* Move Up */}
           <button
             type="button"
-            title="Move Up / Earlier"
+            title="Move Earlier"
             onClick={() => moveTile(id, 'up')}
-            className="p-1 rounded-lg bg-white/90 hover:bg-white text-black font-black shadow-2xs hover:scale-105 transition-all cursor-pointer"
+            className="p-1 rounded-lg bg-slate-100 dark:bg-[#252c38] hover:bg-slate-200 dark:hover:bg-[#323d49] text-slate-900 dark:text-white border border-slate-200 dark:border-slate-600 transition-all cursor-pointer"
           >
-            <MoveUp className="w-3.5 h-3.5 text-black" />
+            <MoveUp className="w-3.5 h-3.5 text-slate-900 dark:text-white" />
           </button>
           {/* Move Down */}
           <button
             type="button"
-            title="Move Down / Later"
+            title="Move Later"
             onClick={() => moveTile(id, 'down')}
-            className="p-1 rounded-lg bg-white/90 hover:bg-white text-black font-black shadow-2xs hover:scale-105 transition-all cursor-pointer"
+            className="p-1 rounded-lg bg-slate-100 dark:bg-[#252c38] hover:bg-slate-200 dark:hover:bg-[#323d49] text-slate-900 dark:text-white border border-slate-200 dark:border-slate-600 transition-all cursor-pointer"
           >
-            <MoveDown className="w-3.5 h-3.5 text-black" />
+            <MoveDown className="w-3.5 h-3.5 text-slate-900 dark:text-white" />
           </button>
           {/* Format: Circle */}
           <button
             type="button"
-            title="Make Circle (Hover to morph to square)"
+            title="Make Circle"
             onClick={() => setTileFormat(id, 'circle')}
             className={cn(
-              'p-1 rounded-lg transition-colors font-bold cursor-pointer',
+              'p-1 rounded-lg transition-colors font-bold cursor-pointer border border-slate-200 dark:border-slate-600',
               config?.format === 'circle'
-                ? 'bg-black text-white shadow-xs'
-                : 'bg-white/90 hover:bg-white text-black'
+                ? 'bg-brand text-white shadow-xs'
+                : 'bg-slate-100 dark:bg-[#252c38] hover:bg-slate-200 dark:hover:bg-[#323d49] text-slate-900 dark:text-white'
             )}
           >
             <CircleDot className="w-3.5 h-3.5" />
@@ -835,27 +834,27 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
           {/* Format: Square */}
           <button
             type="button"
-            title="Make Big Square"
+            title="Make Square"
             onClick={() => setTileFormat(id, 'square')}
             className={cn(
-              'p-1 rounded-lg transition-colors font-bold cursor-pointer',
+              'p-1 rounded-lg transition-colors font-bold cursor-pointer border border-slate-200 dark:border-slate-600',
               config?.format === 'square'
-                ? 'bg-black text-white shadow-xs'
-                : 'bg-white/90 hover:bg-white text-black'
+                ? 'bg-brand text-white shadow-xs'
+                : 'bg-slate-100 dark:bg-[#252c38] hover:bg-slate-200 dark:hover:bg-[#323d49] text-slate-900 dark:text-white'
             )}
           >
             <Square className="w-3.5 h-3.5" />
           </button>
-          {/* Format: Rectangle Bar */}
+          {/* Format: Bar */}
           <button
             type="button"
             title="Make Rectangle Bar"
             onClick={() => setTileFormat(id, 'bar')}
             className={cn(
-              'p-1 rounded-lg transition-colors font-bold cursor-pointer',
+              'p-1 rounded-lg transition-colors font-bold cursor-pointer border border-slate-200 dark:border-slate-600',
               config?.format === 'bar'
-                ? 'bg-black text-white shadow-xs'
-                : 'bg-white/90 hover:bg-white text-black'
+                ? 'bg-brand text-white shadow-xs'
+                : 'bg-slate-100 dark:bg-[#252c38] hover:bg-slate-200 dark:hover:bg-[#323d49] text-slate-900 dark:text-white'
             )}
           >
             <RectangleHorizontal className="w-3.5 h-3.5" />
@@ -865,12 +864,104 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
             type="button"
             title={config?.visible ? 'Hide Tile' : 'Show Tile'}
             onClick={() => toggleTileVisibility(id)}
-            className="p-1 rounded-lg bg-white/90 hover:bg-white text-black transition-colors cursor-pointer"
+            className="p-1 rounded-lg bg-slate-100 dark:bg-[#252c38] hover:bg-slate-200 dark:hover:bg-[#323d49] border border-slate-200 dark:border-slate-600 transition-colors cursor-pointer"
           >
             {config?.visible ? (
-              <Eye className="w-3.5 h-3.5 text-emerald-700" />
+              <Eye className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
             ) : (
-              <EyeOff className="w-3.5 h-3.5 text-rose-600" />
+              <EyeOff className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
+            )}
+          </button>
+        </div>
+      );
+    };
+
+    // Compact centered toolbar dedicated to Circles - NEVER overlaps neighboring circles!
+    const renderCircleEditToolbar = () => {
+      if (!isEditMode) return null;
+      return (
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="absolute -top-5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 bg-white dark:bg-[#1a202c] p-0.5 rounded-lg border border-slate-300 dark:border-slate-600 shadow-md text-slate-900 dark:text-white whitespace-nowrap"
+        >
+          <button
+            type="button"
+            title="Move Earlier"
+            onClick={() => moveTile(id, 'up')}
+            className="p-1 rounded bg-slate-100 dark:bg-[#252c38] text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-[#323d49] border border-slate-200 dark:border-slate-600 transition-colors cursor-pointer flex items-center justify-center"
+          >
+            <MoveUp className="w-3 h-3 text-slate-900 dark:text-white" />
+          </button>
+          <button
+            type="button"
+            title="Move Later"
+            onClick={() => moveTile(id, 'down')}
+            className="p-1 rounded bg-slate-100 dark:bg-[#252c38] text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-[#323d49] border border-slate-200 dark:border-slate-600 transition-colors cursor-pointer flex items-center justify-center"
+          >
+            <MoveDown className="w-3 h-3 text-slate-900 dark:text-white" />
+          </button>
+          <button
+            type="button"
+            title="Convert to Square Card"
+            onClick={() => setTileFormat(id, 'square')}
+            className="p-1 rounded bg-slate-100 dark:bg-[#252c38] text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-[#323d49] border border-slate-200 dark:border-slate-600 transition-colors cursor-pointer flex items-center justify-center"
+          >
+            <Square className="w-3 h-3 text-slate-900 dark:text-white" />
+          </button>
+        </div>
+      );
+    };
+
+    // Toolbar for Bar format - cleanly integrated into the flex row
+    const renderBarEditToolbar = () => {
+      if (!isEditMode) return null;
+      return (
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="flex items-center gap-1 bg-slate-100/90 dark:bg-[#1a202c]/90 backdrop-blur-md p-1 rounded-xl border border-slate-300 dark:border-slate-600 shadow-xs text-slate-900 dark:text-white shrink-0 ml-auto"
+        >
+          <button
+            type="button"
+            title="Move Earlier"
+            onClick={() => moveTile(id, 'up')}
+            className="p-1 rounded-lg bg-white dark:bg-[#252c38] hover:bg-slate-200 dark:hover:bg-[#323d49] text-slate-900 dark:text-white border border-slate-200 dark:border-slate-600 transition-all cursor-pointer"
+          >
+            <MoveUp className="w-3 h-3 text-slate-900 dark:text-white" />
+          </button>
+          <button
+            type="button"
+            title="Move Later"
+            onClick={() => moveTile(id, 'down')}
+            className="p-1 rounded-lg bg-white dark:bg-[#252c38] hover:bg-slate-200 dark:hover:bg-[#323d49] text-slate-900 dark:text-white border border-slate-200 dark:border-slate-600 transition-all cursor-pointer"
+          >
+            <MoveDown className="w-3 h-3 text-slate-900 dark:text-white" />
+          </button>
+          <button
+            type="button"
+            title="Make Circle"
+            onClick={() => setTileFormat(id, 'circle')}
+            className="p-1 rounded-lg bg-white dark:bg-[#252c38] hover:bg-slate-200 dark:hover:bg-[#323d49] text-slate-900 dark:text-white border border-slate-200 dark:border-slate-600 transition-all cursor-pointer"
+          >
+            <CircleDot className="w-3 h-3 text-slate-900 dark:text-white" />
+          </button>
+          <button
+            type="button"
+            title="Make Square"
+            onClick={() => setTileFormat(id, 'square')}
+            className="p-1 rounded-lg bg-white dark:bg-[#252c38] hover:bg-slate-200 dark:hover:bg-[#323d49] text-slate-900 dark:text-white border border-slate-200 dark:border-slate-600 transition-all cursor-pointer"
+          >
+            <Square className="w-3 h-3 text-slate-900 dark:text-white" />
+          </button>
+          <button
+            type="button"
+            title={config?.visible ? 'Hide Tile' : 'Show Tile'}
+            onClick={() => toggleTileVisibility(id)}
+            className="p-1 rounded-lg bg-white dark:bg-[#252c38] hover:bg-slate-200 dark:hover:bg-[#323d49] border border-slate-200 dark:border-slate-600 transition-colors cursor-pointer"
+          >
+            {config?.visible ? (
+              <Eye className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+            ) : (
+              <EyeOff className="w-3 h-3 text-rose-600 dark:text-rose-400" />
             )}
           </button>
         </div>
@@ -896,7 +987,7 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
           )}
         >
           {/* Edit Toolbar when Edit Mode is active */}
-          {renderEditToolbar()}
+          {renderSquareEditToolbar()}
 
           {/* Radial Corner Glow */}
           <div
@@ -907,13 +998,13 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
             )}
           />
 
-          {/* Large Centered Logo/Icon - in customize mode, morphs smoothly on hover */}
+          {/* Large Centered Logo/Icon */}
           <div
             className={cn(
               'w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center shrink-0 shadow-xs mx-auto',
               'transition-all duration-300 ease-out group-hover:scale-110 group-hover:shadow-md',
               isEditMode
-                ? 'rounded-full group-hover:rounded-2xl ring-2 ring-brand/30'
+                ? 'rounded-2xl ring-2 ring-brand/40'
                 : 'rounded-2xl',
               meta.iconBg
             )}
@@ -944,15 +1035,13 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
             'flex items-center justify-between gap-3 transition-all duration-200 bg-white dark:bg-[#354146] border border-slate-200/90 dark:border-[#55666d]'
           )}
         >
-          {renderEditToolbar()}
-
           {/* Left: Prominent Icon & Tile Name */}
-          <div className="flex items-center gap-3 min-w-0">
+          <div className="flex items-center gap-3 min-w-0 flex-1">
             <div
               className={cn(
                 'w-9 h-9 flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-all duration-300',
                 isEditMode
-                  ? 'rounded-full group-hover:rounded-xl ring-2 ring-brand/30'
+                  ? 'rounded-xl ring-2 ring-brand/30'
                   : 'rounded-xl',
                 meta.iconBg
               )}
@@ -964,44 +1053,56 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
             </span>
           </div>
 
-          <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-brand group-hover:translate-x-0.5 transition-all shrink-0" />
+          {/* Right side: Either edit toolbar or Chevron */}
+          {isEditMode ? (
+            renderBarEditToolbar()
+          ) : (
+            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-brand group-hover:translate-x-0.5 transition-all shrink-0" />
+          )}
         </motion.button>
       );
     }
 
-    // 3. SMALL CIRCLE FORMAT - MORPHS FROM CIRCLE TO SQUARE ON HOVER IN CUSTOMIZE MODE!
+    // 3. SMALL CIRCLE FORMAT - With non-overlapping compact centered controls & dark-mode white buttons
     if (format === 'circle') {
       return (
         <motion.div
           key={id}
           layout
-          className="relative inline-flex flex-col items-center group cursor-pointer select-none"
+          className={cn(
+            "relative inline-flex flex-col items-center group select-none transition-all",
+            isEditMode ? "min-w-[76px] cursor-default" : "cursor-pointer"
+          )}
           onClick={() => {
-            if (isEditMode) {
-              setTileFormat(id, 'square');
-            } else {
-              onNavigate(id);
-            }
+            if (!isEditMode) onNavigate(id);
           }}
         >
-          {renderEditToolbar()}
+          {/* Dedicated Non-Overlapping Compact Pill Controls above circle */}
+          {renderCircleEditToolbar()}
 
-          {/* Outer Button: starts as circle (rounded-full). On hover in customize mode, morphs smoothly into rounded square! */}
+          {/* Outer Circle Button */}
           <button
             type="button"
+            onClick={() => {
+              if (isEditMode) {
+                setTileFormat(id, 'square');
+              } else {
+                onNavigate(id);
+              }
+            }}
             className={cn(
               'w-14 h-14 flex items-center justify-center shrink-0 relative transition-all duration-300 ease-out cursor-pointer',
               isEditMode
-                ? 'rounded-full group-hover:rounded-2xl group-hover:rotate-0 hover:scale-110 shadow-md ring-2 ring-brand/40 bg-[#CBD5E1] dark:bg-[#CBD5E1] text-black'
+                ? 'rounded-full group-hover:rounded-2xl hover:scale-105 shadow-md ring-2 ring-brand/40 bg-white dark:bg-[#252c38] text-slate-900 dark:text-white'
                 : 'rounded-full neumorph-circle'
             )}
             title={
               isEditMode
-                ? '✨ Hover morphs to Square! Click to save as Square'
+                ? 'Click to convert into Square Card'
                 : `${meta.title} - ${meta.metric}`
             }
           >
-            {/* Inner Icon: also morphs from circle to square on hover */}
+            {/* Inner Icon */}
             <div
               className={cn(
                 'w-9 h-9 flex items-center justify-center shrink-0 transition-all duration-300 ease-out',
@@ -1014,12 +1115,7 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
               <Icon className="w-5 h-5 stroke-[2.2]" />
             </div>
 
-            {/* In customize mode, morph badge indicator appears on hover */}
-            {isEditMode ? (
-              <span className="absolute -bottom-1 text-[8px] font-black uppercase tracking-wider bg-black text-white px-1.5 py-0.2 rounded opacity-0 group-hover:opacity-100 transition-opacity shadow-xs z-10 pointer-events-none">
-                Square ⏹
-              </span>
-            ) : (
+            {!isEditMode && (
               <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-brand text-white text-[8px] font-bold flex items-center justify-center ring-2 ring-white dark:ring-[#435055]">
                 &bull;
               </span>
@@ -1027,7 +1123,7 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
           </button>
 
           {/* Title label */}
-          <span className="text-[11px] font-extrabold text-slate-900 dark:text-white mt-1 text-center truncate max-w-[68px]">
+          <span className="text-[11px] font-extrabold text-slate-900 dark:text-white mt-1.5 text-center truncate max-w-[76px]">
             {meta.title}
           </span>
         </motion.div>

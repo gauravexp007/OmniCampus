@@ -524,8 +524,8 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                     </button>
                   </div>
 
-                  <div className="py-2 space-y-1.5">
-                    {/* 1. PRIMARY CUSTOMIZE BUTTON - HIGH VISIBILITY & INSTANT ACTION */}
+                  <div className="py-1.5 space-y-1">
+                    {/* 1. PRIMARY CUSTOMIZE BUTTON */}
                     <button
                       type="button"
                       id="menu-customize-dashboard-btn"
@@ -533,22 +533,15 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                         setIsCustomizationMenuOpen(false);
                         setIsCustomizeOpen(true);
                       }}
-                      className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-[#29a19c] dark:hover:bg-[#248f8a] text-white transition-all cursor-pointer shadow-md group"
+                      className="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-[#29a19c] dark:hover:bg-[#248f8a] text-white transition-all cursor-pointer shadow-xs group"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+                      <div className="flex items-center gap-2.5">
                         <Sliders className="w-4 h-4 text-white" />
+                        <span className="text-xs font-bold text-white">Customize Dashboard</span>
                       </div>
-                      <div className="min-w-0 flex-1 text-left">
-                        <p className="text-xs font-black flex items-center justify-between text-white">
-                          <span>Customize Dashboard</span>
-                          <span className="text-[10px] font-mono uppercase bg-white/20 px-2 py-0.5 rounded font-black">
-                            Customize
-                          </span>
-                        </p>
-                        <p className="text-[11px] text-white/80 truncate">
-                          Reorder KPI blocks, graphs & layout presets
-                        </p>
-                      </div>
+                      <span className="text-[10px] font-mono uppercase bg-white/20 px-2 py-0.5 rounded font-bold">
+                        Open
+                      </span>
                     </button>
 
                     {/* 2. Customize Quick Access */}
@@ -562,19 +555,10 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                         const btn = document.getElementById('quick-access-3dot-btn');
                         btn?.click();
                       }}
-                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#354146] transition-colors cursor-pointer group"
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#354146] text-slate-800 dark:text-white transition-colors cursor-pointer group"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
-                        <LayoutGrid className="w-4 h-4" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-xs font-bold text-slate-900 dark:text-white">
-                          Customize Quick Access
-                        </p>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-300 truncate">
-                          Reorder shortcuts & hover morph shapes
-                        </p>
-                      </div>
+                      <LayoutGrid className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                      <span className="text-xs font-bold">Customize Quick Access</span>
                     </button>
 
                     {/* 3. Reset All Customizations */}
@@ -587,19 +571,10 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                         resetBlockOrder();
                         applyPreset('default-hybrid');
                       }}
-                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#354146] transition-colors cursor-pointer group"
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#354146] text-slate-800 dark:text-white transition-colors cursor-pointer group"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800 flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
-                        <RotateCcw className="w-4 h-4" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-xs font-bold text-slate-900 dark:text-white">
-                          Reset All Layouts
-                        </p>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-300 truncate">
-                          Restore original factory dashboard layout
-                        </p>
-                      </div>
+                      <RotateCcw className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                      <span className="text-xs font-bold">Reset All Layouts</span>
                     </button>
 
                     {/* 4. Full Settings */}
@@ -610,19 +585,10 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                         setIsCustomizationMenuOpen(false);
                         onNavigate('settings');
                       }}
-                      className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#354146] transition-colors cursor-pointer group border-t border-slate-100 dark:border-[#435055] pt-2"
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#354146] text-slate-800 dark:text-white transition-colors cursor-pointer group border-t border-slate-100 dark:border-[#435055] pt-2"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-[#435055] text-slate-600 dark:text-slate-300 flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
-                        <Settings className="w-4 h-4" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-xs font-bold text-slate-900 dark:text-white">
-                          All System Customizations
-                        </p>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-300 truncate">
-                          Advanced appearance & layout settings
-                        </p>
-                      </div>
+                      <Settings className="w-4 h-4 text-slate-500 dark:text-slate-300" />
+                      <span className="text-xs font-bold">All System Customizations</span>
                     </button>
                   </div>
                 </motion.div>
@@ -701,7 +667,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                     onClick={swapLeftRight}
                     className="flex-1 py-1.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-[#354146] dark:hover:bg-[#4e5c61] text-xs font-bold flex items-center justify-center gap-1.5 border border-slate-200 dark:border-[#55666d] transition-all cursor-pointer text-slate-800 dark:text-white"
                   >
-                    <ArrowLeftRight className="w-3.5 h-3.5 text-[#29a19c]" />
+                    <ArrowLeftRight className="w-3.5 h-3.5 text-[#29a19c] dark:text-white" />
                     <span>Swap Left ⇄ Right</span>
                   </button>
 
@@ -710,7 +676,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                     onClick={swapTopBottom}
                     className="flex-1 py-1.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-[#354146] dark:hover:bg-[#4e5c61] text-xs font-bold flex items-center justify-center gap-1.5 border border-slate-200 dark:border-[#55666d] transition-all cursor-pointer text-slate-800 dark:text-white"
                   >
-                    <ArrowUpDown className="w-3.5 h-3.5 text-[#29a19c]" />
+                    <ArrowUpDown className="w-3.5 h-3.5 text-[#29a19c] dark:text-white" />
                     <span>Swap Top ⇄ Bottom</span>
                   </button>
 
@@ -937,48 +903,48 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                   <button
                     type="button"
                     onClick={swapLeftRight}
-                    className="px-2.5 py-1 rounded-lg text-xs font-black bg-[#CBD5E1] dark:bg-[#CBD5E1] hover:bg-slate-300 text-black dark:text-black border border-slate-400 transition-all cursor-pointer shadow-2xs"
+                    className="px-2.5 py-1 rounded-lg text-xs font-bold bg-white dark:bg-[#1a202c] hover:bg-slate-100 dark:hover:bg-[#252c38] text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 transition-all cursor-pointer shadow-2xs"
                   >
                     Swap Left ⇄ Right
                   </button>
                   <button
                     type="button"
                     onClick={swapTopBottom}
-                    className="px-2.5 py-1 rounded-lg text-xs font-black bg-[#CBD5E1] dark:bg-[#CBD5E1] hover:bg-slate-300 text-black dark:text-black border border-slate-400 transition-all cursor-pointer shadow-2xs"
+                    className="px-2.5 py-1 rounded-lg text-xs font-bold bg-white dark:bg-[#1a202c] hover:bg-slate-100 dark:hover:bg-[#252c38] text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 transition-all cursor-pointer shadow-2xs"
                   >
                     Swap Top ⇄ Bottom
                   </button>
                 </div>
 
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-black dark:text-white">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-slate-700 dark:text-white">
                     Quick Access Tiles:
                   </span>
                   <button
                     type="button"
                     onClick={() => applyPreset('default-hybrid')}
-                    className="px-2.5 py-1 rounded-lg text-xs font-black bg-[#CBD5E1] dark:bg-[#CBD5E1] hover:bg-slate-300 text-black dark:text-black border border-slate-400 shadow-2xs cursor-pointer"
+                    className="px-2.5 py-1 rounded-lg text-xs font-bold bg-white dark:bg-[#1a202c] hover:bg-slate-100 dark:hover:bg-[#252c38] text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 shadow-2xs cursor-pointer"
                   >
                     Hybrid
                   </button>
                   <button
                     type="button"
                     onClick={() => applyPreset('all-bars')}
-                    className="px-2.5 py-1 rounded-lg text-xs font-black bg-[#CBD5E1] dark:bg-[#CBD5E1] hover:bg-slate-300 text-black dark:text-black border border-slate-400 shadow-2xs cursor-pointer"
+                    className="px-2.5 py-1 rounded-lg text-xs font-bold bg-white dark:bg-[#1a202c] hover:bg-slate-100 dark:hover:bg-[#252c38] text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 shadow-2xs cursor-pointer"
                   >
                     All Bars
                   </button>
                   <button
                     type="button"
                     onClick={() => applyPreset('all-squares')}
-                    className="px-2.5 py-1 rounded-lg text-xs font-black bg-[#CBD5E1] dark:bg-[#CBD5E1] hover:bg-slate-300 text-black dark:text-black border border-slate-400 shadow-2xs cursor-pointer"
+                    className="px-2.5 py-1 rounded-lg text-xs font-bold bg-white dark:bg-[#1a202c] hover:bg-slate-100 dark:hover:bg-[#252c38] text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 shadow-2xs cursor-pointer"
                   >
                     All Squares
                   </button>
                   <button
                     type="button"
                     onClick={() => applyPreset('compact-circles')}
-                    className="px-2.5 py-1 rounded-lg text-xs font-black bg-[#CBD5E1] dark:bg-[#CBD5E1] hover:bg-slate-300 text-black dark:text-black border border-slate-400 shadow-2xs cursor-pointer"
+                    className="px-2.5 py-1 rounded-lg text-xs font-bold bg-white dark:bg-[#1a202c] hover:bg-slate-100 dark:hover:bg-[#252c38] text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 shadow-2xs cursor-pointer"
                   >
                     Circles
                   </button>
@@ -1352,10 +1318,10 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
               </div>
               <button
                 onClick={() => onNavigate('exams')}
-                className="px-3.5 py-1.5 rounded-full bg-[#CBD5E1] dark:bg-[#29a19c] hover:bg-slate-300 dark:hover:bg-[#248f8a] text-black dark:text-white text-xs font-black flex items-center gap-1 cursor-pointer transition-colors border border-slate-400 dark:border-[#29a19c] shadow-2xs"
+                className="px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-[#29a19c] hover:bg-slate-200 dark:hover:bg-[#248f8a] text-slate-800 dark:text-white text-xs font-bold flex items-center gap-1 cursor-pointer transition-colors border border-slate-300 dark:border-[#29a19c] shadow-2xs"
               >
-                <span className="text-black dark:text-white font-black">All Exams</span>
-                <ChevronRight className="w-3.5 h-3.5 text-black dark:text-white" />
+                <span className="text-slate-800 dark:text-white font-bold">All Exams</span>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-800 dark:text-white" />
               </button>
             </div>
 
@@ -1364,25 +1330,25 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                 {exams.slice(0, 3).map((exam) => (
                   <div
                     key={exam.id}
-                    className="p-3 bg-[#CBD5E1] dark:bg-[#CBD5E1] rounded-2xl border border-slate-400 flex items-center justify-between text-xs text-black shadow-2xs"
+                    className="p-3 bg-white dark:bg-[#354146] rounded-2xl border border-slate-200 dark:border-[#55666d] flex items-center justify-between text-xs text-slate-900 dark:text-white shadow-2xs"
                   >
                     <div className="min-w-0 pr-2">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-[10px] font-black text-white bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
+                        <span className="font-mono text-[10px] font-bold text-white bg-slate-900 dark:bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
                           {exam.courseCode}
                         </span>
-                        <h4 className="font-black text-black truncate">
+                        <h4 className="font-bold text-slate-900 dark:text-white truncate">
                           {exam.courseTitle}
                         </h4>
                       </div>
-                      <p className="text-[11px] font-bold text-black mt-1">
+                      <p className="text-[11px] font-medium text-slate-600 dark:text-slate-300 mt-1">
                         {exam.date} &bull; {exam.time} &bull;{' '}
-                        <span className="font-extrabold text-black">
+                        <span className="font-semibold text-slate-900 dark:text-white">
                           {exam.venue}
                         </span>
                       </p>
                     </div>
-                    <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-black text-white shrink-0">
+                    <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-900 dark:bg-[#1a202c] text-white shrink-0 border border-slate-700">
                       {exam.examType}
                     </span>
                   </div>
