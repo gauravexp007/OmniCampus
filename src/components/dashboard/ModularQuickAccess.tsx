@@ -333,12 +333,13 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
     <div
       id="modular-quick-access-container"
       className={cn(
-        'relative overflow-hidden bg-white dark:bg-[#435055] rounded-3xl border border-slate-200/80 dark:border-[#55666d] p-4 sm:p-5 shadow-xs transition-all duration-300 space-y-3.5',
+        'relative bg-white dark:bg-[#435055] rounded-3xl border border-slate-200/80 dark:border-[#55666d] p-4 sm:p-5 shadow-xs transition-all duration-300 space-y-3.5 overflow-visible',
+        isMenuOpen ? 'z-40' : 'z-10',
         isEditMode && 'ring-2 ring-brand/50 shadow-md border-brand/50'
       )}
     >
       {/* Header Bar with Dedicated "Customize" Button */}
-      <div className="flex items-center justify-between gap-2 flex-wrap relative z-10">
+      <div className="flex items-center justify-between gap-2 flex-wrap relative z-20">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl bg-brand/10 dark:bg-brand/20 text-brand flex items-center justify-center shadow-2xs font-black">
             <Compass className="w-4 h-4" />
@@ -385,7 +386,7 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
           )}
 
           {/* 3 VERTICAL DOTS AT RIGHT CORNER FOR ALL CUSTOMIZATION */}
-          <div className="relative shrink-0" ref={menuRef}>
+          <div className="relative shrink-0 z-30" ref={menuRef}>
             <button
               type="button"
               id="quick-access-3dot-btn"
@@ -402,7 +403,7 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
               <MoreVertical className="w-4 h-4 text-black stroke-[2.5]" />
             </button>
 
-            {/* Dropdown Menu for Customization */}
+            {/* Dropdown Menu for Customization - TOP LAYER */}
             <AnimatePresence>
               {isMenuOpen && (
                 <motion.div
@@ -410,14 +411,15 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, y: 6 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-[#354146] rounded-2xl shadow-2xl border border-slate-200 dark:border-[#55666d] p-2 z-50 origin-top-right text-slate-900 dark:text-white backdrop-blur-md"
+                  className="absolute right-0 top-full mt-2 w-72 bg-white dark:bg-[#252b35] rounded-2xl shadow-2xl border-2 border-slate-300 dark:border-[#55666d] p-2.5 z-[100] origin-top-right text-slate-900 dark:text-white backdrop-blur-xl ring-2 ring-black/10"
                 >
                   <div className="px-3 py-2 border-b border-slate-100 dark:border-[#435055] flex items-center justify-between">
                     <span className="text-xs font-bold text-slate-900 dark:text-white">Quick Access Customizer</span>
-                    <span className="text-[10px] font-mono text-slate-400 font-bold uppercase">Shortcuts</span>
+                    <span className="text-[10px] font-mono text-slate-400 font-bold uppercase">Top Layer</span>
                   </div>
 
-                  <div className="py-1 space-y-1">
+                  <div className="py-2 space-y-1.5">
+                    {/* PRIMARY CUSTOMIZE TILES BUTTON */}
                     <button
                       type="button"
                       id="menu-toggle-quick-access-edit"
@@ -425,18 +427,20 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
                         setIsMenuOpen(false);
                         toggleEditMode();
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer group"
+                      className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-brand hover:bg-brand-hover text-white transition-all cursor-pointer shadow-md group"
                     >
-                      <div className="w-7 h-7 rounded-lg bg-brand text-white flex items-center justify-center shrink-0">
-                        <Sliders className="w-3.5 h-3.5" />
+                      <div className="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+                        <Sliders className="w-3.5 h-3.5 text-white" />
                       </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-xs font-bold text-slate-900 dark:text-white flex items-center justify-between">
+                      <div className="min-w-0 flex-1 text-left">
+                        <p className="text-xs font-black flex items-center justify-between text-white">
                           <span>{isEditMode ? 'Exit Customization' : 'Customize Tiles'}</span>
-                          <span className="text-[10px] font-bold text-brand uppercase">{isEditMode ? 'Close' : 'Edit'}</span>
+                          <span className="text-[10px] font-mono uppercase bg-white/20 px-1.5 py-0.5 rounded font-black">
+                            {isEditMode ? 'Done' : 'Customize'}
+                          </span>
                         </p>
-                        <p className="text-[10px] text-slate-500 dark:text-slate-300 truncate">
-                          Reorder tiles & hover circle-to-square
+                        <p className="text-[10px] text-white/80 truncate font-medium">
+                          Reorder shortcuts & morph circle-to-square
                         </p>
                       </div>
                     </button>

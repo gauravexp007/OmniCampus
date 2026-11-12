@@ -380,7 +380,12 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
       {/* =====================================================================
           CLEAN EXECUTIVE HEADER (Reduced text, clean badges & controls)
           ===================================================================== */}
-      <div className="relative overflow-hidden bg-white dark:bg-[#435055] rounded-3xl p-5 sm:p-6 border border-slate-200/90 dark:border-[#55666d] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div
+        className={cn(
+          'relative bg-white dark:bg-[#435055] rounded-3xl p-5 sm:p-6 border border-slate-200/90 dark:border-[#55666d] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 overflow-visible transition-all',
+          isCustomizationMenuOpen ? 'z-50' : 'z-20'
+        )}
+      >
         <div className="space-y-1 relative z-10">
           <h2 className="text-xl md:text-2xl font-bold text-slate-950 dark:text-white tracking-tight">
             Welcome back, {currentUser.name}
@@ -391,7 +396,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
         </div>
 
         {/* Action Controls - Customization inside 3 vertical dots at right corner */}
-        <div className="flex items-center gap-2 shrink-0 flex-wrap relative z-10">
+        <div className="flex items-center gap-2 shrink-0 flex-wrap relative z-20">
           <button
             onClick={() => onNavigate('userfiles')}
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-[#354146] hover:bg-slate-200 dark:hover:bg-[#4e5c61] text-slate-800 dark:text-white text-xs font-bold transition-all cursor-pointer border border-slate-200 dark:border-[#55666d]"
@@ -411,7 +416,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
           </button>
 
           {/* 3 VERTICAL DOTS AT RIGHT CORNER FOR ALL CUSTOMIZATION */}
-          <div className="relative shrink-0" ref={customizationMenuRef}>
+          <div className="relative shrink-0 z-30" ref={customizationMenuRef}>
             <button
               type="button"
               id="dashboard-customization-3dot-btn"
@@ -428,7 +433,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
               <MoreVertical className="w-4 h-4 stroke-[2.5]" />
             </button>
 
-            {/* Dropdown Menu for All Customization */}
+            {/* Dropdown Menu for All Customization - Renders at TOP LAYER */}
             <AnimatePresence>
               {isCustomizationMenuOpen && (
                 <motion.div
@@ -436,18 +441,18 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, y: 6 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute right-0 top-full mt-2 w-72 sm:w-80 bg-white dark:bg-[#354146] rounded-2xl shadow-2xl border border-slate-200 dark:border-[#55666d] p-2 z-50 origin-top-right text-slate-900 dark:text-white backdrop-blur-md"
+                  className="absolute right-0 top-full mt-2 w-72 sm:w-84 bg-white dark:bg-[#252b35] rounded-2xl shadow-2xl border-2 border-slate-300 dark:border-[#55666d] p-2.5 z-[100] origin-top-right text-slate-900 dark:text-white backdrop-blur-xl ring-2 ring-black/10"
                 >
                   <div className="px-3 py-2 border-b border-slate-100 dark:border-[#435055] flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       <Sliders className="w-3.5 h-3.5 text-[#29a19c]" />
                       <span className="text-xs font-bold text-slate-900 dark:text-white">Customization Center</span>
                     </div>
-                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Dashboard</span>
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Top Layer</span>
                   </div>
 
-                  <div className="py-1 space-y-1">
-                    {/* 1. Customize Dashboard Button */}
+                  <div className="py-2 space-y-1.5">
+                    {/* 1. PRIMARY CUSTOMIZE BUTTON - HIGH VISIBILITY & INSTANT ACTION */}
                     <button
                       type="button"
                       id="menu-customize-dashboard-btn"
@@ -455,17 +460,19 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                         setIsCustomizationMenuOpen(false);
                         setIsCustomizeOpen(true);
                       }}
-                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer group"
+                      className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-[#29a19c] dark:hover:bg-[#248f8a] text-white transition-all cursor-pointer shadow-md group"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-slate-900 text-white dark:bg-[#29a19c] flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
-                        <Sliders className="w-4 h-4" />
+                      <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+                        <Sliders className="w-4 h-4 text-white" />
                       </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-xs font-bold text-slate-900 dark:text-white flex items-center justify-between">
+                      <div className="min-w-0 flex-1 text-left">
+                        <p className="text-xs font-black flex items-center justify-between text-white">
                           <span>Customize Dashboard</span>
-                          <span className="text-[10px] font-black text-[#29a19c] uppercase">Customize</span>
+                          <span className="text-[10px] font-mono uppercase bg-white/20 px-2 py-0.5 rounded font-black">
+                            Customize
+                          </span>
                         </p>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-300 truncate">
+                        <p className="text-[11px] text-white/80 truncate">
                           Reorder KPI blocks, graphs & layout presets
                         </p>
                       </div>
@@ -477,12 +484,12 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                       id="menu-customize-quick-access-btn"
                       onClick={() => {
                         setIsCustomizationMenuOpen(false);
-                        const el = document.getElementById('quick-access-section');
+                        const el = document.getElementById('modular-quick-access-container');
                         el?.scrollIntoView({ behavior: 'smooth' });
-                        const btn = document.getElementById('quick-access-customize-btn') || document.getElementById('quick-access-3dot-btn');
+                        const btn = document.getElementById('quick-access-3dot-btn');
                         btn?.click();
                       }}
-                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer group"
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#354146] transition-colors cursor-pointer group"
                     >
                       <div className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
                         <LayoutGrid className="w-4 h-4" />
@@ -507,7 +514,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                         resetBlockOrder();
                         applyPreset('default-hybrid');
                       }}
-                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer group"
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#354146] transition-colors cursor-pointer group"
                     >
                       <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800 flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
                         <RotateCcw className="w-4 h-4" />
@@ -530,7 +537,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                         setIsCustomizationMenuOpen(false);
                         onNavigate('settings');
                       }}
-                      className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer group border-t border-slate-100 dark:border-[#435055] pt-2"
+                      className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#354146] transition-colors cursor-pointer group border-t border-slate-100 dark:border-[#435055] pt-2"
                     >
                       <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-[#435055] text-slate-600 dark:text-slate-300 flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
                         <Settings className="w-4 h-4" />
