@@ -22,6 +22,7 @@ import {
   ChevronRight,
   ShieldCheck,
   TrendingUp,
+  Bell,
 } from 'lucide-react';
 import { ERPModuleId, UserRole } from '../../types';
 import { cn } from '../../lib/utils';
@@ -58,6 +59,7 @@ export const navItems: NavItem[] = [
   { id: 'attendance', label: 'Attendance Register', icon: CalendarCheck2, category: 'academic', roles: ['Admin', 'Faculty', 'Student'] },
   { id: 'exams', label: 'Examinations', icon: FileSpreadsheet, category: 'academic', roles: ['Admin', 'Faculty', 'Student'] },
   { id: 'results', label: 'Results & Grades', icon: Award, category: 'academic', roles: ['Admin', 'Faculty', 'Student'] },
+  { id: 'notices', label: 'Notices & Circulars', icon: Bell, category: 'academic', roles: ['Admin', 'Faculty', 'Student'] },
   { id: 'performance', label: 'Performance Analytics', icon: TrendingUp, category: 'academic', roles: ['Admin', 'Faculty', 'Student'] },
 
   { id: 'finance', label: 'Finance & Invoicing', icon: DollarSign, category: 'services', roles: ['Admin'] },

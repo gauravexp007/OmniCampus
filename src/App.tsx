@@ -20,6 +20,7 @@ import { AttendanceModule } from './components/modules/AttendanceModule';
 import { TimetableModule } from './components/modules/TimetableModule';
 import { ExamsModule } from './components/modules/ExamsModule';
 import { ResultsModule } from './components/modules/ResultsModule';
+import { NoticesModule } from './components/modules/NoticesModule';
 import { StudentPerformanceAnalyticsDashboard } from './components/modules/performance/StudentPerformanceAnalyticsDashboard';
 import { FinanceModule } from './components/modules/FinanceModule';
 import { LibraryModule } from './components/modules/LibraryModule';
@@ -166,6 +167,8 @@ function ERPAppContent() {
         return <ExamsModule />;
       case 'results':
         return <ResultsModule />;
+      case 'notices':
+        return <NoticesModule />;
       case 'performance':
         return <StudentPerformanceAnalyticsDashboard onNavigate={handleSelectModule} />;
       case 'finance':

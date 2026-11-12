@@ -20,6 +20,7 @@ import {
   parseSingleTimeString,
 } from './TimetableTypes';
 import { InteractiveClockPicker } from './InteractiveClockPicker';
+import { FacultySearchSelector } from '../common/FacultySearchSelector';
 
 interface TimetableBlockModalProps {
   isOpen: boolean;
@@ -268,26 +269,25 @@ export const TimetableBlockModal: React.FC<TimetableBlockModalProps> = ({
                 <User className="w-4 h-4 text-brand" />
                 <span>Assign to Faculty Member</span>
               </label>
-              <span className="text-[11px] font-mono font-bold text-brand bg-brand/10 px-2 py-0.5 rounded-lg">
-                ID: {selectedFacultyId || 'Select Faculty'}
-              </span>
+              {selectedFacultyId && (
+                <span className="font-mono text-[10px] font-black px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 shadow-2xs">
+                  {selectedFacultyId}
+                </span>
+              )}
             </div>
 
-            <select
-              value={selectedFacultyId}
-              onChange={(e) => handleFacultyChange(e.target.value)}
-              className="w-full py-3 px-4 text-sm font-bold bg-white dark:bg-[#282828] border border-slate-200 dark:border-[#555555] rounded-2xl text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-brand cursor-pointer shadow-2xs"
-            >
-              {facultyList.length === 0 ? (
-                <option value="">No registered faculty in database</option>
-              ) : (
-                facultyList.map((fac) => (
-                  <option key={fac.id || fac.employeeId} value={fac.employeeId}>
-                    [{fac.employeeId}] {fac.name} — {fac.department}
-                  </option>
-                ))
-              )}
-            </select>
+            <FacultySearchSelector
+              facultyList={facultyList}
+              selectedFacultyId={selectedFacultyId}
+              onSelectFaculty={(fac) => {
+                if (fac) {
+                  setSelectedFacultyId(fac.employeeId);
+                  setInstructor(fac.name);
+                }
+              }}
+              placeholder="Search faculty by name or ID..."
+              size="md"
+            />
           </div>
 
           {/* Interactive Clock Time Picker */}

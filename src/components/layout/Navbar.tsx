@@ -79,6 +79,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     timetable: 'Class Timetable',
     exams: 'Examinations',
     results: 'Results & Grades',
+    notices: 'Notices & Circulars',
     performance: 'Performance Analytics',
     finance: 'Finance & Invoicing',
     library: 'Library Catalog',
@@ -93,7 +94,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const getSectionName = (mod: ERPModuleId): string => {
     if (mod === 'dashboard') return 'Overview';
     if (['students', 'admissions', 'faculty'].includes(mod)) return 'Front Desk';
-    if (['academics', 'timetable', 'attendance', 'exams', 'results', 'performance'].includes(mod)) return 'Academics';
+    if (['academics', 'timetable', 'attendance', 'exams', 'results', 'notices', 'performance'].includes(mod)) return 'Academics';
     if (['finance', 'library', 'hostel'].includes(mod)) return 'Services';
     return 'Admin';
   };

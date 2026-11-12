@@ -749,9 +749,45 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       delete updates.role;
     }
 
+    // Faculty ID is permanent and immutable. Cannot be modified by anyone.
+    if (currentUser?.role === 'Faculty') {
+      delete updates.idNumber;
+      delete (updates as any).employeeId;
+      delete (updates as any).facultyId;
+    }
+
     try {
       const userDocRef = doc(db, 'users', firebaseUser.uid);
       await setDoc(userDocRef, { ...updates, updatedAt: new Date().toISOString() }, { merge: true });
+
+      // Synchronize faculty collection if user is Faculty
+      if (currentUser?.role === 'Faculty') {
+        const facId = currentUser.idNumber || currentUser.employeeId;
+        const facRef = doc(db, 'faculty', firebaseUser.uid);
+        setDoc(
+          facRef,
+          {
+            name: updates.name || currentUser.name,
+            department: updates.department || currentUser.department,
+            avatar: updates.avatar || currentUser.avatar,
+            phone: updates.phone || currentUser.phone,
+          },
+          { merge: true }
+        ).catch(() => {});
+        setFaculty((prev) =>
+          prev.map((f) =>
+            f.id === firebaseUser.uid || f.employeeId === facId
+              ? {
+                  ...f,
+                  name: updates.name || f.name,
+                  department: updates.department || f.department,
+                  avatar: updates.avatar || f.avatar,
+                  phone: updates.phone || f.phone,
+                }
+              : f
+          )
+        );
+      }
       setCustomProfile((prev) => {
         if (!prev) {
           const defaultRole: UserRole = isDesignatedAdmin ? 'Admin' : 'Student';

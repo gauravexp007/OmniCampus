@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { TimetableCategory, TIMETABLE_CATEGORIES, PASTEL_PALETTES } from './TimetableTypes';
 import { FacultyMember } from '../../types';
+import { FacultySearchSelector } from '../common/FacultySearchSelector';
 
 interface TimetableHeaderProps {
   onOpenGenerator: () => void;
@@ -106,22 +107,21 @@ export const TimetableHeader: React.FC<TimetableHeaderProps> = ({
             )
           )}
 
-          {/* Admin Faculty Filter Selector (Admin can view schedule per faculty) */}
+          {/* Admin Faculty Filter Selector (Admin can search & view schedule per faculty) */}
           {isAdmin && (
-            <div className="flex items-center gap-1 bg-slate-100 dark:bg-[#383838] px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-[#525252]">
-              <UserCheck className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-              <select
-                value={selectedFacultyFilter}
-                onChange={(e) => onSelectFacultyFilter(e.target.value)}
-                className="text-xs font-bold bg-transparent text-slate-800 dark:text-white border-none focus:outline-hidden cursor-pointer max-w-[150px] truncate"
-              >
-                <option value="ALL">All Faculty</option>
-                {facultyList.map((f) => (
-                  <option key={f.id || f.employeeId} value={f.employeeId}>
-                    [{f.employeeId}] {f.name}
-                  </option>
-                ))}
-              </select>
+            <div className="w-56 sm:w-64">
+              <FacultySearchSelector
+                facultyList={facultyList}
+                selectedFacultyId={selectedFacultyFilter}
+                onSelectFaculty={(fac) => {
+                  onSelectFacultyFilter(fac ? fac.employeeId : 'ALL');
+                }}
+                showAllOption={true}
+                allOptionLabel="All Faculty Timetables"
+                onSelectAll={() => onSelectFacultyFilter('ALL')}
+                placeholder="Filter by Faculty..."
+                size="sm"
+              />
             </div>
           )}
 

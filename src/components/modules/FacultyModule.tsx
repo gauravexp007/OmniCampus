@@ -12,6 +12,7 @@ import {
   BookOpen,
   Calendar,
   CheckSquare,
+  Bell,
 } from 'lucide-react';
 import { useERP } from '../../context/ERPContext';
 import { FacultyMember } from '../../types';
@@ -189,7 +190,12 @@ export const FacultyModule: React.FC = () => {
                       {member.name.charAt(0)}
                     </div>
                     <div>
-                      <h4 className="font-bold text-slate-900 dark:text-white text-xs">{member.name}</h4>
+                      <h4 className="font-bold text-slate-900 dark:text-white text-xs flex items-center gap-1.5 flex-wrap">
+                        <span className="font-mono text-[10px] font-extrabold text-indigo-600 dark:text-indigo-400">
+                          [{member.employeeId}]
+                        </span>
+                        <span>{member.name}</span>
+                      </h4>
                       <p className="text-[11px] text-indigo-600 dark:text-indigo-400 font-semibold">{member.designation}</p>
                     </div>
                   </div>
@@ -223,25 +229,35 @@ export const FacultyModule: React.FC = () => {
 
               {/* Admin Assignment Quick Buttons */}
               {role === 'Admin' && (
-                <div className="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-slate-100 dark:border-[#383838]">
+                <div className="grid grid-cols-3 gap-1.5 mt-3 pt-3 border-t border-slate-100 dark:border-[#383838]">
                   <button
                     type="button"
                     onClick={() => setCurrentModule('timetable')}
-                    className="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 text-[10px] font-bold transition-colors cursor-pointer"
+                    className="flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 text-[10px] font-bold transition-colors cursor-pointer"
                     title={`Assign Timetable to ${member.name} (${member.employeeId})`}
                   >
                     <Calendar className="w-3 h-3 text-indigo-600 dark:text-indigo-400 shrink-0" />
-                    <span className="truncate">Assign Timetable</span>
+                    <span className="truncate">Timetable</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setCurrentModule('attendance')}
-                    className="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-[10px] font-bold transition-colors cursor-pointer"
+                    className="flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-[10px] font-bold transition-colors cursor-pointer"
                     title={`Assign Attendance Register to ${member.name} (${member.employeeId})`}
                   >
                     <CheckSquare className="w-3 h-3 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                    <span className="truncate">Assign Attendance</span>
+                    <span className="truncate">Attendance</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setCurrentModule('notices')}
+                    className="flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/50 hover:bg-amber-100 dark:hover:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-[10px] font-bold transition-colors cursor-pointer"
+                    title={`Assign Notice to ${member.name} (${member.employeeId})`}
+                  >
+                    <Bell className="w-3 h-3 text-amber-600 dark:text-amber-400 shrink-0" />
+                    <span className="truncate">Notice</span>
                   </button>
                 </div>
               )}

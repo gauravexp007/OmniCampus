@@ -22,6 +22,7 @@ import { cn } from '../../../lib/utils';
 import { StudentMonthlyAttendanceVisualizer } from './StudentMonthlyAttendanceVisualizer';
 import { ConfettiButton } from '../../ui/ConfettiButton';
 import { AnimatedSegmentedToggle } from '../../ui/AnimatedSegmentedToggle';
+import { FacultySearchSelector } from '../../common/FacultySearchSelector';
 
 const DEPARTMENTS = [
   'All Departments',
@@ -479,26 +480,21 @@ export const FacultyAttendanceRegister: React.FC = () => {
           </div>
 
           {role === 'Admin' ? (
-            <div className="flex items-center gap-2 min-w-[280px] sm:w-auto">
-              <label htmlFor="assigned-faculty-select" className="text-[11px] font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap">
-                Select Faculty ID:
-              </label>
-              <select
-                id="assigned-faculty-select"
-                value={assignedFacultyId}
-                onChange={(e) => setAssignedFacultyId(e.target.value)}
-                className="w-full sm:w-80 px-3 py-2 rounded-xl border border-slate-300 dark:border-[#373e4b] bg-white dark:bg-[#252b35] text-slate-900 dark:text-white font-bold text-xs focus:ring-2 focus:ring-brand cursor-pointer shadow-2xs"
-              >
-                {faculty.length === 0 ? (
-                  <option value="">No registered faculty in database</option>
-                ) : (
-                  faculty.map((fac) => (
-                    <option key={fac.id || fac.employeeId} value={fac.employeeId}>
-                      [{fac.employeeId}] {fac.name} — {fac.department}
-                    </option>
-                  ))
-                )}
-              </select>
+            <div className="flex items-center gap-2 min-w-[280px] sm:w-96">
+              <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap shrink-0">
+                Assigned Faculty:
+              </span>
+              <div className="flex-1 min-w-0">
+                <FacultySearchSelector
+                  facultyList={faculty}
+                  selectedFacultyId={assignedFacultyId}
+                  onSelectFaculty={(fac) => {
+                    if (fac) setAssignedFacultyId(fac.employeeId);
+                  }}
+                  placeholder="Search faculty name or ID..."
+                  size="sm"
+                />
+              </div>
             </div>
           ) : (
             <div className="flex items-center gap-2">
@@ -866,14 +862,14 @@ export const FacultyAttendanceRegister: React.FC = () => {
                           <img
                             src={student.avatar}
                             alt={student.name}
-                            className="w-8 h-8 rounded-full border border-slate-200 dark:border-[#373e4b] object-cover shrink-0 group-hover:ring-2 group-hover:ring-brand transition-all shadow-2xs"
+                            className="w-8 h-8 rounded-full border border-slate-300 dark:border-[#4b5563] object-cover shrink-0 group-hover:ring-2 group-hover:ring-brand transition-all shadow-2xs"
                           />
                           <div>
-                            <p className="font-bold text-slate-900 dark:text-white text-sm group-hover:text-brand dark:group-hover:text-brand-light transition-colors flex items-center gap-1.5">
+                            <p className="font-bold text-slate-950 dark:text-white text-sm group-hover:text-brand dark:group-hover:text-brand-light transition-colors flex items-center gap-1.5">
                               <span>{student.name}</span>
                               <CalendarDays className="w-3.5 h-3.5 text-brand opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                             </p>
-                            <p className="text-[11px] font-mono text-slate-500 dark:text-slate-400 font-semibold">
+                            <p className="text-[11px] font-mono text-slate-700 dark:text-slate-300 font-bold">
                               {student.enrollmentNo}
                             </p>
                           </div>
@@ -881,9 +877,9 @@ export const FacultyAttendanceRegister: React.FC = () => {
                       </td>
 
                       {/* Program & Section */}
-                      <td className="py-3 px-4 text-slate-600 dark:text-slate-300">
-                        <p className="font-bold text-slate-800 dark:text-slate-200">{student.program}</p>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                      <td className="py-3 px-4 text-slate-700 dark:text-slate-200">
+                        <p className="font-bold text-slate-900 dark:text-white">{student.program}</p>
+                        <p className="text-[11px] text-slate-600 dark:text-slate-300 font-semibold">
                           Semester {student.semester} • Section {student.section || 'A'}
                         </p>
                       </td>
@@ -891,18 +887,18 @@ export const FacultyAttendanceRegister: React.FC = () => {
                       {/* Status for this Class */}
                       <td className="py-3 px-4">
                         {currentStatus === 'Present' ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-extrabold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700/60 shadow-2xs">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-black bg-emerald-100 dark:bg-emerald-950 text-emerald-900 dark:text-emerald-200 border border-emerald-400 dark:border-emerald-700 shadow-2xs">
                             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
                             <span>Present</span>
                           </span>
                         ) : currentStatus === 'Absent' ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-extrabold bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border border-rose-300 dark:border-rose-700/60 shadow-2xs">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-black bg-rose-100 dark:bg-rose-950 text-rose-900 dark:text-rose-200 border border-rose-400 dark:border-rose-700 shadow-2xs">
                             <XCircle className="w-3.5 h-3.5 text-rose-700 dark:text-rose-400" />
                             <span>Absent</span>
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-slate-200/90 dark:bg-[#1a1f28] text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-[#373e4b]">
-                            <Clock className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-black bg-slate-800 dark:bg-[#151922] text-white dark:text-slate-100 border border-slate-700 dark:border-[#384252] shadow-2xs">
+                            <Clock className="w-3.5 h-3.5 text-slate-300" />
                             <span>Unmarked</span>
                           </span>
                         )}
@@ -912,14 +908,14 @@ export const FacultyAttendanceRegister: React.FC = () => {
                       <td className="py-3 px-4 text-center">
                         {isPastDate ? (
                           <div
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-[#1e232d] text-slate-500 dark:text-slate-400 text-xs font-medium border border-slate-200 dark:border-[#373e4b]"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-[#1e232d] text-slate-600 dark:text-slate-300 text-xs font-semibold border border-slate-300 dark:border-[#373e4b]"
                             title="Past attendance records can be viewed only and cannot be edited"
                           >
-                            <Lock className="w-3.5 h-3.5 text-slate-400" />
+                            <Lock className="w-3.5 h-3.5 text-slate-500" />
                             <span>Locked (View Only)</span>
                           </div>
                         ) : (
-                          <div className="inline-flex items-center gap-1.5 justify-center p-1 rounded-xl bg-slate-100 dark:bg-[#1c212b] border border-slate-200 dark:border-[#373e4b] shadow-2xs">
+                          <div className="inline-flex items-center gap-1.5 justify-center p-1 rounded-xl bg-slate-200/80 dark:bg-[#141821] border border-slate-300 dark:border-[#373e4b] shadow-2xs">
                             {/* 1-Click PRESENT Button */}
                             <button
                               type="button"
@@ -927,10 +923,10 @@ export const FacultyAttendanceRegister: React.FC = () => {
                                 handleMarkAttendance(student, 'Present');
                               }}
                               className={cn(
-                                'flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer active:scale-95',
+                                'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all cursor-pointer active:scale-95',
                                 currentStatus === 'Present'
-                                  ? 'bg-emerald-600 text-white shadow-xs font-black ring-1 ring-emerald-500'
-                                  : 'text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/60 hover:text-emerald-800 dark:hover:text-emerald-200 font-bold'
+                                  ? 'bg-emerald-600 text-white shadow-sm font-black ring-2 ring-emerald-500'
+                                  : 'bg-white dark:bg-[#252b35] text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 hover:bg-emerald-600 hover:text-white dark:hover:bg-emerald-600 dark:hover:text-white'
                               )}
                               title={`Mark ${student.name} as Present`}
                             >
@@ -943,10 +939,10 @@ export const FacultyAttendanceRegister: React.FC = () => {
                               type="button"
                               onClick={() => handleMarkAttendance(student, 'Absent')}
                               className={cn(
-                                'flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer active:scale-95',
+                                'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all cursor-pointer active:scale-95',
                                 currentStatus === 'Absent'
-                                  ? 'bg-rose-600 text-white shadow-xs font-black ring-1 ring-rose-500'
-                                  : 'text-rose-700 dark:text-rose-300 hover:bg-rose-50 dark:hover:bg-rose-950/60 hover:text-rose-800 dark:hover:text-rose-200 font-bold'
+                                  ? 'bg-rose-600 text-white shadow-sm font-black ring-2 ring-rose-500'
+                                  : 'bg-white dark:bg-[#252b35] text-rose-800 dark:text-rose-300 border border-rose-300 dark:border-rose-700 hover:bg-rose-600 hover:text-white dark:hover:bg-rose-600 dark:hover:text-white'
                               )}
                               title={`Mark ${student.name} as Absent`}
                             >

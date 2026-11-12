@@ -17,6 +17,7 @@ export type ERPModuleId =
   | 'documents'
   | 'userfiles'
   | 'reports'
+  | 'notices'
   | 'settings';
 
 export type UserRole = 'Admin' | 'Faculty' | 'Student';
@@ -344,6 +345,9 @@ export interface AnnouncementItem {
   author: string;
   snippet: string;
   readCount: number;
+  targetAudience?: 'All Campus' | 'All Faculty' | 'Students Only' | 'Specific Faculty';
+  assignedFacultyId?: string;
+  assignedFacultyName?: string;
 }
 
 export interface MetricCardData {
