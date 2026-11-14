@@ -322,15 +322,38 @@ export interface UserUploadedFile {
   category: string;
 }
 
+export type AcademicDocumentFieldType =
+  | 'Assignment'
+  | 'Syllabus'
+  | 'Notes'
+  | 'Sessional'
+  | 'Year Plan';
+
+export type OfficialDocumentType =
+  | 'Official Transcript'
+  | 'Degree Certificate'
+  | 'NOC / Migration'
+  | 'Bonafide Letter'
+  | 'Accreditation Dossier';
+
 export interface DocumentRecord {
   id: string;
   title: string;
-  type: 'Official Transcript' | 'Degree Certificate' | 'NOC / Migration' | 'Bonafide Letter' | 'Accreditation Dossier';
+  type: OfficialDocumentType | AcademicDocumentFieldType;
+  categoryGroup?: 'official' | 'academic';
   requester: string;
   issuedDate: string;
   verifiedBy: string;
   digitalSealHash: string;
-  status: 'Issued & Blockchain Verified' | 'Pending Dean Signature' | 'Draft';
+  status: 'Issued & Blockchain Verified' | 'Pending Dean Signature' | 'Draft' | 'Published' | 'Active';
+  subjectCode?: string;
+  department?: string;
+  semester?: string;
+  dueDate?: string;
+  academicYear?: string;
+  description?: string;
+  fileSizeBytes?: number;
+  fileType?: string;
   fileDataUrl?: string;
   fileName?: string;
   uploadedByUid?: string;

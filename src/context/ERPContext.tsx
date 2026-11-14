@@ -44,6 +44,7 @@ import {
   mockAnnouncements,
 } from '../data/mockData';
 import { auth, db } from '../lib/firebase';
+import { handleFirestoreError, OperationType } from '../lib/firestoreErrors';
 import { onAuthStateChanged, signOut, User as FirebaseUser } from 'firebase/auth';
 import { getSketchAvatar } from '../utils/sketchAvatars';
 
@@ -382,8 +383,8 @@ interface ERPContextType {
   addEmployee: (employee: Omit<HREmployee, 'id'> & { id?: string }) => void;
   deleteEmployee: (id: string) => void;
 
-  addDocument: (document: Omit<DocumentRecord, 'id'> & { id?: string }) => void;
-  deleteDocument: (id: string) => void;
+  addDocument: (document: Omit<DocumentRecord, 'id'> & { id?: string }) => Promise<void>;
+  deleteDocument: (id: string) => Promise<void>;
 
   addAnnouncement: (announcement: Omit<AnnouncementItem, 'id'> & { id?: string }) => void;
   deleteAnnouncement: (id: string) => void;
@@ -446,7 +447,7 @@ function loadStorage<T>(key: string, defaultValue: T): T {
 
 // Allowed modules per role
 export const ROLE_ALLOWED_MODULES: Record<UserRole, ERPModuleId[]> = {
-  Student: ['dashboard', 'profile', 'academics', 'timetable', 'exams', 'results', 'attendance', 'userfiles'],
+  Student: ['dashboard', 'profile', 'academics', 'timetable', 'exams', 'results', 'attendance', 'documents', 'userfiles'],
   Faculty: ['dashboard', 'profile', 'students', 'academics', 'attendance', 'timetable', 'exams', 'results', 'documents', 'userfiles'],
   Admin: [
     'dashboard',
@@ -1788,16 +1789,20 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Document Actions (Saved to Cloud Firestore)
   const addDocument = async (docData: Omit<DocumentRecord, 'id'> & { id?: string }) => {
-    const newDoc: DocumentRecord = {
+    const rawDoc: DocumentRecord = {
       ...docData,
       id: docData.id || `manual-doc-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       uploadedByUid: firebaseUser?.uid || 'user',
     };
+    const newDoc = Object.fromEntries(
+      Object.entries(rawDoc).filter(([, value]) => value !== undefined)
+    ) as DocumentRecord;
+
     setDocuments((prev) => [newDoc, ...prev.filter((d) => d.id !== newDoc.id)]);
     try {
       await setDoc(doc(db, 'documents', newDoc.id), newDoc);
     } catch (err) {
-      console.error('Error saving document to Firestore:', err);
+      handleFirestoreError(err, OperationType.WRITE, `documents/${newDoc.id}`);
     }
   };
 
@@ -1806,7 +1811,7 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     try {
       await deleteDoc(doc(db, 'documents', id));
     } catch (err) {
-      console.error('Error deleting document from Firestore:', err);
+      handleFirestoreError(err, OperationType.DELETE, `documents/${id}`);
     }
   };
 
