@@ -1527,6 +1527,7 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       enrollmentNo: student.enrollmentNo,
       avatar: student.avatar,
       department: department || student.department,
+      semester: student.semester,
       courseCode,
       courseTitle,
       date,

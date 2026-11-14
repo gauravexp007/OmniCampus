@@ -14,15 +14,18 @@ import { ConfettiButton } from '../ui/ConfettiButton';
 import { RightSideModal } from '../common/RightSideModal';
 
 export const FinanceModule: React.FC = () => {
-  const { transactions, addTransaction, deleteTransaction, role } = useERP();
+  const { transactions, students, addTransaction, deleteTransaction, role } = useERP();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedSemesterFilter, setSelectedSemesterFilter] = useState<number | 'All'>('All');
+  const [modalStudentSemesterFilter, setModalStudentSemesterFilter] = useState<number | 'All'>('All');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   // New transaction state
   const [newTx, setNewTx] = useState<{
     studentName: string;
     enrollmentNo: string;
+    semester: number;
     category: FinancialTransaction['category'];
     amount: number;
     paymentMethod: FinancialTransaction['paymentMethod'];
@@ -30,6 +33,7 @@ export const FinanceModule: React.FC = () => {
   }>({
     studentName: '',
     enrollmentNo: '',
+    semester: 1,
     category: 'Tuition Fee',
     amount: 5000,
     paymentMethod: 'Stripe Gateway',
@@ -51,13 +55,30 @@ export const FinanceModule: React.FC = () => {
     'Scholarship Deduction',
   ];
 
+  const resolveTxSemester = (tx: FinancialTransaction): number | undefined => {
+    if (typeof tx.semester === 'number') return tx.semester;
+    const found = students.find(
+      (s) => s.enrollmentNo.toLowerCase() === (tx.enrollmentNo || '').toLowerCase()
+    );
+    return found?.semester;
+  };
+
+  const modalFilteredStudents = students.filter(
+    (s) =>
+      modalStudentSemesterFilter === 'All' ||
+      Number(s.semester) === Number(modalStudentSemesterFilter)
+  );
+
   const filteredTransactions = transactions.filter((t) => {
     const matchesQuery =
       t.invoiceNo.toLowerCase().includes(searchQuery.toLowerCase()) ||
       t.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       t.enrollmentNo.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCat = selectedCategory === 'All' || t.category === selectedCategory;
-    return matchesQuery && matchesCat;
+    const txSem = resolveTxSemester(t);
+    const matchesSem =
+      selectedSemesterFilter === 'All' || Number(txSem) === Number(selectedSemesterFilter);
+    return matchesQuery && matchesCat && matchesSem;
   });
 
   const totalRealized = transactions
@@ -72,6 +93,7 @@ export const FinanceModule: React.FC = () => {
       invoiceNo: `INV-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`,
       studentName: newTx.studentName.trim(),
       enrollmentNo: newTx.enrollmentNo.trim().toUpperCase(),
+      semester: Number(newTx.semester) || 1,
       category: newTx.category,
       amount: Number(newTx.amount) || 0,
       paymentMethod: newTx.paymentMethod,
@@ -83,6 +105,7 @@ export const FinanceModule: React.FC = () => {
     setNewTx({
       studentName: '',
       enrollmentNo: '',
+      semester: 1,
       category: 'Tuition Fee',
       amount: 5000,
       paymentMethod: 'Stripe Gateway',
@@ -154,7 +177,23 @@ export const FinanceModule: React.FC = () => {
           />
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <select
+            aria-label="Filter invoices by semester"
+            value={selectedSemesterFilter}
+            onChange={(e) =>
+              setSelectedSemesterFilter(e.target.value === 'All' ? 'All' : Number(e.target.value))
+            }
+            className="px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-indigo-500 text-slate-700 font-medium cursor-pointer"
+          >
+            <option value="All">All Semesters</option>
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+              <option key={sem} value={sem}>
+                Semester {sem}
+              </option>
+            ))}
+          </select>
+
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
@@ -195,7 +234,14 @@ export const FinanceModule: React.FC = () => {
                     </td>
                     <td className="px-4 py-3">
                       <div className="font-semibold text-slate-900">{tx.studentName}</div>
-                      <div className="text-[10px] text-slate-400 font-mono">{tx.enrollmentNo}</div>
+                      <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-mono">
+                        <span>{tx.enrollmentNo}</span>
+                        {resolveTxSemester(tx) && (
+                          <span className="px-1.5 py-0.2 rounded bg-brand/10 text-brand font-sans font-bold">
+                            Sem {resolveTxSemester(tx)}
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-4 py-3 text-slate-600">{tx.category}</td>
                     <td className="px-4 py-3 text-slate-600">{tx.paymentMethod}</td>
@@ -274,6 +320,59 @@ export const FinanceModule: React.FC = () => {
             </div>
 
             <form onSubmit={handleAddTransaction} className="space-y-3">
+              {students.length > 0 && (
+                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                  <label className="block text-[11px] font-semibold text-slate-700">
+                    Choose Semester & Registered Student
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <select
+                      aria-label="Filter invoice students by semester"
+                      value={modalStudentSemesterFilter}
+                      onChange={(e) => {
+                        const val = e.target.value === 'All' ? 'All' : Number(e.target.value);
+                        setModalStudentSemesterFilter(val);
+                        if (typeof val === 'number') {
+                          setNewTx((prev) => ({ ...prev, semester: val }));
+                        }
+                      }}
+                      className="px-2.5 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-indigo-500 text-slate-800"
+                    >
+                      <option value="All">All Semesters</option>
+                      {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+                        <option key={sem} value={sem}>
+                          Semester {sem}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      value=""
+                      onChange={(e) => {
+                        const found = students.find((s) => s.id === e.target.value);
+                        if (found) {
+                          setNewTx((prev) => ({
+                            ...prev,
+                            studentName: found.name,
+                            enrollmentNo: found.enrollmentNo,
+                            semester: found.semester,
+                          }));
+                        }
+                      }}
+                      className="px-2.5 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-indigo-500 text-slate-800"
+                    >
+                      <option value="" disabled>
+                        -- Quick pick student ({modalFilteredStudents.length}) --
+                      </option>
+                      {modalFilteredStudents.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.name} ({s.enrollmentNo}) · Sem {s.semester}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="sm:col-span-2">
                   <label className="block text-[11px] font-semibold text-slate-700 mb-1">

@@ -193,6 +193,7 @@ export const AcademicDocumentsSection: React.FC = () => {
 
   const [selectedFieldOption, setSelectedFieldOption] = useState<FacultyFieldSelection>('All');
   const [selectedSubjectKey, setSelectedSubjectKey] = useState<string>('All');
+  const [selectedSemester, setSelectedSemester] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -382,6 +383,14 @@ export const AcademicDocumentsSection: React.FC = () => {
         }
       }
 
+      // Semester filter
+      if (selectedSemester !== 'All') {
+        const docSem = docItem.semester || 'All Semesters';
+        if (docSem !== selectedSemester) {
+          return false;
+        }
+      }
+
       if (!q) return true;
       return (
         docItem.title.toLowerCase().includes(q) ||
@@ -390,11 +399,19 @@ export const AcademicDocumentsSection: React.FC = () => {
         (docItem.facultyName || '').toLowerCase().includes(q) ||
         (docItem.subjectCode || '').toLowerCase().includes(q) ||
         (docItem.subjectName || '').toLowerCase().includes(q) ||
+        (docItem.semester || '').toLowerCase().includes(q) ||
         (docItem.department || '').toLowerCase().includes(q) ||
         (docItem.description || '').toLowerCase().includes(q)
       );
     });
-  }, [academicDocuments, selectedFieldOption, selectedSubjectKey, subjectFilterOptions, searchQuery]);
+  }, [
+    academicDocuments,
+    selectedFieldOption,
+    selectedSubjectKey,
+    selectedSemester,
+    subjectFilterOptions,
+    searchQuery,
+  ]);
 
   const openModalForField = (fieldType: AcademicDocumentFieldType) => {
     if (isStudent) return;
@@ -748,6 +765,30 @@ export const AcademicDocumentsSection: React.FC = () => {
             </select>
           </div>
 
+          {/* Semester Filter Dropdown */}
+          <div className="flex items-center gap-2 shrink-0">
+            <label
+              htmlFor="semester-filter-select"
+              className="text-xs font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap"
+            >
+              Semester:
+            </label>
+            <select
+              id="semester-filter-select"
+              aria-label="Filter academic documents by semester"
+              value={selectedSemester}
+              onChange={(e) => setSelectedSemester(e.target.value)}
+              className="w-full md:w-36 px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#16191f] border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800 dark:text-slate-100 font-medium cursor-pointer"
+            >
+              <option value="All">All Semesters</option>
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+                <option key={sem} value={`Semester ${sem}`}>
+                  Semester {sem}
+                </option>
+              ))}
+            </select>
+          </div>
+
           {/* Search */}
           <div className="relative flex-1">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -977,17 +1018,21 @@ export const AcademicDocumentsSection: React.FC = () => {
               </span>
             </button>
           ) : (
-            (selectedSubjectKey !== 'All' || selectedFieldOption !== 'All' || searchQuery) && (
+            (selectedSubjectKey !== 'All' ||
+              selectedFieldOption !== 'All' ||
+              selectedSemester !== 'All' ||
+              searchQuery) && (
               <button
                 type="button"
                 onClick={() => {
                   setSelectedSubjectKey('All');
                   setSelectedFieldOption('All');
+                  setSelectedSemester('All');
                   setSearchQuery('');
                 }}
                 className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold transition-colors cursor-pointer"
               >
-                Reset Subject & Field Filters
+                Reset Filters
               </button>
             )
           )}

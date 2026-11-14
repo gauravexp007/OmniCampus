@@ -74,6 +74,8 @@ const getGradePointFromMarks = (marks: number): { point: number; grade: ResultRe
 export const ResultsModule: React.FC = () => {
   const { results, students, addResult, deleteResult, role, currentUser } = useERP();
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedSemesterFilter, setSelectedSemesterFilter] = useState<number | 'All'>('All');
+  const [modalStudentSemesterFilter, setModalStudentSemesterFilter] = useState<number | 'All'>('All');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   // New result form state
@@ -207,12 +209,19 @@ export const ResultsModule: React.FC = () => {
     setSubjectMarks((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const modalFilteredStudents = useMemo(() => {
+    if (modalStudentSemesterFilter === 'All') return students;
+    return students.filter((s) => Number(s.semester) === Number(modalStudentSemesterFilter));
+  }, [students, modalStudentSemesterFilter]);
+
   const filteredResults = results.filter((r) => {
-    return (
+    const matchesSemester =
+      selectedSemesterFilter === 'All' || Number(r.semester) === Number(selectedSemesterFilter);
+    const matchesQuery =
       r.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       r.enrollmentNo.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      r.department.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+      r.department.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesSemester && matchesQuery;
   });
 
   const handleAddResult = (e: React.FormEvent) => {
@@ -313,8 +322,8 @@ export const ResultsModule: React.FC = () => {
       {/* 8-Semester SGPA Progression Chart */}
       <SGPAProgressionChart />
 
-      {/* Search Bar */}
-      <div className="bg-white rounded-xl p-3 border border-slate-200 shadow-xs flex items-center gap-2.5">
+      {/* Search & Semester Filter Bar */}
+      <div className="bg-white rounded-xl p-3 border border-slate-200 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
@@ -325,6 +334,22 @@ export const ResultsModule: React.FC = () => {
             className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800"
           />
         </div>
+
+        <select
+          aria-label="Filter results by semester"
+          value={selectedSemesterFilter}
+          onChange={(e) =>
+            setSelectedSemesterFilter(e.target.value === 'All' ? 'All' : Number(e.target.value))
+          }
+          className="px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-700 font-medium cursor-pointer"
+        >
+          <option value="All">All Semesters</option>
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+            <option key={sem} value={sem}>
+              Semester {sem}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Results Table */}
@@ -439,30 +464,49 @@ export const ResultsModule: React.FC = () => {
 
             {/* Modal Scrollable Body */}
             <form onSubmit={handleAddResult} className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-4">
-              {/* Student Quick Selector */}
+              {/* Student Quick Selector with Semester Filter */}
               {students.length > 0 && (
-                <div className="bg-brand-light/60 p-3 rounded-xl border border-brand/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <div className="bg-brand-light/60 p-3 rounded-xl border border-brand/20 flex flex-col lg:flex-row lg:items-center justify-between gap-2.5">
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-brand shrink-0" />
                     <div>
                       <span className="text-xs font-bold text-slate-800">Quick Student Auto-Fill</span>
-                      <p className="text-[10px] text-slate-500">Select an existing registered student to populate credentials and calculate cumulative CGPA.</p>
+                      <p className="text-[10px] text-slate-500">Choose semester first to distinguish students and auto-fill credentials.</p>
                     </div>
                   </div>
-                  <select
-                    onChange={(e) => handleStudentSelect(e.target.value)}
-                    className="sm:w-80 px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-brand cursor-pointer shadow-2xs font-medium"
-                    defaultValue=""
-                  >
-                    <option value="" disabled>
-                      -- Choose a registered student --
-                    </option>
-                    {students.map((s) => (
-                      <option key={s.id} value={s.enrollmentNo}>
-                        {s.name} ({s.enrollmentNo}) - {s.department} (Sem {s.semester})
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                    <select
+                      aria-label="Choose semester to filter student selector"
+                      value={modalStudentSemesterFilter}
+                      onChange={(e) =>
+                        setModalStudentSemesterFilter(
+                          e.target.value === 'All' ? 'All' : Number(e.target.value)
+                        )
+                      }
+                      className="px-2.5 py-1.5 text-xs bg-white border border-slate-200 rounded-lg text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-brand cursor-pointer shadow-2xs font-medium"
+                    >
+                      <option value="All">All Semesters</option>
+                      {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+                        <option key={sem} value={sem}>
+                          Semester {sem}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      onChange={(e) => handleStudentSelect(e.target.value)}
+                      className="sm:w-72 px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-brand cursor-pointer shadow-2xs font-medium"
+                      defaultValue=""
+                    >
+                      <option value="" disabled>
+                        -- Choose student ({modalFilteredStudents.length}) --
                       </option>
-                    ))}
-                  </select>
+                      {modalFilteredStudents.map((s) => (
+                        <option key={s.id} value={s.enrollmentNo}>
+                          {s.name} ({s.enrollmentNo}) · Sem {s.semester}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               )}
 

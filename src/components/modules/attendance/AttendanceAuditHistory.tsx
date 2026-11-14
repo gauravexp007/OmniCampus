@@ -44,6 +44,7 @@ export const AttendanceAuditHistory: React.FC = () => {
   // Filters State
   const [attendeeType, setAttendeeType] = useState<'all' | 'students' | 'faculties'>('all');
   const [selectedDepartment, setSelectedDepartment] = useState<string>('All Departments');
+  const [selectedSemester, setSelectedSemester] = useState<number | 'All'>('All');
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'present' | 'absent'>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -83,11 +84,28 @@ export const AttendanceAuditHistory: React.FC = () => {
     | null
   >(null);
 
+  // Helper to resolve semester for a student attendance record
+  const getRecordSemester = (rec: StudentAttendanceRecord): number | undefined => {
+    if (typeof rec.semester === 'number') return rec.semester;
+    const matched = students.find(
+      (s) =>
+        s.id === rec.studentId ||
+        s.enrollmentNo.toLowerCase() === (rec.enrollmentNo || '').toLowerCase()
+    );
+    return matched?.semester;
+  };
+
   // Filtered Student Records
   const filteredStudentRecords = useMemo(() => {
     const ind = studentAttendanceRecords.filter((rec) => {
       if (selectedDepartment !== 'All Departments' && rec.department !== selectedDepartment) {
         return false;
+      }
+      if (selectedSemester !== 'All') {
+        const recSem = getRecordSemester(rec);
+        if (Number(recSem) !== Number(selectedSemester)) {
+          return false;
+        }
       }
       if (selectedDate && rec.date !== selectedDate) {
         return false;
@@ -132,7 +150,7 @@ export const AttendanceAuditHistory: React.FC = () => {
     });
 
     return { individual: ind, sessions: sess };
-  }, [studentAttendanceRecords, attendanceRecords, selectedDepartment, selectedDate, statusFilter, searchQuery]);
+  }, [studentAttendanceRecords, attendanceRecords, students, selectedDepartment, selectedSemester, selectedDate, statusFilter, searchQuery]);
 
   // Filtered Faculty Records
   const filteredFacultyRecords = useMemo(() => {
@@ -322,14 +340,15 @@ export const AttendanceAuditHistory: React.FC = () => {
           </div>
         </div>
 
-        {/* Row 2: Department Selection, Date Filter, and Search Input */}
+        {/* Row 2: Department Selection, Semester Filter, Date Filter, and Search Input */}
         <div className="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
           {/* Department Selection Filter */}
-          <div className="sm:col-span-4 relative">
+          <div className="sm:col-span-3 relative">
             <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs">
               <Building2 className="w-3.5 h-3.5 text-slate-500 shrink-0" />
               <div className="flex-1">
                 <select
+                  aria-label="Filter attendance history by department"
                   value={selectedDepartment}
                   onChange={(e) => setSelectedDepartment(e.target.value)}
                   className="w-full bg-transparent text-slate-800 font-medium focus:outline-hidden cursor-pointer"
@@ -344,8 +363,30 @@ export const AttendanceAuditHistory: React.FC = () => {
             </div>
           </div>
 
+          {/* Semester Selection Filter */}
+          <div className="sm:col-span-2">
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+              <GraduationCap className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+              <select
+                aria-label="Filter attendance history by semester"
+                value={selectedSemester}
+                onChange={(e) =>
+                  setSelectedSemester(e.target.value === 'All' ? 'All' : Number(e.target.value))
+                }
+                className="w-full bg-transparent text-slate-800 font-medium focus:outline-hidden cursor-pointer"
+              >
+                <option value="All">All Semesters</option>
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+                  <option key={sem} value={sem}>
+                    Semester {sem}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
           {/* Date Picker Input */}
-          <div className="sm:col-span-3">
+          <div className="sm:col-span-2">
             <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs">
               <Calendar className="w-3.5 h-3.5 text-slate-500 shrink-0" />
               <input
@@ -447,7 +488,14 @@ export const AttendanceAuditHistory: React.FC = () => {
                           </p>
                         </button>
                       </td>
-                      <td className="py-2.5 px-3 text-slate-600">{rec.department}</td>
+                      <td className="py-2.5 px-3 text-slate-600">
+                        <p>{rec.department}</p>
+                        {getRecordSemester(rec) && (
+                          <span className="inline-block mt-0.5 px-1.5 py-0.5 rounded bg-brand/10 text-brand text-[10px] font-bold">
+                            Sem {getRecordSemester(rec)}
+                          </span>
+                        )}
+                      </td>
                       <td className="py-2.5 px-3 text-slate-600">
                         <p className="font-medium text-slate-800">{rec.date}</p>
                         <p className="text-[11px] text-slate-400">{rec.timeSlot || '09:00 AM'}</p>

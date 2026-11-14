@@ -208,20 +208,37 @@ export const FacultyAttendanceRegister: React.FC = () => {
     return found ? found.title : availableCourses[0]?.title || 'Distributed Database Systems';
   }, [availableCourses, selectedCourseCode]);
 
-  // Students enrolled in selected department and filtered strictly by selected semester
-  const departmentStudents = useMemo(() => {
+  // Students enrolled in selected department (used for semester counts)
+  const deptOnlyStudents = useMemo(() => {
     return students.filter((s) => {
-      const matchDept =
+      return (
         selectedDept === 'All' ||
         selectedDept === 'All Departments' ||
-        s.department === selectedDept;
-      const matchSem =
-        selectedSemester === 'all'
-          ? true
-          : Number(s.semester) === Number(selectedSemester);
-      return matchDept && matchSem;
+        s.department === selectedDept
+      );
     });
-  }, [students, selectedDept, selectedSemester]);
+  }, [students, selectedDept]);
+
+  // Count of students per semester in selected department
+  const semesterCounts = useMemo(() => {
+    const counts: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 };
+    deptOnlyStudents.forEach((s) => {
+      const sem = Number(s.semester);
+      if (sem >= 1 && sem <= 8) {
+        counts[sem] = (counts[sem] || 0) + 1;
+      }
+    });
+    return counts;
+  }, [deptOnlyStudents]);
+
+  // Students enrolled in selected department and filtered strictly by selected semester
+  const departmentStudents = useMemo(() => {
+    return deptOnlyStudents.filter((s) => {
+      return selectedSemester === 'all'
+        ? true
+        : Number(s.semester) === Number(selectedSemester);
+    });
+  }, [deptOnlyStudents, selectedSemester]);
 
   // Lookup attendance records for this date and course
   const sessionRecordsMap = useMemo(() => {
@@ -624,6 +641,46 @@ export const FacultyAttendanceRegister: React.FC = () => {
             />
           </div>
         </div>
+
+        {/* Quick Semester Switcher before marking attendance */}
+        <div className="mt-3 pt-3 border-t border-slate-100 dark:border-[#373e4b] flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mr-1">
+              Choose Semester:
+            </span>
+            <button
+              type="button"
+              onClick={() => setSelectedSemester('all')}
+              className={cn(
+                'px-2.5 py-1 rounded-lg text-[11px] font-bold transition-colors cursor-pointer tabular-nums',
+                selectedSemester === 'all'
+                  ? 'bg-brand text-white shadow-xs'
+                  : 'bg-slate-100 dark:bg-[#1e232d] text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-[#2c3342]'
+              )}
+            >
+              All ({deptOnlyStudents.length})
+            </button>
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+              <button
+                key={sem}
+                type="button"
+                onClick={() => setSelectedSemester(sem)}
+                className={cn(
+                  'px-2.5 py-1 rounded-lg text-[11px] font-bold transition-colors cursor-pointer tabular-nums',
+                  selectedSemester === sem
+                    ? 'bg-brand text-white shadow-xs'
+                    : 'bg-slate-100 dark:bg-[#1e232d] text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-[#2c3342]'
+                )}
+              >
+                Sem {sem} ({semesterCounts[sem] || 0})
+              </button>
+            ))}
+          </div>
+          <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 tabular-nums">
+            Showing {selectedSemester === 'all' ? 'all semesters' : `Semester ${selectedSemester}`} ·{' '}
+            {departmentStudents.length} {departmentStudents.length === 1 ? 'student' : 'students'}
+          </span>
+        </div>
       </div>
 
       {/* HISTORICAL VIEW-ONLY WARNING */}
@@ -880,9 +937,14 @@ export const FacultyAttendanceRegister: React.FC = () => {
                       {/* Program & Section */}
                       <td className="py-3 px-4 text-slate-700 dark:text-slate-200">
                         <p className="font-bold text-slate-900 dark:text-white">{student.program}</p>
-                        <p className="text-[11px] text-slate-600 dark:text-slate-300 font-semibold">
-                          Semester {student.semester} • Section {student.section || 'A'}
-                        </p>
+                        <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                          <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-brand/10 dark:bg-brand/20 text-brand text-[10px] font-extrabold tabular-nums">
+                            Sem {student.semester}
+                          </span>
+                          <span className="text-[11px] text-slate-600 dark:text-slate-300 font-semibold">
+                            Section {student.section || 'A'}
+                          </span>
+                        </div>
                       </td>
 
                       {/* Status for this Class */}

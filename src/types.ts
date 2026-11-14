@@ -178,6 +178,7 @@ export interface StudentAttendanceRecord {
   enrollmentNo: string;
   avatar?: string;
   department: string;
+  semester?: number;
   courseCode: string;
   courseTitle: string;
   date: string;
@@ -242,6 +243,7 @@ export interface ExamRecord {
   totalRegistered: number;
   chiefInvigilator: string;
   hallTicketStatus: 'Released' | 'Pending Approval' | 'Closed';
+  semester?: number;
 }
 
 export interface ResultRecord {
@@ -265,6 +267,7 @@ export interface FinancialTransaction {
   invoiceNo: string;
   studentName: string;
   enrollmentNo: string;
+  semester?: number;
   category: 'Tuition Fee' | 'Hostel Fee' | 'Laboratory & Library' | 'Examination Fee' | 'Scholarship Grant';
   amount: number;
   paymentMethod: 'Stripe Gateway' | 'Bank Wire' | 'Campus SmartCard' | 'Scholarship Deduction';

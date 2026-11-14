@@ -94,6 +94,7 @@ export const DocumentsModule: React.FC = () => {
   } = useERP();
 
   const [activeFilter, setActiveFilter] = useState<VaultFilterTab>('all');
+  const [semesterFilter, setSemesterFilter] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [personalCategoryFilter, setPersonalCategoryFilter] = useState<string>('All');
   const [confirmDeleteKey, setConfirmDeleteKey] = useState<string | null>(null);
@@ -121,6 +122,7 @@ export const DocumentsModule: React.FC = () => {
     title: string;
     targetAudience: TargetAudienceOption;
     type: OfficialDocumentType;
+    semester: string;
     selectedRecipientKey: string;
     manualRecipientName: string;
     description: string;
@@ -132,6 +134,7 @@ export const DocumentsModule: React.FC = () => {
     title: '',
     targetAudience: defaultAudience,
     type: role === 'Admin' ? 'Salary Notice' : 'Admit Card',
+    semester: 'All Semesters',
     selectedRecipientKey: '',
     manualRecipientName: '',
     description: '',
@@ -161,9 +164,27 @@ export const DocumentsModule: React.FC = () => {
     );
   }, [documents]);
 
+  // Resolve logged-in student's semester from user profile or student master roster
+  const resolvedStudentSemester = useMemo(() => {
+    if (currentUser.semester) return Number(currentUser.semester);
+    const myEmail = normalizeStr(currentUser.email);
+    const myId = normalizeStr(currentUser.idNumber);
+    const matched = students.find(
+      (s) =>
+        (myEmail && normalizeStr(s.email) === myEmail) ||
+        (myId && normalizeStr(s.enrollmentNo) === myId)
+    );
+    return matched?.semester;
+  }, [currentUser.semester, currentUser.email, currentUser.idNumber, students]);
+
   // Recipient Matchers
   const matchesStudentRecipient = (docItem: DocumentRecord): boolean => {
-    if (docItem.targetAudience === 'All Students') return true;
+    if (docItem.targetAudience === 'All Students') {
+      if (docItem.semester && docItem.semester !== 'All Semesters' && resolvedStudentSemester) {
+        return normalizeStr(docItem.semester) === `semester ${resolvedStudentSemester}`;
+      }
+      return true;
+    }
     const uid = firebaseUser?.uid;
     const myEmail = normalizeStr(currentUser.email);
     const myId = normalizeStr(currentUser.idNumber);
@@ -179,7 +200,12 @@ export const DocumentsModule: React.FC = () => {
 
     // Legacy fallback if targetAudience is not set
     const req = normalizeStr(docItem.requester);
-    if (!req || req === 'all students') return true;
+    if (!req || req === 'all students') {
+      if (docItem.semester && docItem.semester !== 'All Semesters' && resolvedStudentSemester) {
+        return normalizeStr(docItem.semester) === `semester ${resolvedStudentSemester}`;
+      }
+      return true;
+    }
     if (uid && docItem.targetRecipientUid === uid) return true;
     if (myName && req === myName) return true;
     if (myId && req === myId) return true;
@@ -225,7 +251,14 @@ export const DocumentsModule: React.FC = () => {
       if (!validIssuer) return false;
       return matchesStudentRecipient(d);
     });
-  }, [nonAcademicDocuments, firebaseUser?.uid, currentUser.email, currentUser.idNumber, currentUser.name]);
+  }, [
+    nonAcademicDocuments,
+    firebaseUser?.uid,
+    currentUser.email,
+    currentUser.idNumber,
+    currentUser.name,
+    resolvedStudentSemester,
+  ]);
 
   const facultyAdminIssuedDocs = useMemo(() => {
     return nonAcademicDocuments.filter((d) => {
@@ -299,17 +332,24 @@ export const DocumentsModule: React.FC = () => {
     }
 
     const q = normalizeStr(searchQuery);
-    if (!q) return list;
-    return list.filter(
-      (d) =>
+    return list.filter((d) => {
+      if (semesterFilter !== 'All') {
+        const docSem = d.semester || 'All Semesters';
+        if (docSem !== semesterFilter) return false;
+      }
+      if (!q) return true;
+      return (
         normalizeStr(d.title).includes(q) ||
         normalizeStr(d.type).includes(q) ||
         normalizeStr(d.requester).includes(q) ||
         normalizeStr(d.issuedByName).includes(q) ||
+        normalizeStr(d.semester).includes(q) ||
         normalizeStr(d.description).includes(q)
-    );
+      );
+    });
   }, [
     activeFilter,
+    semesterFilter,
     role,
     studentIssuedDocs,
     facultyAdminIssuedDocs,
@@ -420,6 +460,7 @@ export const DocumentsModule: React.FC = () => {
       title: '',
       targetAudience: initialAudience,
       type: initialType,
+      semester: 'All Semesters',
       selectedRecipientKey: '',
       manualRecipientName: '',
       description: '',
@@ -437,10 +478,17 @@ export const DocumentsModule: React.FC = () => {
       ...prev,
       targetAudience: nextAudience,
       type: keepType ? prev.type : nextTypeList[0],
+      semester: isFacultyTarget ? 'All Semesters' : prev.semester,
       selectedRecipientKey: '',
       manualRecipientName: '',
     }));
   };
+
+  // Students filtered by selected semester inside the Issue Document modal
+  const issueModalFilteredStudents = useMemo(() => {
+    if (issueForm.semester === 'All Semesters') return students;
+    return students.filter((s) => `Semester ${s.semester}` === issueForm.semester);
+  }, [students, issueForm.semester]);
 
   const handleIssueFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIssueError(null);
@@ -516,6 +564,16 @@ export const DocumentsModule: React.FC = () => {
         .toString(16)
         .substring(2, 6)}`.toUpperCase();
 
+      const resolvedSemester =
+        issueForm.targetAudience === 'Specific Student'
+          ? (() => {
+              const found = students.find((s) => s.id === issueForm.selectedRecipientKey);
+              return found ? `Semester ${found.semester}` : issueForm.semester;
+            })()
+          : issueForm.targetAudience === 'All Students'
+            ? issueForm.semester
+            : undefined;
+
       await addDocument({
         title: issueForm.title.trim(),
         type: issueForm.type,
@@ -528,6 +586,7 @@ export const DocumentsModule: React.FC = () => {
         targetAudience: issueForm.targetAudience,
         targetRecipientId,
         targetRecipientEmail,
+        semester: resolvedSemester,
         issuedByRole: role,
         issuedByName: currentUser.name,
         description: issueForm.description.trim() || undefined,
@@ -724,15 +783,33 @@ export const DocumentsModule: React.FC = () => {
           })}
         </div>
 
-        <div className="relative w-full lg:w-80">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            placeholder="Search personal or issued documents..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-[#16191f] border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800 dark:text-slate-100 placeholder:text-slate-400"
-          />
+        <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+          {showIssuedSection && (
+            <select
+              aria-label="Filter issued documents by semester"
+              value={semesterFilter}
+              onChange={(e) => setSemesterFilter(e.target.value)}
+              className="px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#16191f] border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800 dark:text-slate-100 font-medium cursor-pointer"
+            >
+              <option value="All">All Semesters</option>
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+                <option key={sem} value={`Semester ${sem}`}>
+                  Semester {sem}
+                </option>
+              ))}
+            </select>
+          )}
+
+          <div className="relative flex-1 lg:w-72">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search personal or issued documents..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-[#16191f] border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800 dark:text-slate-100 placeholder:text-slate-400"
+            />
+          </div>
         </div>
       </div>
 
@@ -948,6 +1025,11 @@ export const DocumentsModule: React.FC = () => {
                             {docItem.targetAudience ? ` (${docItem.targetAudience})` : ''}
                           </span>
                         </div>
+                        {docItem.semester && (
+                          <div className="font-semibold text-brand truncate">
+                            Semester: {docItem.semester}
+                          </div>
+                        )}
                         <div className="truncate">
                           Issued by: {docItem.issuedByName || docItem.verifiedBy}
                           {docItem.issuedByRole ? ` · ${docItem.issuedByRole}` : ''}
@@ -1231,12 +1313,38 @@ export const DocumentsModule: React.FC = () => {
                     </select>
                   </div>
 
+                  {!isTargetFaculty && (
+                    <div className="sm:col-span-2">
+                      <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                        Choose Semester {issueForm.targetAudience === 'Specific Student' ? '(filters student list below)' : ''}
+                      </label>
+                      <select
+                        value={issueForm.semester}
+                        onChange={(e) =>
+                          setIssueForm({
+                            ...issueForm,
+                            semester: e.target.value,
+                            selectedRecipientKey: '',
+                          })
+                        }
+                        className="w-full px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#16191f] border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800 dark:text-slate-100 cursor-pointer"
+                      >
+                        <option value="All Semesters">All Semesters</option>
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+                          <option key={sem} value={`Semester ${sem}`}>
+                            Semester {sem}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
                   {issueForm.targetAudience === 'Specific Student' && (
                     <div className="sm:col-span-2 space-y-2">
                       <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300">
                         Select Student
                       </label>
-                      {students.length > 0 && (
+                      {issueModalFilteredStudents.length > 0 ? (
                         <select
                           value={issueForm.selectedRecipientKey}
                           onChange={(e) =>
@@ -1244,13 +1352,19 @@ export const DocumentsModule: React.FC = () => {
                           }
                           className="w-full px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#16191f] border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800 dark:text-slate-100"
                         >
-                          <option value="">-- Choose registered student --</option>
-                          {students.map((s) => (
+                          <option value="">
+                            -- Choose registered student ({issueModalFilteredStudents.length}) --
+                          </option>
+                          {issueModalFilteredStudents.map((s) => (
                             <option key={s.id} value={s.id}>
-                              {s.name} ({s.enrollmentNo})
+                              {s.name} ({s.enrollmentNo}) · Sem {s.semester}
                             </option>
                           ))}
                         </select>
+                      ) : (
+                        <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium">
+                          No registered students found for {issueForm.semester}. Switch semester or enter student details manually below.
+                        </p>
                       )}
                       {!issueForm.selectedRecipientKey && (
                         <input

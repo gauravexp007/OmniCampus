@@ -20,6 +20,7 @@ import { RightSideModal } from '../common/RightSideModal';
 export const ExamsModule: React.FC = () => {
   const { exams, addExam, toggleExamHallTicket, deleteExam, role, currentUser } = useERP();
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedSemesterFilter, setSelectedSemesterFilter] = useState<number | 'All'>('All');
   const [selectedExamForTicket, setSelectedExamForTicket] = useState<ExamRecord | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
@@ -29,6 +30,7 @@ export const ExamsModule: React.FC = () => {
     courseCode: '',
     courseTitle: '',
     examType: 'Mid-Term Exam' as ExamRecord['examType'],
+    semester: 1,
     date: '2026-10-15',
     time: '10:00 AM - 01:00 PM',
     durationMinutes: 180,
@@ -37,11 +39,13 @@ export const ExamsModule: React.FC = () => {
   });
 
   const filteredExams = exams.filter((e) => {
-    return (
+    const matchesSemester =
+      selectedSemesterFilter === 'All' || Number(e.semester) === Number(selectedSemesterFilter);
+    const matchesQuery =
       e.courseTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
       e.courseCode.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      e.examCode.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+      e.examCode.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesSemester && matchesQuery;
   });
 
   const handleAddExam = (e: React.FormEvent) => {
@@ -64,6 +68,7 @@ export const ExamsModule: React.FC = () => {
       totalRegistered: 45,
       chiefInvigilator: newExam.chiefInvigilator.trim() || 'Controller of Exams',
       hallTicketStatus: 'Released',
+      semester: Number(newExam.semester) || 1,
     });
 
     setIsAddModalOpen(false);
@@ -72,6 +77,7 @@ export const ExamsModule: React.FC = () => {
       courseCode: '',
       courseTitle: '',
       examType: 'Mid-Term Exam',
+      semester: 1,
       date: '2026-10-15',
       time: '10:00 AM - 01:00 PM',
       durationMinutes: 180,
@@ -106,8 +112,8 @@ export const ExamsModule: React.FC = () => {
         )}
       </div>
 
-      {/* Search Bar */}
-      <div className="bg-white rounded-xl p-3 border border-slate-200 shadow-xs flex items-center gap-2.5">
+      {/* Search & Semester Filter Bar */}
+      <div className="bg-white rounded-xl p-3 border border-slate-200 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
@@ -118,6 +124,21 @@ export const ExamsModule: React.FC = () => {
             className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800"
           />
         </div>
+        <select
+          aria-label="Filter exams by semester"
+          value={selectedSemesterFilter}
+          onChange={(e) =>
+            setSelectedSemesterFilter(e.target.value === 'All' ? 'All' : Number(e.target.value))
+          }
+          className="px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-700 font-medium cursor-pointer"
+        >
+          <option value="All">All Semesters</option>
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+            <option key={sem} value={sem}>
+              Semester {sem}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Exams List */}
@@ -130,9 +151,16 @@ export const ExamsModule: React.FC = () => {
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="font-mono text-xs font-bold text-brand">
-                    {exam.courseCode}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-mono text-xs font-bold text-brand">
+                      {exam.courseCode}
+                    </span>
+                    {exam.semester && (
+                      <span className="px-1.5 py-0.5 rounded bg-brand/10 text-brand text-[10px] font-bold">
+                        Sem {exam.semester}
+                      </span>
+                    )}
+                  </div>
                   <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-700">
                     {exam.examType}
                   </span>
@@ -269,6 +297,25 @@ export const ExamsModule: React.FC = () => {
                     <option value="End-Semester Theory">End-Semester Theory</option>
                     <option value="Practical Viva">Practical Viva</option>
                     <option value="Supplementary">Supplementary</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                    Semester
+                  </label>
+                  <select
+                    value={newExam.semester}
+                    onChange={(e) =>
+                      setNewExam({ ...newExam, semester: Number(e.target.value) })
+                    }
+                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-indigo-500 text-slate-800"
+                  >
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+                      <option key={sem} value={sem}>
+                        Semester {sem}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
