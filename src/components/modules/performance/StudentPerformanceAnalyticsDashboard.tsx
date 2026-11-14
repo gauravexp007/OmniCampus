@@ -393,18 +393,6 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
               <h2 className="text-xl md:text-2xl font-black text-slate-950 dark:text-white tracking-tight">
                 Student Performance Analytics
               </h2>
-              <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                <span>University ERP Academic Evaluation System</span>
-                <span aria-hidden="true">&bull;</span>
-                <span className="font-semibold text-slate-700 dark:text-slate-300">
-                  {role} Portal
-                </span>
-                <span aria-hidden="true">&bull;</span>
-                <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-bold">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  Live Database Synced
-                </span>
-              </div>
             </div>
           </div>
         </div>
@@ -820,9 +808,6 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
                   <h4 className="text-sm font-extrabold text-slate-950 dark:text-white">
                     Subject Performance Distribution across Cohort
                   </h4>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    Class average marks and pass percentages
-                  </p>
                 </div>
               </div>
 
@@ -851,9 +836,6 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
                   <h4 className="text-sm font-extrabold text-slate-950 dark:text-white">
                     Attendance Health Distribution
                   </h4>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    Cohort breakdown by statutory compliance
-                  </p>
                 </div>
               </div>
 
@@ -1171,9 +1153,6 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
                     <BarChart3 className="w-4 h-4 text-indigo-600" />
                     <span>Subject-Wise Marks vs Class Average</span>
                   </h4>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    Continuous evaluation &amp; end-semester score benchmarks
-                  </p>
                 </div>
                 <span className="text-xs font-bold text-slate-400">
                   {studentMetrics.subjectPerformances.length} Subjects Evaluated
@@ -1244,13 +1223,6 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
                         : 'Multi-Year Growth & Credits Trajectory'}
                     </span>
                   </h4>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    {timeHorizon === 'semester'
-                      ? 'Progress across historical and active university semesters'
-                      : timeHorizon === 'monthly'
-                      ? 'Attendance turnout % & average subject score per month'
-                      : 'Multi-year cumulative CGPA and completed degree credits'}
-                  </p>
                 </div>
                 <span className="text-xs font-mono font-bold text-purple-600 bg-purple-50 dark:bg-purple-950/40 px-2.5 py-1 rounded-xl border border-purple-200 dark:border-purple-800">
                   {timeHorizon === 'semester'
@@ -1338,9 +1310,6 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
                     <PieChartIcon className="w-4 h-4 text-indigo-600" />
                     <span>Evaluation Component Weightage Donut</span>
                   </h4>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    Attained score distribution across syllabus components
-                  </p>
                 </div>
                 <span className="text-xs font-bold text-slate-500">
                   Continuous Assessment
@@ -1409,9 +1378,6 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
                   <Target className="w-4 h-4 text-blue-600" />
                   <span>Assignments &amp; Continuous Assessment Submissions</span>
                 </h4>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  Coding labs, research papers, and homework grading records
-                </p>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-xs font-bold text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 px-3 py-1 rounded-xl border border-blue-200 dark:border-blue-800">
@@ -1480,9 +1446,6 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
                   <BookOpen className="w-4 h-4 text-brand" />
                   <span>Curriculum Gradebook &amp; Subject Standing Detail</span>
                 </h4>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  Comprehensive audit of internal assessments, mid-terms, final theory, and attendance
-                </p>
               </div>
             </div>
 

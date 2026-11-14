@@ -1079,9 +1079,6 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                     <h3 className="text-sm sm:text-base font-bold text-slate-950 dark:text-white">
                       Class Schedule & Timetable
                     </h3>
-                    <p className="text-[11px] text-slate-400 dark:text-slate-300">
-                      Active academic periods for this term
-                    </p>
                   </div>
                 </div>
                 <button
@@ -1311,9 +1308,6 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                   <h3 className="text-sm font-bold text-slate-950 dark:text-white">
                     Upcoming Examinations
                   </h3>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-300">
-                    Academic assessments & hall venues
-                  </p>
                 </div>
               </div>
               <button

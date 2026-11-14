@@ -977,9 +977,6 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
                       : `Lecture Turnout (MONTHLY)`}
                   </h4>
                 </div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                  Monthly attendance calculated strictly by reducing absents, holidays, Saturdays, and Sundays
-                </p>
               </div>
 
               <div className="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
@@ -1413,9 +1410,6 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
                       : `Class Marks & Grading (${timeframe.toUpperCase()})`}
                   </h4>
                 </div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                  Semester-wise continuous evaluations and cumulative GPA grading progression
-                </p>
               </div>
 
               <div className="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">

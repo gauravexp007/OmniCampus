@@ -158,9 +158,6 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onNavigate }) =>
           <div className="flex items-center gap-2">
             <h2 className="text-lg font-bold text-slate-900">System Settings & Preferences</h2>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Configure appearance theme, academic session rules, account notifications, and institutional preferences.
-          </p>
         </div>
 
         {savedSuccess && (

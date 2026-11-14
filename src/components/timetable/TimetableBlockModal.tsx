@@ -191,9 +191,6 @@ export const TimetableBlockModal: React.FC<TimetableBlockModalProps> = ({
             <h3 className="text-lg font-black tracking-tight">
               {isEditing ? 'Edit Schedule Period' : 'Add Schedule Period'}
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Admin assignment to faculty · Monday through Friday
-            </p>
           </div>
           <button
             type="button"

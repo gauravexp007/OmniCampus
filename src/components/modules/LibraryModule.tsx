@@ -93,9 +93,6 @@ export const LibraryModule: React.FC = () => {
               {libraryItems.length} {libraryItems.length === 1 ? 'Title' : 'Titles'}
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Book circulation, availability lookup, shelf locations, and catalog tracking.
-          </p>
         </div>
 
         {role !== 'Student' && (

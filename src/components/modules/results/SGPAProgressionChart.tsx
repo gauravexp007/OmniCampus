@@ -245,11 +245,6 @@ export const SGPAProgressionChart: React.FC<SGPAProgressionChartProps> = ({ clas
               8-Semester SGPA Progression & Grade Trajectory
             </h3>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
-            {role === 'Student'
-              ? 'Track your term-by-term SGPA progression, honors threshold, and cumulative CGPA curve.'
-              : 'Interactive 8-term academic trajectory audit across degree semesters.'}
-          </p>
         </div>
 
         {/* Right side: Student selector (for faculty/admin) or student identifier */}

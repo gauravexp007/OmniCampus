@@ -416,9 +416,6 @@ export const TimetableGeneratorModal: React.FC<TimetableGeneratorModalProps> = (
             </div>
             <div>
               <h3 className="text-base font-black">Timetable Generator</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Generate weekly schedule assigned to registered faculties (Admin Only)
-              </p>
             </div>
           </div>
           <button

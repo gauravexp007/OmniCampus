@@ -88,9 +88,6 @@ export const AdmissionsModule: React.FC = () => {
               {admissions.length} {admissions.length === 1 ? 'Applicant' : 'Applicants'}
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Track prospective student applications, interviews, entrance scores, and offer letters.
-          </p>
         </div>
 
         {role === 'Admin' && (

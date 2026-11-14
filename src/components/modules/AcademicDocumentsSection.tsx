@@ -601,9 +601,6 @@ export const AcademicDocumentsSection: React.FC = () => {
               <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
                 Upload Academic Documents for Students
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Choose a document field below and click its rectangular upload box to publish materials by subject.
-              </p>
             </div>
 
             {/* Field Dropdown Selection */}
@@ -718,9 +715,6 @@ export const AcademicDocumentsSection: React.FC = () => {
               <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
                 Faculty Study Materials & Uploads
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Select a subject from the dropdown list to view documents uploaded by faculty.
-              </p>
             </div>
             <span className="text-xs font-medium text-slate-500 dark:text-slate-400 tabular-nums shrink-0">
               {academicDocuments.length} faculty{' '}

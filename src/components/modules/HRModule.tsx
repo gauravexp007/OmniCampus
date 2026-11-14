@@ -86,9 +86,6 @@ export const HRModule: React.FC = () => {
               {employees.length} {employees.length === 1 ? 'Employee' : 'Employees'}
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Staff payroll processing, employee records, leave balances, and performance ratings.
-          </p>
         </div>
 
         {role === 'Admin' && (

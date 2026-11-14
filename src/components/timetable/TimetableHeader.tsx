@@ -76,13 +76,11 @@ export const TimetableHeader: React.FC<TimetableHeaderProps> = ({
                 {totalSlots} {totalSlots === 1 ? 'Period' : 'Periods'}
               </span>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              {isFaculty
-                ? `Faculty ID: ${facultyId || 'Assigned'} · Assigned by University Administration (Read Only)`
-                : isAdmin
-                ? 'Administration Timetable Generator · Assign periods to faculty with unique IDs'
-                : 'Monday to Friday academic schedule'}
-            </p>
+            {isFaculty && facultyId && (
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Faculty ID: {facultyId}
+              </p>
+            )}
           </div>
         </div>
 

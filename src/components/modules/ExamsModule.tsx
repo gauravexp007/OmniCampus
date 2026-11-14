@@ -92,11 +92,6 @@ export const ExamsModule: React.FC = () => {
               {exams.length} {exams.length === 1 ? 'Exam' : 'Exams'}
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
-            {role === 'Student'
-              ? 'Check exam schedules, reporting timings, seat locations, and download your biometric hall ticket.'
-              : 'Semester exam schedules, hall ticket generation, invigilation duty, and venue allocation.'}
-          </p>
         </div>
 
         {role !== 'Student' && (

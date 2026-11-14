@@ -150,9 +150,6 @@ export const UserFilesModule: React.FC = () => {
               {userFiles.length} {userFiles.length === 1 ? 'File' : 'Files'} Stored
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Store documents, assignment submissions, verification certificates, and receipts in Firebase Firestore.
-          </p>
         </div>
 
         <button

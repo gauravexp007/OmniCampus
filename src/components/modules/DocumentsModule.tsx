@@ -158,13 +158,6 @@ export const DocumentsModule: React.FC = () => {
                 : 'Documents'}
             </span>
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            {activeTab === 'academic'
-              ? 'Manage and filter assignments, syllabi, lecture notes, sessionals, and academic year plans.'
-              : role === 'Student'
-                ? 'Download official certified documents, bonafide letters, and transcripts.'
-                : 'Issue digitally signed degree certificates, transcripts, and verified letters.'}
-          </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">

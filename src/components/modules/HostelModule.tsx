@@ -82,9 +82,6 @@ export const HostelModule: React.FC = () => {
               {hostelRooms.length} {hostelRooms.length === 1 ? 'Room' : 'Rooms'}
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Hostel accommodation, room capacity, warden assignments, and maintenance logs.
-          </p>
         </div>
 
         {role === 'Admin' && (

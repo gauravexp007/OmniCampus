@@ -280,11 +280,6 @@ export const ResultsModule: React.FC = () => {
               {results.length} {results.length === 1 ? 'Record' : 'Records'}
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
-            {role === 'Student'
-              ? 'View semester SGPA, cumulative CGPA, and official transcript records.'
-              : 'Grade point moderation, marks entry, and official gazette publication.'}
-          </p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -425,9 +420,6 @@ export const ResultsModule: React.FC = () => {
                   <h3 className="text-sm sm:text-base font-bold text-slate-900">
                     Enter Student Examination Marks & Analysis
                   </h3>
-                  <p className="text-[11px] text-slate-500">
-                    Input course-level scores. Real-time weighted SGPA, cumulative CGPA, and letter grades are calculated automatically.
-                  </p>
                 </div>
               </div>
               <button

@@ -528,9 +528,6 @@ export const StudentAttendanceDashboard: React.FC = () => {
             <h4 className="text-sm font-bold text-slate-900">
               Personal Attendance Record History
             </h4>
-            <p className="text-xs text-slate-500">
-              Complete chronological audit of every lecture marked by faculty instructors
-            </p>
           </div>
 
           {/* Quick Filters */}

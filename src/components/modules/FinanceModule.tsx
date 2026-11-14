@@ -100,9 +100,6 @@ export const FinanceModule: React.FC = () => {
               {transactions.length} {transactions.length === 1 ? 'Record' : 'Records'}
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Manage tuition fees, hostel deposits, grant disbursements, and ledger transactions.
-          </p>
         </div>
 
         {role === 'Admin' && (
