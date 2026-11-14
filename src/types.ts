@@ -327,7 +327,10 @@ export type AcademicDocumentFieldType =
   | 'Syllabus'
   | 'Notes'
   | 'Sessional'
-  | 'Year Plan';
+  | 'Year Plan'
+  | 'Lab Manual'
+  | 'Question Bank'
+  | 'Reference Material';
 
 export type OfficialDocumentType =
   | 'Official Transcript'
@@ -347,6 +350,7 @@ export interface DocumentRecord {
   digitalSealHash: string;
   status: 'Issued & Blockchain Verified' | 'Pending Dean Signature' | 'Draft' | 'Published' | 'Active';
   subjectCode?: string;
+  subjectName?: string;
   department?: string;
   semester?: string;
   dueDate?: string;
@@ -357,6 +361,9 @@ export interface DocumentRecord {
   fileDataUrl?: string;
   fileName?: string;
   uploadedByUid?: string;
+  uploadedByRole?: UserRole;
+  facultyId?: string;
+  facultyName?: string;
 }
 
 export interface AnnouncementItem {

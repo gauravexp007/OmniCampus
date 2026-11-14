@@ -226,6 +226,7 @@
         "digitalSealHash": { "type": "string" },
         "status": { "type": "string" },
         "subjectCode": { "type": "string" },
+        "subjectName": { "type": "string" },
         "department": { "type": "string" },
         "semester": { "type": "string" },
         "dueDate": { "type": "string" },
@@ -236,6 +237,9 @@
         "fileDataUrl": { "type": "string" },
         "fileName": { "type": "string" },
         "uploadedByUid": { "type": "string" },
+        "uploadedByRole": { "type": "string", "enum": ["Admin", "Faculty", "Student"] },
+        "facultyId": { "type": "string" },
+        "facultyName": { "type": "string" },
         "createdByUid": { "type": "string" }
       },
       "required": ["id", "title", "type", "requester"]

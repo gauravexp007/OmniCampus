@@ -50,7 +50,20 @@ export const DocumentsModule: React.FC = () => {
     );
   }, [documents]);
 
-  const academicCount = documents.length - officialDocuments.length;
+  const academicCount = useMemo(() => {
+    return documents.filter((d) => {
+      const isAcademic =
+        d.categoryGroup === 'academic' ||
+        (ACADEMIC_FIELD_TYPES as readonly string[]).includes(d.type);
+      if (!isAcademic) return false;
+      if (role === 'Student') {
+        if (d.uploadedByRole === 'Faculty') return true;
+        if (d.uploadedByRole === 'Admin' || d.uploadedByRole === 'Student') return false;
+        return Boolean(d.facultyId) || (d.verifiedBy || '').startsWith('Faculty');
+      }
+      return true;
+    }).length;
+  }, [documents, role]);
 
   const filteredOfficialDocuments = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
