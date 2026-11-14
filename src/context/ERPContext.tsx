@@ -195,7 +195,7 @@ import {
   deleteDoc,
   onSnapshot,
   query,
-  orderBy,
+  where,
   getDoc,
   getDocs,
 } from 'firebase/firestore';
@@ -397,6 +397,7 @@ interface ERPContextType {
   // File Uploads & Cloud Storage
   uploadUserFile: (fileData: {
     name: string;
+    title?: string;
     fileType: string;
     sizeBytes: number;
     dataUrl: string;
@@ -711,7 +712,10 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
 
     try {
-      const filesQuery = query(collection(db, 'user_files'), orderBy('uploadedAt', 'desc'));
+      const filesQuery = query(
+        collection(db, 'user_files'),
+        where('uploadedByUid', '==', firebaseUser.uid)
+      );
       const unsubscribeFiles = onSnapshot(
         filesQuery,
         (snapshot) => {
@@ -719,6 +723,7 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           snapshot.forEach((d) => {
             loaded.push({ id: d.id, ...(d.data() as Omit<UserUploadedFile, 'id'>) });
           });
+          loaded.sort((a, b) => (b.uploadedAt || '').localeCompare(a.uploadedAt || ''));
           setUserFiles(loaded);
         },
         (error) => {
@@ -815,9 +820,10 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  // Upload user file to Firestore
+  // Upload personal user file to Firestore
   const uploadUserFile = async (fileData: {
     name: string;
+    title?: string;
     fileType: string;
     sizeBytes: number;
     dataUrl: string;
@@ -826,8 +832,9 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (!firebaseUser) throw new Error('Must be signed in to upload files');
 
     const fileId = `file-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
-    const newFileDoc = {
+    const rawFileDoc: Record<string, unknown> = {
       name: fileData.name,
+      title: fileData.title?.trim() || undefined,
       fileType: fileData.fileType,
       sizeBytes: fileData.sizeBytes,
       dataUrl: fileData.dataUrl,
@@ -835,15 +842,26 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       uploadedByUid: firebaseUser.uid,
       uploaderName: currentUser.name,
       uploaderEmail: currentUser.email,
+      uploaderRole: currentUser.role,
       uploadedAt: new Date().toISOString(),
     };
+    const newFileDoc = Object.fromEntries(
+      Object.entries(rawFileDoc).filter(([, value]) => value !== undefined)
+    );
 
-    // Save to Firestore
-    await setDoc(doc(db, 'user_files', fileId), newFileDoc);
+    try {
+      await setDoc(doc(db, 'user_files', fileId), newFileDoc);
+    } catch (err) {
+      handleFirestoreError(err, OperationType.WRITE, `user_files/${fileId}`);
+    }
   };
 
   const deleteUserFile = async (fileId: string) => {
-    await deleteDoc(doc(db, 'user_files', fileId));
+    try {
+      await deleteDoc(doc(db, 'user_files', fileId));
+    } catch (err) {
+      handleFirestoreError(err, OperationType.DELETE, `user_files/${fileId}`);
+    }
   };
 
   // Apply theme to DOM document element
@@ -1793,6 +1811,8 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       ...docData,
       id: docData.id || `manual-doc-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       uploadedByUid: firebaseUser?.uid || 'user',
+      issuedByRole: docData.issuedByRole || currentUser.role,
+      issuedByName: docData.issuedByName || currentUser.name,
     };
     const newDoc = Object.fromEntries(
       Object.entries(rawDoc).filter(([, value]) => value !== undefined)

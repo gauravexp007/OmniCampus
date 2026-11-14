@@ -312,12 +312,14 @@ export interface HREmployee {
 export interface UserUploadedFile {
   id: string;
   name: string;
+  title?: string;
   fileType: string;
   sizeBytes: number;
   dataUrl: string;
   uploadedByUid: string;
   uploaderName: string;
   uploaderEmail: string;
+  uploaderRole?: UserRole;
   uploadedAt: string;
   category: string;
 }
@@ -332,12 +334,25 @@ export type AcademicDocumentFieldType =
   | 'Question Bank'
   | 'Reference Material';
 
-export type OfficialDocumentType =
+export type StudentIssuedDocumentType =
+  | 'Admit Card'
+  | 'Registration Form'
   | 'Official Transcript'
   | 'Degree Certificate'
   | 'NOC / Migration'
-  | 'Bonafide Letter'
-  | 'Accreditation Dossier';
+  | 'Bonafide Letter';
+
+export type FacultyIssuedDocumentType =
+  | 'Salary Notice'
+  | 'Feedback Form'
+  | 'Empty Registration Form'
+  | 'Complaint Form'
+  | 'Accreditation Dossier'
+  | 'Official Notice / Form';
+
+export type OfficialDocumentType =
+  | StudentIssuedDocumentType
+  | FacultyIssuedDocumentType;
 
 export interface DocumentRecord {
   id: string;
@@ -349,6 +364,12 @@ export interface DocumentRecord {
   verifiedBy: string;
   digitalSealHash: string;
   status: 'Issued & Blockchain Verified' | 'Pending Dean Signature' | 'Draft' | 'Published' | 'Active';
+  targetAudience?: 'All Students' | 'Specific Student' | 'All Faculty' | 'Specific Faculty';
+  targetRecipientUid?: string;
+  targetRecipientId?: string;
+  targetRecipientEmail?: string;
+  issuedByRole?: UserRole;
+  issuedByName?: string;
   subjectCode?: string;
   subjectName?: string;
   department?: string;

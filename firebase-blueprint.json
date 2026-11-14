@@ -23,12 +23,14 @@
       "properties": {
         "id": { "type": "string" },
         "name": { "type": "string" },
+        "title": { "type": "string" },
         "fileType": { "type": "string" },
         "sizeBytes": { "type": "number" },
         "dataUrl": { "type": "string" },
         "uploadedByUid": { "type": "string" },
         "uploaderName": { "type": "string" },
         "uploaderEmail": { "type": "string" },
+        "uploaderRole": { "type": "string", "enum": ["Admin", "Faculty", "Student"] },
         "uploadedAt": { "type": "string" },
         "category": { "type": "string" }
       },
@@ -225,6 +227,15 @@
         "verifiedBy": { "type": "string" },
         "digitalSealHash": { "type": "string" },
         "status": { "type": "string" },
+        "targetAudience": {
+          "type": "string",
+          "enum": ["All Students", "Specific Student", "All Faculty", "Specific Faculty"]
+        },
+        "targetRecipientUid": { "type": "string" },
+        "targetRecipientId": { "type": "string" },
+        "targetRecipientEmail": { "type": "string" },
+        "issuedByRole": { "type": "string", "enum": ["Admin", "Faculty", "Student"] },
+        "issuedByName": { "type": "string" },
         "subjectCode": { "type": "string" },
         "subjectName": { "type": "string" },
         "department": { "type": "string" },

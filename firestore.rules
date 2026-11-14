@@ -24,11 +24,17 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    // User Uploaded Files Collection
+    // User Uploaded Files Collection (Strictly private to the uploading user)
     match /user_files/{fileId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated() && request.resource.data.uploadedByUid == request.auth.uid;
-      allow update, delete: if isAuthenticated();
+      allow read: if isAuthenticated() && resource.data.uploadedByUid == request.auth.uid;
+      allow create: if isAuthenticated()
+        && request.resource.data.uploadedByUid == request.auth.uid
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.name.size() <= 300
+        && request.resource.data.category is string
+        && request.resource.data.category.size() <= 120;
+      allow update, delete: if isAuthenticated() && resource.data.uploadedByUid == request.auth.uid;
     }
 
     // Students Collection

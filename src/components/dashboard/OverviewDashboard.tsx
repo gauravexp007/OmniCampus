@@ -456,9 +456,9 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
         {/* Action Controls - Customization inside 3 vertical dots at right corner */}
         <div className="flex items-center gap-2 shrink-0 flex-wrap relative z-20">
           <button
-            onClick={() => onNavigate('userfiles')}
+            onClick={() => onNavigate('documents')}
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-[#354146] hover:bg-slate-200 dark:hover:bg-[#4e5c61] text-slate-800 dark:text-white text-xs font-bold transition-all cursor-pointer border border-slate-200 dark:border-[#55666d]"
-            title="Institutional Document Vault"
+            title="Document Vault"
           >
             <HardDrive className="w-3.5 h-3.5 text-slate-600 dark:text-[#a3f7bf]" />
             <span>Vault</span>
