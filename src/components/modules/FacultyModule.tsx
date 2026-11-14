@@ -17,6 +17,7 @@ import {
 import { useERP } from '../../context/ERPContext';
 import { FacultyMember } from '../../types';
 import { SKETCH_FACULTY } from '../../utils/sketchAvatars';
+import { RightSideModal } from '../common/RightSideModal';
 
 export const FacultyModule: React.FC = () => {
   const { faculty, courses, addFaculty, deleteFaculty, updateFaculty, role, setCurrentModule } = useERP();
@@ -313,9 +314,12 @@ export const FacultyModule: React.FC = () => {
       )}
 
       {/* Add Faculty Modal */}
-      {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl border border-slate-200 shadow-xl max-w-lg w-full p-5 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+      <RightSideModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        maxWidthClass="max-w-lg"
+        panelClassName="bg-white dark:bg-[#1e2229] rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xl p-5 space-y-4"
+      >
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <h3 className="text-sm font-bold text-slate-900">Add Faculty Member</h3>
               <button
@@ -499,14 +503,17 @@ export const FacultyModule: React.FC = () => {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
+      </RightSideModal>
 
       {/* Selected Faculty Details Modal */}
-      {selectedFaculty && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl border border-slate-200 shadow-xl max-w-md w-full p-5 space-y-4">
+      <RightSideModal
+        isOpen={Boolean(selectedFaculty)}
+        onClose={() => setSelectedFaculty(null)}
+        maxWidthClass="max-w-md"
+        panelClassName="bg-white dark:bg-[#1e2229] rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xl p-5 space-y-4"
+      >
+        {selectedFaculty && (
+          <>
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <h3 className="text-sm font-bold text-slate-900">Faculty Details</h3>
               <button
@@ -638,9 +645,9 @@ export const FacultyModule: React.FC = () => {
                 Close
               </button>
             </div>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </RightSideModal>
     </div>
   );
 };

@@ -22,6 +22,7 @@ import { useERP } from '../../context/ERPContext';
 import { Student } from '../../types';
 import { cn } from '../../lib/utils';
 import { SKETCH_STUDENT } from '../../utils/sketchAvatars';
+import { RightSideModal } from '../common/RightSideModal';
 
 export const StudentsModule: React.FC = () => {
   const { students, courses, results, addStudent, deleteStudent, updateStudent, role } = useERP();
@@ -469,9 +470,12 @@ export const StudentsModule: React.FC = () => {
       )}
 
       {/* Add Student Modal */}
-      {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#252b35] rounded-2xl border border-slate-200 dark:border-[#373e4b] shadow-2xl max-w-lg w-full p-5 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+      <RightSideModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        maxWidthClass="max-w-lg"
+        panelClassName="bg-white dark:bg-[#252b35] rounded-2xl border border-slate-200 dark:border-[#373e4b] shadow-2xl p-5 space-y-4"
+      >
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#373e4b]">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-lg bg-emerald-600/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
@@ -676,14 +680,17 @@ export const StudentsModule: React.FC = () => {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
+      </RightSideModal>
 
       {/* COMPREHENSIVE 360° STUDENT OVERVIEW & DOSSIER MODAL */}
-      {selectedStudent && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#252b35] rounded-2xl border border-slate-200 dark:border-[#373e4b] shadow-2xl max-w-2xl w-full p-6 space-y-5 animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
+      <RightSideModal
+        isOpen={Boolean(selectedStudent)}
+        onClose={() => setSelectedStudent(null)}
+        maxWidthClass="max-w-2xl"
+        panelClassName="bg-white dark:bg-[#252b35] rounded-2xl border border-slate-200 dark:border-[#373e4b] shadow-2xl p-6 space-y-5"
+      >
+        {selectedStudent && (
+          <>
             {/* Modal Header */}
             <div className="flex items-start justify-between pb-4 border-b border-slate-100 dark:border-[#373e4b]">
               <div className="flex items-center gap-3.5">
@@ -908,9 +915,9 @@ export const StudentsModule: React.FC = () => {
                 </button>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </RightSideModal>
     </div>
   );
 };

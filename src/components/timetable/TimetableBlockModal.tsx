@@ -12,6 +12,7 @@ import {
   BookOpen,
 } from 'lucide-react';
 import { TimetableSlot, FacultyMember } from '../../types';
+import { RightSideModal } from '../common/RightSideModal';
 import {
   TimetableDay,
   TIMETABLE_DAYS,
@@ -177,14 +178,12 @@ export const TimetableBlockModal: React.FC<TimetableBlockModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.96, y: 8 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.96, y: 8 }}
-        transition={{ duration: 0.16 }}
-        className="bg-white dark:bg-[#2b2b2b] rounded-3xl border border-slate-200 dark:border-[#525252] shadow-2xl max-w-2xl w-full p-5 sm:p-7 space-y-5 text-slate-900 dark:text-white max-h-[92vh] overflow-y-auto"
-      >
+    <RightSideModal
+      isOpen={isOpen}
+      onClose={onClose}
+      maxWidthClass="max-w-2xl"
+      panelClassName="bg-white dark:bg-[#2b2b2b] rounded-3xl border border-slate-200 dark:border-[#525252] shadow-2xl p-5 sm:p-7 space-y-5 text-slate-900 dark:text-white"
+    >
         {/* Modal Top Header */}
         <div className="flex items-center justify-between pb-3.5 border-b border-slate-200/80 dark:border-[#404040]">
           <div>
@@ -456,7 +455,6 @@ export const TimetableBlockModal: React.FC<TimetableBlockModalProps> = ({
             </div>
           </div>
         </form>
-      </motion.div>
-    </div>
+    </RightSideModal>
   );
 };

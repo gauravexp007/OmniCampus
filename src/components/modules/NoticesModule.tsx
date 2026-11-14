@@ -23,6 +23,7 @@ import { AnnouncementItem, FacultyMember } from '../../types';
 import { FacultySearchSelector } from '../common/FacultySearchSelector';
 import { cn } from '../../lib/utils';
 import { ConfettiButton } from '../ui/ConfettiButton';
+import { RightSideModal } from '../common/RightSideModal';
 
 export interface NoticesModuleProps {
   initialAssignedFacultyId?: string;
@@ -423,9 +424,12 @@ export const NoticesModule: React.FC<NoticesModuleProps> = ({ initialAssignedFac
       )}
 
       {/* Publish Notice Modal */}
-      {isPublishModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/50 flex items-center justify-center p-4 backdrop-blur-xs">
-          <div className="bg-white dark:bg-[#1a202c] rounded-2xl border border-slate-300 dark:border-[#384252] shadow-2xl max-w-lg w-full p-5 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+      <RightSideModal
+        isOpen={isPublishModalOpen}
+        onClose={() => setIsPublishModalOpen(false)}
+        maxWidthClass="max-w-lg"
+        panelClassName="bg-white dark:bg-[#1a202c] rounded-2xl border border-slate-300 dark:border-[#384252] shadow-2xl p-5 space-y-4"
+      >
             <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-[#373e4b]">
               <div className="flex items-center gap-2">
                 <Megaphone className="w-4 h-4 text-brand" />
@@ -603,14 +607,17 @@ export const NoticesModule: React.FC<NoticesModuleProps> = ({ initialAssignedFac
                 </ConfettiButton>
               </div>
             </form>
-          </div>
-        </div>
-      )}
+      </RightSideModal>
 
       {/* View Notice Detail Modal */}
-      {viewingNotice && (
-        <div className="fixed inset-0 z-50 bg-slate-950/50 flex items-center justify-center p-4 backdrop-blur-xs">
-          <div className="bg-white dark:bg-[#1a202c] rounded-2xl border border-slate-300 dark:border-[#384252] shadow-2xl max-w-lg w-full p-5 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+      <RightSideModal
+        isOpen={Boolean(viewingNotice)}
+        onClose={() => setViewingNotice(null)}
+        maxWidthClass="max-w-lg"
+        panelClassName="bg-white dark:bg-[#1a202c] rounded-2xl border border-slate-300 dark:border-[#384252] shadow-2xl p-5 space-y-4"
+      >
+        {viewingNotice && (
+          <>
             <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-[#373e4b]">
               <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
                 {viewingNotice.category}
@@ -666,9 +673,9 @@ export const NoticesModule: React.FC<NoticesModuleProps> = ({ initialAssignedFac
                 Close
               </button>
             </div>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </RightSideModal>
     </div>
   );
 };

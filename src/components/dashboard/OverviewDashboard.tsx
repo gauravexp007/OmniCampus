@@ -31,6 +31,7 @@ import { ERPModuleId } from '../../types';
 import { ModularQuickAccess } from './ModularQuickAccess';
 import { DashboardAnalyticsSection } from './DashboardAnalyticsSection';
 import { AnimatedCounter } from '../common/DribbbleAnimations';
+import { RightSideModal } from '../common/RightSideModal';
 import {
   useDashboardLayout,
   DashboardPresetId,
@@ -606,16 +607,12 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
           UNIFIED DASHBOARD CUSTOMIZATION MODAL
           One single place for KPI blocks, Quick Access presets, and Graphs layout
           ===================================================================== */}
-      <AnimatePresence>
-        {isCustomizeOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              transition={{ duration: 0.2 }}
-              className="bg-white dark:bg-[#435055] rounded-3xl border border-slate-200 dark:border-[#55666d] shadow-2xl max-w-xl w-full p-5 sm:p-6 space-y-5 text-slate-900 dark:text-white max-h-[90vh] overflow-y-auto"
-            >
+      <RightSideModal
+        isOpen={isCustomizeOpen}
+        onClose={() => setIsCustomizeOpen(false)}
+        maxWidthClass="max-w-xl"
+        panelClassName="bg-white dark:bg-[#435055] rounded-3xl border border-slate-200 dark:border-[#55666d] shadow-2xl p-5 sm:p-6 space-y-5 text-slate-900 dark:text-white"
+      >
               {/* Header */}
               <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#55666d] pb-3">
                 <div className="flex items-center gap-2.5">
@@ -834,10 +831,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                   Save & Close
                 </button>
               </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+      </RightSideModal>
 
       {/* =====================================================================
           INTERACTIVE CUSTOMIZATION BAR (When Edit Mode is active)

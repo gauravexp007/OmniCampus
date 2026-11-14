@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useERP } from '../../context/ERPContext';
 import { ExamRecord } from '../../types';
+import { RightSideModal } from '../common/RightSideModal';
 
 export const ExamsModule: React.FC = () => {
   const { exams, addExam, toggleExamHallTicket, deleteExam, role, currentUser } = useERP();
@@ -209,9 +210,11 @@ export const ExamsModule: React.FC = () => {
       )}
 
       {/* Add Exam Modal */}
-      {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl border border-slate-200 shadow-xl max-w-lg w-full p-5 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+      <RightSideModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        maxWidthClass="max-w-lg"
+      >
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <h3 className="text-sm font-bold text-slate-900">Schedule Examination</h3>
               <button
@@ -324,14 +327,16 @@ export const ExamsModule: React.FC = () => {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
+      </RightSideModal>
 
       {/* Digital Hall Ticket Modal */}
-      {selectedExamForTicket && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl border border-slate-200 shadow-xl max-w-md w-full p-5 space-y-4 animate-in fade-in zoom-in-95">
+      <RightSideModal
+        isOpen={Boolean(selectedExamForTicket)}
+        onClose={() => setSelectedExamForTicket(null)}
+        maxWidthClass="max-w-md"
+      >
+        {selectedExamForTicket && (
+          <>
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-5 h-5 text-brand" />
@@ -396,9 +401,9 @@ export const ExamsModule: React.FC = () => {
                 <span>Download Pass</span>
               </button>
             </div>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </RightSideModal>
     </div>
   );
 };

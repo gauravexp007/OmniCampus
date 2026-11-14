@@ -11,6 +11,7 @@ import {
 import { useERP } from '../../context/ERPContext';
 import { FinancialTransaction } from '../../types';
 import { ConfettiButton } from '../ui/ConfettiButton';
+import { RightSideModal } from '../common/RightSideModal';
 
 export const FinanceModule: React.FC = () => {
   const { transactions, addTransaction, deleteTransaction, role } = useERP();
@@ -257,9 +258,11 @@ export const FinanceModule: React.FC = () => {
       )}
 
       {/* Create Invoice Modal */}
-      {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl border border-slate-200 shadow-xl max-w-lg w-full p-5 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+      <RightSideModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        maxWidthClass="max-w-lg"
+      >
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <h3 className="text-sm font-bold text-slate-900">Create Fee Invoice</h3>
               <button
@@ -398,9 +401,7 @@ export const FinanceModule: React.FC = () => {
                 </ConfettiButton>
               </div>
             </form>
-          </div>
-        </div>
-      )}
+      </RightSideModal>
     </div>
   );
 };

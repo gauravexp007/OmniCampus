@@ -21,6 +21,7 @@ import { useERP } from '../../../context/ERPContext';
 import { AttendanceRecord, FacultyAttendanceRecord, StudentAttendanceRecord, Student } from '../../../types';
 import { cn } from '../../../lib/utils';
 import { StudentMonthlyAttendanceVisualizer } from './StudentMonthlyAttendanceVisualizer';
+import { RightSideModal } from '../../common/RightSideModal';
 
 const DEPARTMENTS = [
   'All Departments',
@@ -577,9 +578,13 @@ export const AttendanceAuditHistory: React.FC = () => {
       </div>
 
       {/* DETAIL MODAL */}
-      {selectedDetailRecord && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4 animate-in fade-in duration-150">
-          <div className="bg-white rounded-2xl max-w-md w-full p-5 shadow-2xl border border-slate-200">
+      <RightSideModal
+        isOpen={Boolean(selectedDetailRecord)}
+        onClose={() => setSelectedDetailRecord(null)}
+        maxWidthClass="max-w-md"
+      >
+        {selectedDetailRecord && (
+          <>
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <h4 className="text-sm font-bold text-slate-900">Attendance Audit Verification</h4>
               <button
@@ -642,22 +647,25 @@ export const AttendanceAuditHistory: React.FC = () => {
                 Close
               </button>
             </div>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </RightSideModal>
 
       {/* MONTHLY ATTENDANCE VISUALIZER MODAL */}
-      {visualizerStudent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-3 sm:p-5 overflow-y-auto animate-in fade-in duration-150">
-          <div className="max-w-4xl w-full my-auto">
-            <StudentMonthlyAttendanceVisualizer
-              initialStudent={visualizerStudent}
-              isModal
-              onClose={() => setVisualizerStudent(null)}
-            />
-          </div>
-        </div>
-      )}
+      <RightSideModal
+        isOpen={Boolean(visualizerStudent)}
+        onClose={() => setVisualizerStudent(null)}
+        maxWidthClass="max-w-4xl"
+        bare
+      >
+        {visualizerStudent && (
+          <StudentMonthlyAttendanceVisualizer
+            initialStudent={visualizerStudent}
+            isModal
+            onClose={() => setVisualizerStudent(null)}
+          />
+        )}
+      </RightSideModal>
     </div>
   );
 };

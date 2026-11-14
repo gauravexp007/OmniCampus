@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { TimetableSlot, FacultyMember } from '../../types';
 import { TimetableDay } from './TimetableTypes';
+import { RightSideModal } from '../common/RightSideModal';
 
 interface TimetableGeneratorModalProps {
   isOpen: boolean;
@@ -401,14 +402,12 @@ export const TimetableGeneratorModal: React.FC<TimetableGeneratorModalProps> = (
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.96 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.96 }}
-        transition={{ duration: 0.16 }}
-        className="bg-white dark:bg-[#2b2b2b] rounded-3xl border border-slate-200 dark:border-[#525252] shadow-2xl max-w-xl w-full p-5 sm:p-6 space-y-4 text-slate-900 dark:text-white max-h-[92vh] overflow-y-auto"
-      >
+    <RightSideModal
+      isOpen={isOpen}
+      onClose={onClose}
+      maxWidthClass="max-w-xl"
+      panelClassName="bg-white dark:bg-[#2b2b2b] rounded-3xl border border-slate-200 dark:border-[#525252] shadow-2xl p-5 sm:p-6 space-y-4 text-slate-900 dark:text-white"
+    >
         <div className="flex items-center justify-between pb-3 border-b border-slate-200/80 dark:border-[#404040]">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-2xl bg-brand text-white flex items-center justify-center">
@@ -536,7 +535,6 @@ export const TimetableGeneratorModal: React.FC<TimetableGeneratorModalProps> = (
             {isGenerating ? 'Generating...' : generationSuccess ? 'Generated!' : 'Generate Timetable'}
           </button>
         </div>
-      </motion.div>
-    </div>
+    </RightSideModal>
   );
 };

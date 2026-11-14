@@ -18,6 +18,7 @@ import { StudentMonthlyAttendanceVisualizer } from './attendance/StudentMonthlyA
 import { FacultyAttendanceRecord } from '../../types';
 import { AnimatedSegmentedToggle } from '../ui/AnimatedSegmentedToggle';
 import { ConfettiButton } from '../ui/ConfettiButton';
+import { RightSideModal } from '../common/RightSideModal';
 
 export const AttendanceModule: React.FC = () => {
   const { role, currentUser, addFacultyAttendanceRecord } = useERP();
@@ -167,9 +168,11 @@ export const AttendanceModule: React.FC = () => {
       {activeTab === 'history' && <AttendanceAuditHistory />}
 
       {/* FACULTY DUTY MODAL */}
-      {isFacultyDutyModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4 animate-in fade-in duration-150">
-          <div className="bg-white rounded-2xl max-w-md w-full p-5 shadow-2xl border border-slate-200">
+      <RightSideModal
+        isOpen={isFacultyDutyModalOpen}
+        onClose={() => setIsFacultyDutyModalOpen(false)}
+        maxWidthClass="max-w-md"
+      >
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <span className="p-1.5 rounded-lg bg-purple-50 text-purple-600">
@@ -258,9 +261,7 @@ export const AttendanceModule: React.FC = () => {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
+      </RightSideModal>
     </div>
   );
 };

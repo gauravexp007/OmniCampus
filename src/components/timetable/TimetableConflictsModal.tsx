@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { AlertTriangle, X, ArrowRight, Pencil, Trash2 } from 'lucide-react';
 import { TimetableConflict } from './TimetableTypes';
 import { TimetableSlot } from '../../types';
+import { RightSideModal } from '../common/RightSideModal';
 
 interface TimetableConflictsModalProps {
   isOpen: boolean;
@@ -22,14 +23,12 @@ export const TimetableConflictsModal: React.FC<TimetableConflictsModalProps> = (
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 10 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 10 }}
-        transition={{ duration: 0.18 }}
-        className="bg-white dark:bg-[#2b2b2b] rounded-3xl border border-slate-200 dark:border-[#525252] shadow-2xl max-w-lg w-full p-5 sm:p-6 space-y-4 text-slate-900 dark:text-white max-h-[85vh] overflow-y-auto"
-      >
+    <RightSideModal
+      isOpen={isOpen}
+      onClose={onClose}
+      maxWidthClass="max-w-lg"
+      panelClassName="bg-white dark:bg-[#2b2b2b] rounded-3xl border border-slate-200 dark:border-[#525252] shadow-2xl p-5 sm:p-6 space-y-4 text-slate-900 dark:text-white"
+    >
         <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#404040]">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-2xl bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 flex items-center justify-center font-bold">
@@ -134,7 +133,6 @@ export const TimetableConflictsModal: React.FC<TimetableConflictsModalProps> = (
             Close Inspector
           </button>
         </div>
-      </motion.div>
-    </div>
+    </RightSideModal>
   );
 };

@@ -23,6 +23,7 @@ import { StudentMonthlyAttendanceVisualizer } from './StudentMonthlyAttendanceVi
 import { ConfettiButton } from '../../ui/ConfettiButton';
 import { AnimatedSegmentedToggle } from '../../ui/AnimatedSegmentedToggle';
 import { FacultySearchSelector } from '../../common/FacultySearchSelector';
+import { RightSideModal } from '../../common/RightSideModal';
 
 const DEPARTMENTS = [
   'All Departments',
@@ -983,9 +984,12 @@ export const FacultyAttendanceRegister: React.FC = () => {
       </button>
 
       {/* QUICK ADD STUDENT MODAL */}
-      {isAddStudentModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
-          <div className="bg-white dark:bg-[#252b35] rounded-2xl max-w-md w-full p-5 shadow-2xl border border-slate-200 dark:border-[#373e4b]">
+      <RightSideModal
+        isOpen={isAddStudentModalOpen}
+        onClose={() => setIsAddStudentModalOpen(false)}
+        maxWidthClass="max-w-md"
+        panelClassName="bg-white dark:bg-[#252b35] rounded-2xl border border-slate-200 dark:border-[#373e4b] shadow-2xl p-5"
+      >
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#373e4b]">
               <div className="flex items-center gap-2">
                 <span className="p-2 rounded-xl bg-emerald-600/10 text-emerald-600 dark:text-emerald-400">
@@ -1131,22 +1135,23 @@ export const FacultyAttendanceRegister: React.FC = () => {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
+      </RightSideModal>
 
       {/* MONTHLY ATTENDANCE VISUALIZER MODAL FOR SINGLE STUDENT */}
-      {visualizerStudent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-5 overflow-y-auto animate-in fade-in duration-150">
-          <div className="max-w-4xl w-full my-auto">
-            <StudentMonthlyAttendanceVisualizer
-              initialStudent={visualizerStudent}
-              isModal
-              onClose={() => setVisualizerStudent(null)}
-            />
-          </div>
-        </div>
-      )}
+      <RightSideModal
+        isOpen={Boolean(visualizerStudent)}
+        onClose={() => setVisualizerStudent(null)}
+        maxWidthClass="max-w-4xl"
+        bare
+      >
+        {visualizerStudent && (
+          <StudentMonthlyAttendanceVisualizer
+            initialStudent={visualizerStudent}
+            isModal
+            onClose={() => setVisualizerStudent(null)}
+          />
+        )}
+      </RightSideModal>
     </div>
   );
 };
