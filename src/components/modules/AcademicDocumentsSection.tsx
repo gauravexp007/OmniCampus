@@ -1,4 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   Plus,
   Search,
@@ -679,20 +681,29 @@ export const AcademicDocumentsSection: React.FC = () => {
               }`}
             >
               {visibleFieldBoxes.map((box) => (
-                <button
+                <motion.button
                   key={box.fieldType}
                   type="button"
                   onClick={() => openModalForField(box.fieldType)}
-                  className={`group relative rounded-2xl border px-4 py-5 min-h-[120px] flex flex-col items-center justify-center gap-2.5 text-center transition-all duration-150 cursor-pointer focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand ${box.lightCardClass}`}
+                  whileHover={{ y: -3, scale: 1.02 }}
+                  whileTap={{ scale: 0.93, y: 1 }}
+                  transition={{ type: 'spring', stiffness: 460, damping: 24 }}
+                  className={`group relative rounded-2xl border px-4 py-5 min-h-[120px] flex flex-col items-center justify-center gap-2.5 text-center transition-colors duration-150 cursor-pointer focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand active:shadow-inner ${box.lightCardClass}`}
                 >
                   <span className={`text-sm font-semibold tracking-tight ${box.textClass}`}>
                     {box.boxLabel}
                   </span>
-                  <Plus
-                    className="w-7 h-7 text-slate-800 dark:text-slate-100 transition-transform duration-150 group-hover:scale-110"
-                    strokeWidth={1.75}
-                  />
-                </button>
+                  <motion.span
+                    className="inline-flex items-center justify-center"
+                    whileHover={{ rotate: 90 }}
+                    transition={{ type: 'spring', stiffness: 360, damping: 20 }}
+                  >
+                    <Plus
+                      className="w-7 h-7 text-slate-800 dark:text-slate-100"
+                      strokeWidth={1.75}
+                    />
+                  </motion.span>
+                </motion.button>
               ))}
             </div>
           </div>
@@ -989,25 +1000,42 @@ export const AcademicDocumentsSection: React.FC = () => {
         </div>
       )}
 
-      {/* Faculty / Admin Upload Modal */}
-      {!isStudent && isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-[1px] flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white dark:bg-[#1e2229] rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl max-w-lg w-full p-5 space-y-4 my-auto animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-              <div className="flex items-center gap-2">
-                <span className={`w-2.5 h-2.5 rounded-full ${activeBoxConfig.dotClass}`} />
-                <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
-                  Upload {formState.fieldType} for Students
-                </h3>
-              </div>
-              <button
-                type="button"
+      {/* Faculty / Admin Upload Right-Side Portal Window */}
+      {typeof document !== 'undefined' &&
+        createPortal(
+          <AnimatePresence>
+            {!isStudent && isModalOpen && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.16 }}
                 onClick={() => setIsModalOpen(false)}
-                className="p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                className="fixed inset-0 z-[120] bg-slate-900/50 backdrop-blur-[2px] flex items-center justify-end p-3 sm:p-5 md:pl-[270px]"
               >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
+                <motion.div
+                  initial={{ opacity: 0, x: 36, scale: 0.98 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: 28, scale: 0.98 }}
+                  transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+                  onClick={(e) => e.stopPropagation()}
+                  className="bg-white dark:bg-[#1e2229] rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xl w-full max-w-lg max-h-[calc(100vh-1.5rem)] sm:max-h-[calc(100vh-2.5rem)] overflow-y-auto p-5 space-y-4"
+                >
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                    <div className="flex items-center gap-2">
+                      <span className={`w-2.5 h-2.5 rounded-full ${activeBoxConfig.dotClass}`} />
+                      <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
+                        Upload {formState.fieldType} for Students
+                      </h3>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setIsModalOpen(false)}
+                      className="p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
 
             {formError && (
               <div className="flex items-start gap-2 rounded-lg border border-rose-200 dark:border-rose-800/60 bg-rose-50 dark:bg-rose-950/30 p-2.5 text-xs text-rose-700 dark:text-rose-300">
@@ -1250,9 +1278,12 @@ export const AcademicDocumentsSection: React.FC = () => {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body
+        )}
     </div>
   );
 };

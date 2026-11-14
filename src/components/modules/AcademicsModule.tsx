@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import {
   BookOpen,
   Search,
@@ -268,205 +269,234 @@ export const AcademicsModule: React.FC = () => {
         </>
       )}
 
-      {/* Add Course Modal */}
-      {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl border border-slate-200 shadow-xl max-w-lg w-full p-5 space-y-4 animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <h3 className="text-sm font-bold text-slate-900">Add Academic Course</h3>
-              <button
-                onClick={() => setIsAddModalOpen(false)}
-                className="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <form onSubmit={handleAddCourse} className="space-y-3">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="sm:col-span-2">
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                    Course Title *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Deep Learning & Neural Networks"
-                    value={newCourse.title}
-                    onChange={(e) => setNewCourse({ ...newCourse, title: e.target.value })}
-                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-indigo-500 text-slate-800"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                    Course Code
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. CS-401"
-                    value={newCourse.code}
-                    onChange={(e) => setNewCourse({ ...newCourse, code: e.target.value })}
-                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-indigo-500 text-slate-800"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                    Credits
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="10"
-                    value={newCourse.credits}
-                    onChange={(e) =>
-                      setNewCourse({ ...newCourse, credits: Number(e.target.value) })
-                    }
-                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-indigo-500 text-slate-800"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                    Department
-                  </label>
-                  <select
-                    value={newCourse.department}
-                    onChange={(e) => setNewCourse({ ...newCourse, department: e.target.value })}
-                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-indigo-500 text-slate-800"
-                  >
-                    {departments
-                      .filter((d) => d !== 'All')
-                      .map((dept) => (
-                        <option key={dept} value={dept}>
-                          {dept}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                    Level
-                  </label>
-                  <select
-                    value={newCourse.level}
-                    onChange={(e) =>
-                      setNewCourse({
-                        ...newCourse,
-                        level: e.target.value as AcademicCourse['level'],
-                      })
-                    }
-                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-indigo-500 text-slate-800"
-                  >
-                    <option value="Undergraduate">Undergraduate</option>
-                    <option value="Postgraduate">Postgraduate</option>
-                    <option value="Doctoral">Doctoral</option>
-                  </select>
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                    Instructor Name
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Prof. Marcus Vance"
-                    value={newCourse.instructor}
-                    onChange={(e) =>
-                      setNewCourse({ ...newCourse, instructor: e.target.value })
-                    }
-                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-indigo-500 text-slate-800"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+      {/* Add Course Right-Side Portal Modal */}
+      {typeof document !== 'undefined' &&
+        isAddModalOpen &&
+        createPortal(
+          <div
+            onClick={() => setIsAddModalOpen(false)}
+            className="fixed inset-0 z-[120] bg-slate-900/50 backdrop-blur-[2px] flex items-center justify-end p-3 sm:p-5 md:pl-[270px]"
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white dark:bg-[#1e2229] rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xl max-w-lg w-full max-h-[calc(100vh-1.5rem)] sm:max-h-[calc(100vh-2.5rem)] overflow-y-auto p-5 space-y-4 animate-in fade-in slide-in-from-right-4 duration-150"
+            >
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
+                  Add Academic Course
+                </h3>
                 <button
                   type="button"
                   onClick={() => setIsAddModalOpen(false)}
-                  className="px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 text-xs font-semibold hover:bg-slate-50"
+                  className="p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
                 >
-                  Cancel
+                  <X className="w-4 h-4" />
                 </button>
+              </div>
+
+              <form onSubmit={handleAddCourse} className="space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="sm:col-span-2">
+                    <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      Course Title *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Deep Learning & Neural Networks"
+                      value={newCourse.title}
+                      onChange={(e) => setNewCourse({ ...newCourse, title: e.target.value })}
+                      className="w-full px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#16191f] border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800 dark:text-slate-100"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      Course Code
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. CS-401"
+                      value={newCourse.code}
+                      onChange={(e) => setNewCourse({ ...newCourse, code: e.target.value })}
+                      className="w-full px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#16191f] border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800 dark:text-slate-100"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      Credits
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="10"
+                      value={newCourse.credits}
+                      onChange={(e) =>
+                        setNewCourse({ ...newCourse, credits: Number(e.target.value) })
+                      }
+                      className="w-full px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#16191f] border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800 dark:text-slate-100"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      Department
+                    </label>
+                    <select
+                      value={newCourse.department}
+                      onChange={(e) => setNewCourse({ ...newCourse, department: e.target.value })}
+                      className="w-full px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#16191f] border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800 dark:text-slate-100"
+                    >
+                      {departments
+                        .filter((d) => d !== 'All')
+                        .map((dept) => (
+                          <option key={dept} value={dept}>
+                            {dept}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      Level
+                    </label>
+                    <select
+                      value={newCourse.level}
+                      onChange={(e) =>
+                        setNewCourse({
+                          ...newCourse,
+                          level: e.target.value as AcademicCourse['level'],
+                        })
+                      }
+                      className="w-full px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#16191f] border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800 dark:text-slate-100"
+                    >
+                      <option value="Undergraduate">Undergraduate</option>
+                      <option value="Postgraduate">Postgraduate</option>
+                      <option value="Doctoral">Doctoral</option>
+                    </select>
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      Instructor Name
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Prof. Marcus Vance"
+                      value={newCourse.instructor}
+                      onChange={(e) =>
+                        setNewCourse({ ...newCourse, instructor: e.target.value })
+                      }
+                      className="w-full px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#16191f] border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800 dark:text-slate-100"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+                  <button
+                    type="button"
+                    onClick={() => setIsAddModalOpen(false)}
+                    className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-3.5 py-1.5 rounded-lg bg-brand hover:bg-brand-hover text-white text-xs font-semibold cursor-pointer"
+                  >
+                    Save Course
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>,
+          document.body
+        )}
+
+      {/* Course Detail Right-Side Portal Modal */}
+      {typeof document !== 'undefined' &&
+        selectedCourse &&
+        createPortal(
+          <div
+            onClick={() => setSelectedCourse(null)}
+            className="fixed inset-0 z-[120] bg-slate-900/50 backdrop-blur-[2px] flex items-center justify-end p-3 sm:p-5 md:pl-[270px]"
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white dark:bg-[#1e2229] rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xl max-w-md w-full max-h-[calc(100vh-1.5rem)] sm:max-h-[calc(100vh-2.5rem)] overflow-y-auto p-5 space-y-4 animate-in fade-in slide-in-from-right-4 duration-150"
+            >
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
+                  Course Information
+                </h3>
                 <button
-                  type="submit"
-                  className="px-3.5 py-1.5 rounded-lg bg-brand hover:bg-brand-hover text-white text-xs font-semibold"
+                  type="button"
+                  onClick={() => setSelectedCourse(null)}
+                  className="p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
                 >
-                  Save Course
+                  <X className="w-4 h-4" />
                 </button>
               </div>
-            </form>
-          </div>
-        </div>
-      )}
 
-      {/* Course Detail Modal */}
-      {selectedCourse && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl border border-slate-200 shadow-xl max-w-md w-full p-5 space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <h3 className="text-sm font-bold text-slate-900">Course Information</h3>
-              <button
-                onClick={() => setSelectedCourse(null)}
-                className="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
+              <div className="space-y-3 text-xs">
+                <div>
+                  <span className="font-mono text-brand font-bold text-xs">
+                    {selectedCourse.code}
+                  </span>
+                  <h4 className="font-bold text-slate-900 dark:text-slate-100 text-sm">
+                    {selectedCourse.title}
+                  </h4>
+                </div>
 
-            <div className="space-y-3 text-xs">
-              <div>
-                <span className="font-mono text-brand font-bold text-xs">
-                  {selectedCourse.code}
-                </span>
-                <h4 className="font-bold text-slate-900 text-sm">{selectedCourse.title}</h4>
+                <div className="bg-slate-50 dark:bg-[#16191f] rounded-lg p-3 space-y-1.5 border border-slate-100 dark:border-slate-800">
+                  <div className="flex justify-between">
+                    <span className="text-slate-500 dark:text-slate-400">Department:</span>
+                    <span className="font-semibold text-slate-800 dark:text-slate-200">
+                      {selectedCourse.department}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500 dark:text-slate-400">Program Level:</span>
+                    <span className="font-semibold text-slate-800 dark:text-slate-200">
+                      {selectedCourse.level}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500 dark:text-slate-400">Credit Weight:</span>
+                    <span className="font-semibold text-slate-800 dark:text-slate-200 tabular-nums">
+                      {selectedCourse.credits} Credits
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500 dark:text-slate-400">Assigned Instructor:</span>
+                    <span className="font-semibold text-slate-800 dark:text-slate-200">
+                      {selectedCourse.instructor}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500 dark:text-slate-400">Class Capacity:</span>
+                    <span className="font-semibold text-slate-800 dark:text-slate-200 tabular-nums">
+                      {selectedCourse.capacity} Students
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              <div className="bg-slate-50 rounded-lg p-3 space-y-1.5 border border-slate-100">
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Department:</span>
-                  <span className="font-semibold text-slate-800">
-                    {selectedCourse.department}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Program Level:</span>
-                  <span className="font-semibold text-slate-800">{selectedCourse.level}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Credit Weight:</span>
-                  <span className="font-semibold text-slate-800">
-                    {selectedCourse.credits} Credits
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Assigned Instructor:</span>
-                  <span className="font-semibold text-slate-800">
-                    {selectedCourse.instructor}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Class Capacity:</span>
-                  <span className="font-semibold text-slate-800">
-                    {selectedCourse.capacity} Students
-                  </span>
-                </div>
+              <div className="flex justify-end pt-2">
+                <button
+                  type="button"
+                  onClick={() => setSelectedCourse(null)}
+                  className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold cursor-pointer"
+                >
+                  Close
+                </button>
               </div>
             </div>
-
-            <div className="flex justify-end pt-2">
-              <button
-                onClick={() => setSelectedCourse(null)}
-                className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
     </div>
   );
 };
