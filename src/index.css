@@ -25,6 +25,18 @@
     --brand-gradient-from: #6C7D8A;
     --brand-gradient-to: #556671;
 
+    /* Dropdown Tokens (Light Mode) */
+    --dropdown-bg: #f4f7f9;
+    --dropdown-surface: #ffffff;
+    --dropdown-border: #9BB0BD;
+    --dropdown-text: #1e293b;
+    --dropdown-muted: #475569;
+    --dropdown-hover-bg: #e2e9ef;
+    --dropdown-selected-bg: #6C7D8A;
+    --dropdown-selected-text: #ffffff;
+    --dropdown-badge-bg: #e6ecf0;
+    --dropdown-badge-text: #23313A;
+
     /* Specific Palette overrides */
     --starline-lime: #6C7D8A;
     --starline-purple: #8B5CF6;
@@ -47,6 +59,16 @@
     --brand-ring: rgba(19, 180, 151, 0.35);
     --brand-gradient-from: #13b497;
     --brand-gradient-to: #00a389;
+    --dropdown-bg: #effbf8;
+    --dropdown-surface: #ffffff;
+    --dropdown-border: #86dfd0;
+    --dropdown-text: #064e3b;
+    --dropdown-muted: #0f766e;
+    --dropdown-hover-bg: #d9f5ef;
+    --dropdown-selected-bg: #13b497;
+    --dropdown-selected-text: #ffffff;
+    --dropdown-badge-bg: #dcf7f1;
+    --dropdown-badge-text: #0b6e5c;
   }
 
   [data-theme="indigo"] {
@@ -60,6 +82,16 @@
     --brand-ring: rgba(79, 70, 229, 0.35);
     --brand-gradient-from: #4f46e5;
     --brand-gradient-to: #6366f1;
+    --dropdown-bg: #f3f5ff;
+    --dropdown-surface: #ffffff;
+    --dropdown-border: #b8c5fc;
+    --dropdown-text: #1e1b4b;
+    --dropdown-muted: #4338ca;
+    --dropdown-hover-bg: #e0e7ff;
+    --dropdown-selected-bg: #4f46e5;
+    --dropdown-selected-text: #ffffff;
+    --dropdown-badge-bg: #e0e7ff;
+    --dropdown-badge-text: #3730a3;
   }
 
   [data-theme="emerald"] {
@@ -73,6 +105,16 @@
     --brand-ring: rgba(5, 150, 105, 0.35);
     --brand-gradient-from: #059669;
     --brand-gradient-to: #10b981;
+    --dropdown-bg: #effcf6;
+    --dropdown-surface: #ffffff;
+    --dropdown-border: #86efac;
+    --dropdown-text: #064e3b;
+    --dropdown-muted: #047857;
+    --dropdown-hover-bg: #d1fae5;
+    --dropdown-selected-bg: #059669;
+    --dropdown-selected-text: #ffffff;
+    --dropdown-badge-bg: #d1fae5;
+    --dropdown-badge-text: #065f46;
   }
 
   [data-theme="sapphire"] {
@@ -86,6 +128,16 @@
     --brand-ring: rgba(37, 99, 235, 0.35);
     --brand-gradient-from: #2563eb;
     --brand-gradient-to: #3b82f6;
+    --dropdown-bg: #f1f6ff;
+    --dropdown-surface: #ffffff;
+    --dropdown-border: #93c5fd;
+    --dropdown-text: #172554;
+    --dropdown-muted: #1d4ed8;
+    --dropdown-hover-bg: #dbeafe;
+    --dropdown-selected-bg: #2563eb;
+    --dropdown-selected-text: #ffffff;
+    --dropdown-badge-bg: #dbeafe;
+    --dropdown-badge-text: #1e40af;
   }
 
   [data-theme="rose"] {
@@ -99,6 +151,16 @@
     --brand-ring: rgba(225, 29, 72, 0.35);
     --brand-gradient-from: #e11d48;
     --brand-gradient-to: #f43f5e;
+    --dropdown-bg: #fff2f4;
+    --dropdown-surface: #ffffff;
+    --dropdown-border: #fda4af;
+    --dropdown-text: #881337;
+    --dropdown-muted: #be123c;
+    --dropdown-hover-bg: #ffe4e6;
+    --dropdown-selected-bg: #e11d48;
+    --dropdown-selected-text: #ffffff;
+    --dropdown-badge-bg: #ffe4e6;
+    --dropdown-badge-text: #9f1239;
   }
 
   [data-theme="amber"] {
@@ -112,6 +174,16 @@
     --brand-ring: rgba(217, 119, 6, 0.35);
     --brand-gradient-from: #d97706;
     --brand-gradient-to: #f59e0b;
+    --dropdown-bg: #fffbef;
+    --dropdown-surface: #ffffff;
+    --dropdown-border: #fcd34d;
+    --dropdown-text: #78350f;
+    --dropdown-muted: #b45309;
+    --dropdown-hover-bg: #fef3c7;
+    --dropdown-selected-bg: #d97706;
+    --dropdown-selected-text: #ffffff;
+    --dropdown-badge-bg: #fef3c7;
+    --dropdown-badge-text: #92400e;
   }
 
   [data-theme="violet"] {
@@ -125,6 +197,16 @@
     --brand-ring: rgba(124, 58, 237, 0.35);
     --brand-gradient-from: #7c3aed;
     --brand-gradient-to: #8b5cf6;
+    --dropdown-bg: #f6f3ff;
+    --dropdown-surface: #ffffff;
+    --dropdown-border: #c4b5fd;
+    --dropdown-text: #4c1d95;
+    --dropdown-muted: #6d28d9;
+    --dropdown-hover-bg: #ede9fe;
+    --dropdown-selected-bg: #7c3aed;
+    --dropdown-selected-text: #ffffff;
+    --dropdown-badge-bg: #ede9fe;
+    --dropdown-badge-text: #5b21b6;
   }
 
   [data-theme="slate"] {
@@ -138,6 +220,16 @@
     --brand-ring: rgba(51, 65, 85, 0.35);
     --brand-gradient-from: #334155;
     --brand-gradient-to: #475569;
+    --dropdown-bg: #f3f6fa;
+    --dropdown-surface: #ffffff;
+    --dropdown-border: #94a3b8;
+    --dropdown-text: #0f172a;
+    --dropdown-muted: #334155;
+    --dropdown-hover-bg: #e2e8f0;
+    --dropdown-selected-bg: #334155;
+    --dropdown-selected-text: #ffffff;
+    --dropdown-badge-bg: #e2e8f0;
+    --dropdown-badge-text: #0f172a;
   }
 
   *, html, body, #root, button, input, select, textarea {
@@ -545,12 +637,169 @@ body.dark,
   --palette-muted: #8ea1a5;
   --palette-light: #d2ded8;
 
-  /* Align brand primary with palette teal in dark mode */
+  /* Align default dark palette (starline) with palette teal */
   --brand-primary: #29a19c;
   --brand-hover: #248f8a;
   --brand-ring: rgba(41, 161, 156, 0.45);
   --brand-gradient-from: #29a19c;
   --brand-gradient-to: #1e7a76;
+
+  /* Dark Mode Dropdown Tokens (Default / Starline) */
+  --dropdown-bg: #1e2c32;
+  --dropdown-surface: #27353c;
+  --dropdown-border: #3d7574;
+  --dropdown-text: #f8fafc;
+  --dropdown-muted: #cbd5e1;
+  --dropdown-hover-bg: #29494a;
+  --dropdown-selected-bg: #29a19c;
+  --dropdown-selected-text: #ffffff;
+  --dropdown-badge-bg: rgba(41, 161, 156, 0.24);
+  --dropdown-badge-text: #a3f7bf;
+}
+
+/* Preserve chosen theme colors & theme-matched dropdown lists in Dark Mode */
+.dark[data-theme="hotel"] {
+  --brand-primary: #13b497;
+  --brand-hover: #0f9b82;
+  --brand-ring: rgba(19, 180, 151, 0.45);
+  --brand-gradient-from: #13b497;
+  --brand-gradient-to: #00a389;
+  --dropdown-bg: #152e2b;
+  --dropdown-surface: #1b3b37;
+  --dropdown-border: #1e6b5e;
+  --dropdown-text: #f0fdfa;
+  --dropdown-muted: #99f6e4;
+  --dropdown-hover-bg: #1c4d46;
+  --dropdown-selected-bg: #13b497;
+  --dropdown-selected-text: #ffffff;
+  --dropdown-badge-bg: rgba(19, 180, 151, 0.24);
+  --dropdown-badge-text: #5eead4;
+}
+
+.dark[data-theme="indigo"] {
+  --brand-primary: #6366f1;
+  --brand-hover: #4f46e5;
+  --brand-ring: rgba(99, 102, 241, 0.45);
+  --brand-gradient-from: #4f46e5;
+  --brand-gradient-to: #6366f1;
+  --dropdown-bg: #1c1f3b;
+  --dropdown-surface: #25294d;
+  --dropdown-border: #4f46e5;
+  --dropdown-text: #eef2ff;
+  --dropdown-muted: #c7d2fe;
+  --dropdown-hover-bg: #2e3469;
+  --dropdown-selected-bg: #4f46e5;
+  --dropdown-selected-text: #ffffff;
+  --dropdown-badge-bg: rgba(99, 102, 241, 0.25);
+  --dropdown-badge-text: #c7d2fe;
+}
+
+.dark[data-theme="emerald"] {
+  --brand-primary: #10b981;
+  --brand-hover: #059669;
+  --brand-ring: rgba(16, 185, 129, 0.45);
+  --brand-gradient-from: #059669;
+  --brand-gradient-to: #10b981;
+  --dropdown-bg: #132a24;
+  --dropdown-surface: #193830;
+  --dropdown-border: #059669;
+  --dropdown-text: #ecfdf5;
+  --dropdown-muted: #a7f3d0;
+  --dropdown-hover-bg: #1b4a3d;
+  --dropdown-selected-bg: #059669;
+  --dropdown-selected-text: #ffffff;
+  --dropdown-badge-bg: rgba(16, 185, 129, 0.24);
+  --dropdown-badge-text: #6ee7b7;
+}
+
+.dark[data-theme="sapphire"] {
+  --brand-primary: #3b82f6;
+  --brand-hover: #2563eb;
+  --brand-ring: rgba(59, 130, 246, 0.45);
+  --brand-gradient-from: #2563eb;
+  --brand-gradient-to: #3b82f6;
+  --dropdown-bg: #16233b;
+  --dropdown-surface: #1d2e4d;
+  --dropdown-border: #2563eb;
+  --dropdown-text: #eff6ff;
+  --dropdown-muted: #bfdbfe;
+  --dropdown-hover-bg: #1f3966;
+  --dropdown-selected-bg: #2563eb;
+  --dropdown-selected-text: #ffffff;
+  --dropdown-badge-bg: rgba(59, 130, 246, 0.25);
+  --dropdown-badge-text: #93c5fd;
+}
+
+.dark[data-theme="rose"] {
+  --brand-primary: #f43f5e;
+  --brand-hover: #e11d48;
+  --brand-ring: rgba(244, 63, 94, 0.45);
+  --brand-gradient-from: #e11d48;
+  --brand-gradient-to: #f43f5e;
+  --dropdown-bg: #2f1721;
+  --dropdown-surface: #3d1e2b;
+  --dropdown-border: #e11d48;
+  --dropdown-text: #fff1f2;
+  --dropdown-muted: #fecdd3;
+  --dropdown-hover-bg: #522034;
+  --dropdown-selected-bg: #e11d48;
+  --dropdown-selected-text: #ffffff;
+  --dropdown-badge-bg: rgba(244, 63, 94, 0.25);
+  --dropdown-badge-text: #fda4af;
+}
+
+.dark[data-theme="amber"] {
+  --brand-primary: #f59e0b;
+  --brand-hover: #d97706;
+  --brand-ring: rgba(245, 158, 11, 0.45);
+  --brand-gradient-from: #d97706;
+  --brand-gradient-to: #f59e0b;
+  --dropdown-bg: #2c2012;
+  --dropdown-surface: #3b2a17;
+  --dropdown-border: #d97706;
+  --dropdown-text: #fffbeb;
+  --dropdown-muted: #fde68a;
+  --dropdown-hover-bg: #523819;
+  --dropdown-selected-bg: #d97706;
+  --dropdown-selected-text: #ffffff;
+  --dropdown-badge-bg: rgba(245, 158, 11, 0.25);
+  --dropdown-badge-text: #fcd34d;
+}
+
+.dark[data-theme="violet"] {
+  --brand-primary: #8b5cf6;
+  --brand-hover: #7c3aed;
+  --brand-ring: rgba(139, 92, 246, 0.45);
+  --brand-gradient-from: #7c3aed;
+  --brand-gradient-to: #8b5cf6;
+  --dropdown-bg: #241b38;
+  --dropdown-surface: #2f234a;
+  --dropdown-border: #7c3aed;
+  --dropdown-text: #f5f3ff;
+  --dropdown-muted: #ddd6fe;
+  --dropdown-hover-bg: #3e2c66;
+  --dropdown-selected-bg: #7c3aed;
+  --dropdown-selected-text: #ffffff;
+  --dropdown-badge-bg: rgba(139, 92, 246, 0.25);
+  --dropdown-badge-text: #ddd6fe;
+}
+
+.dark[data-theme="slate"] {
+  --brand-primary: #64748b;
+  --brand-hover: #475569;
+  --brand-ring: rgba(100, 116, 139, 0.45);
+  --brand-gradient-from: #334155;
+  --brand-gradient-to: #475569;
+  --dropdown-bg: #1c2430;
+  --dropdown-surface: #253040;
+  --dropdown-border: #64748b;
+  --dropdown-text: #f8fafc;
+  --dropdown-muted: #cbd5e1;
+  --dropdown-hover-bg: #334155;
+  --dropdown-selected-bg: #475569;
+  --dropdown-selected-text: #ffffff;
+  --dropdown-badge-bg: rgba(100, 116, 139, 0.28);
+  --dropdown-badge-text: #e2e8f0;
 }
 
 /* Root Dark Canvas (Dark Grey & Light Grey Gradient Foundation) */
@@ -830,20 +1079,113 @@ html.dark [data-attendance-card] [data-force-white],
   border-color: #a3f7bf !important;
 }
 
-/* Form Controls in Dark Mode (#27323a background, #55666d border, #8ea1a5 placeholder) */
+/* Form Controls in Dark Mode */
 .dark input:not([type="checkbox"]):not([type="radio"]):not(.glass-input):not(.bg-transparent),
-.dark select:not(.glass-input):not(.bg-transparent),
 .dark textarea:not(.glass-input):not(.bg-transparent) {
   background-color: #27323a !important;
   border-color: #55666d !important;
   color: #ffffff !important;
 }
 
+.dark select:not(.glass-input):not(.bg-transparent):not(.sr-only) {
+  background-color: var(--dropdown-surface, #27323a) !important;
+  border-color: var(--dropdown-border, #55666d) !important;
+  color: var(--dropdown-text, #ffffff) !important;
+}
+
+/* Native <select> Dropdown Lists (<option> & <optgroup>) across ALL themes & modes
+   Ensures options NEVER render invisible white text on a white popup background */
+select:not(.glass-input):not(.bg-transparent):not(.sr-only) {
+  background-color: var(--dropdown-surface, #ffffff);
+  border-color: var(--dropdown-border, #cbd5e1);
+  color: var(--dropdown-text, #0f172a);
+}
+
+select option,
+select optgroup,
+.dark select option,
+.dark select optgroup,
+#auth-form-panel select option,
+.dark #auth-form-panel select option {
+  background-color: var(--dropdown-bg, #ffffff) !important;
+  color: var(--dropdown-text, #0f172a) !important;
+  font-weight: 600;
+}
+
+select optgroup,
+.dark select optgroup {
+  color: var(--brand-primary) !important;
+  font-weight: 800;
+}
+
+select option:checked,
+select option:hover,
+select option:focus,
+.dark select option:checked,
+.dark select option:hover,
+.dark select option:focus {
+  background-color: var(--dropdown-selected-bg, var(--brand-primary)) !important;
+  background-image: linear-gradient(
+    0deg,
+    var(--dropdown-selected-bg, var(--brand-primary)) 0%,
+    var(--dropdown-selected-bg, var(--brand-primary)) 100%
+  ) !important;
+  color: var(--dropdown-selected-text, #ffffff) !important;
+}
+
+/* Custom Theme-Colored Dropdown Surfaces & Items */
+.theme-dropdown-trigger {
+  background-color: var(--dropdown-surface, #ffffff) !important;
+  border-color: var(--dropdown-border, #cbd5e1) !important;
+  color: var(--dropdown-text, #0f172a) !important;
+}
+
+.theme-dropdown-panel {
+  background-color: var(--dropdown-bg, #ffffff) !important;
+  border-color: var(--dropdown-border, #cbd5e1) !important;
+  color: var(--dropdown-text, #0f172a) !important;
+}
+
+.theme-dropdown-item {
+  color: var(--dropdown-text, #0f172a) !important;
+  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+
+.theme-dropdown-item:hover {
+  background-color: var(--dropdown-hover-bg, #e2e8f0) !important;
+}
+
+.theme-dropdown-item-active {
+  background-color: var(--dropdown-selected-bg, var(--brand-primary)) !important;
+  border-color: var(--brand-primary) !important;
+  color: var(--dropdown-selected-text, #ffffff) !important;
+}
+
+.theme-dropdown-item-active * {
+  color: var(--dropdown-selected-text, #ffffff) !important;
+}
+
+.theme-dropdown-badge {
+  background-color: var(--dropdown-badge-bg, #e2e8f0) !important;
+  color: var(--dropdown-badge-text, #0f172a) !important;
+  border-color: var(--dropdown-border, #cbd5e1) !important;
+}
+
+.theme-dropdown-item-active .theme-dropdown-badge {
+  background-color: rgba(255, 255, 255, 0.22) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+.dark select.bg-transparent:not(.glass-input):not(.sr-only) {
+  color: var(--dropdown-text, #ffffff) !important;
+}
+
 .dark input:focus,
 .dark select:focus,
 .dark textarea:focus {
-  border-color: #29a19c !important;
-  box-shadow: 0 0 0 2px rgba(41, 161, 156, 0.35) !important;
+  border-color: var(--brand-primary, #29a19c) !important;
+  box-shadow: 0 0 0 2px var(--brand-ring, rgba(41, 161, 156, 0.35)) !important;
 }
 
 .dark input::placeholder,
@@ -917,7 +1259,7 @@ html.dark [data-attendance-card] [data-force-white],
 /* Brand light tint in Dark Mode */
 .dark .bg-brand-light,
 .dark .bg-brand-light\/60 {
-  background-color: rgba(41, 161, 156, 0.18) !important;
+  background-color: color-mix(in srgb, var(--brand-primary) 20%, transparent) !important;
 }
 
 /* Elevated Cards in Dark Mode (#435055 surface, #55666d border) */
@@ -944,8 +1286,7 @@ html.dark [data-attendance-card] [data-force-white],
 
 /* Command Palette dialog in Dark Mode (#435055 with #55666d border) */
 .dark #command-dialog-panel,
-.dark [role="dialog"],
-.dark #notifications-dropdown {
+.dark [role="dialog"] {
   background-color: #435055 !important;
   border-color: #55666d !important;
 }

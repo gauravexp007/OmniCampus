@@ -23,6 +23,7 @@ import {
 import { useERP } from '../../../context/ERPContext';
 import { ResultRecord, Student } from '../../../types';
 import { cn } from '../../../lib/utils';
+import { normalizeToTenScale } from '../../../utils/cgpaScale';
 
 export interface SGPAProgressionChartProps {
   className?: string;
@@ -90,7 +91,7 @@ export const SGPAProgressionChart: React.FC<SGPAProgressionChartProps> = ({ clas
     );
 
     const currentSemester = Number(selectedStudent.semester) || 5;
-    const baseCGPA = Number(selectedStudent.cgpa) || 3.75;
+    const baseCGPA = normalizeToTenScale(selectedStudent.cgpa) || 9.4;
 
     // Generate deterministic baseline variation for earlier semesters if not explicitly logged
     const hash = selectedStudent.enrollmentNo
@@ -106,31 +107,31 @@ export const SGPAProgressionChart: React.FC<SGPAProgressionChartProps> = ({ clas
         semesters.push({
           semesterNumber: sem,
           semesterLabel: `Sem ${sem}`,
-          sgpa: Number(existing.sgpa),
-          cgpa: Number(existing.cgpa),
+          sgpa: normalizeToTenScale(existing.sgpa),
+          cgpa: normalizeToTenScale(existing.cgpa),
           status: existing.status,
           grade: existing.grade,
           credits: existing.creditsCompleted || 24,
           isCompleted: true,
         });
       } else if (sem <= currentSemester) {
-        // Deterministic realistic historical progression up to current semester
+        // Deterministic realistic historical progression up to current semester (out of 10)
         // slight upward natural trajectory towards baseCGPA
         const progressFactor = sem / currentSemester;
-        const variance = Math.sin(hash + sem * 1.5) * 0.12;
+        const variance = Math.sin(hash + sem * 1.5) * 0.3;
         const simulatedSGPA = Math.min(
-          4.0,
-          Math.max(2.4, Number((baseCGPA - 0.2 + progressFactor * 0.25 + variance).toFixed(2)))
+          10.0,
+          Math.max(6.0, Number((baseCGPA - 0.5 + progressFactor * 0.6 + variance).toFixed(2)))
         );
         const simulatedCGPA = Math.min(
-          4.0,
-          Math.max(2.4, Number((baseCGPA - 0.15 + progressFactor * 0.15).toFixed(2)))
+          10.0,
+          Math.max(6.0, Number((baseCGPA - 0.35 + progressFactor * 0.35).toFixed(2)))
         );
 
         let simulatedGrade = 'A';
-        if (simulatedSGPA >= 3.8) simulatedGrade = 'A+';
-        else if (simulatedSGPA >= 3.5) simulatedGrade = 'A';
-        else if (simulatedSGPA >= 3.0) simulatedGrade = 'B+';
+        if (simulatedSGPA >= 9.0) simulatedGrade = 'A+';
+        else if (simulatedSGPA >= 8.0) simulatedGrade = 'A';
+        else if (simulatedSGPA >= 7.0) simulatedGrade = 'B+';
         else simulatedGrade = 'B';
 
         semesters.push({
@@ -205,7 +206,7 @@ export const SGPAProgressionChart: React.FC<SGPAProgressionChartProps> = ({ clas
                 <span className="w-2 h-2 rounded-full bg-brand"></span>
                 Semester SGPA:
               </span>
-              <span className="font-bold text-indigo-300 text-sm">{data.sgpa?.toFixed(2)}</span>
+              <span className="font-bold text-indigo-300 text-sm tabular-nums">{data.sgpa?.toFixed(2)} / 10</span>
             </div>
 
             <div className="flex justify-between items-center text-[11px]">
@@ -213,7 +214,7 @@ export const SGPAProgressionChart: React.FC<SGPAProgressionChartProps> = ({ clas
                 <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
                 Cumulative CGPA:
               </span>
-              <span className="font-bold text-emerald-400">{data.cgpa?.toFixed(2)}</span>
+              <span className="font-bold text-emerald-400 tabular-nums">{data.cgpa?.toFixed(2)} / 10</span>
             </div>
           </div>
 
@@ -280,10 +281,10 @@ export const SGPAProgressionChart: React.FC<SGPAProgressionChartProps> = ({ clas
             Latest Term SGPA
           </p>
           <div className="flex items-baseline gap-1.5 mt-0.5">
-            <span className="text-lg font-black text-brand">
+            <span className="text-lg font-black text-brand tabular-nums">
               {latestSemester?.sgpa ? latestSemester.sgpa.toFixed(2) : '—'}
             </span>
-            <span className="text-[11px] text-slate-400 font-medium">/ 4.0</span>
+            <span className="text-[11px] text-slate-400 font-medium">/ 10</span>
           </div>
           <p className="text-[10px] text-slate-500 mt-0.5">
             {latestSemester ? latestSemester.semesterLabel : 'In Progress'}
@@ -295,10 +296,10 @@ export const SGPAProgressionChart: React.FC<SGPAProgressionChartProps> = ({ clas
             Cumulative CGPA
           </p>
           <div className="flex items-baseline gap-1.5 mt-0.5">
-            <span className="text-lg font-black text-emerald-600">
+            <span className="text-lg font-black text-emerald-600 tabular-nums">
               {latestSemester?.cgpa ? latestSemester.cgpa.toFixed(2) : '—'}
             </span>
-            <span className="text-[11px] text-slate-400 font-medium">/ 4.0</span>
+            <span className="text-[11px] text-slate-400 font-medium">/ 10</span>
           </div>
           <p className="text-[10px] text-slate-500 mt-0.5">Across Completed Semesters</p>
         </div>
@@ -310,7 +311,7 @@ export const SGPAProgressionChart: React.FC<SGPAProgressionChartProps> = ({ clas
           <div className="flex items-baseline gap-1.5 mt-0.5">
             <span
               className={cn(
-                'text-lg font-black',
+                'text-lg font-black tabular-nums',
                 deltaSGPA >= 0 ? 'text-emerald-600' : 'text-rose-600'
               )}
             >
@@ -330,10 +331,10 @@ export const SGPAProgressionChart: React.FC<SGPAProgressionChartProps> = ({ clas
           <div className="flex items-center gap-1.5 mt-1">
             <Award className="w-4 h-4 text-amber-500 shrink-0" />
             <span className="text-xs font-bold text-slate-800">
-              {latestSemester?.sgpa && latestSemester.sgpa >= 3.5 ? "Dean's Honors" : 'Good Standing'}
+              {latestSemester?.sgpa && latestSemester.sgpa >= 8.5 ? "Dean's Honors" : 'Good Standing'}
             </span>
           </div>
-          <p className="text-[10px] text-slate-500 mt-0.5">Threshold: 3.50 SGPA</p>
+          <p className="text-[10px] text-slate-500 mt-0.5">Threshold: 8.50 SGPA</p>
         </div>
       </div>
 
@@ -369,8 +370,8 @@ export const SGPAProgressionChart: React.FC<SGPAProgressionChartProps> = ({ clas
               />
 
               <YAxis
-                domain={[2.0, 4.0]}
-                ticks={[2.0, 2.5, 3.0, 3.5, 4.0]}
+                domain={[5.0, 10.0]}
+                ticks={[5.0, 6.0, 7.0, 8.0, 9.0, 10.0]}
                 tickLine={false}
                 axisLine={{ stroke: '#e2e8f0' }}
                 tick={{ fill: '#64748b', fontSize: 11 }}
@@ -379,11 +380,11 @@ export const SGPAProgressionChart: React.FC<SGPAProgressionChartProps> = ({ clas
 
               {/* Dean's List / Honors Reference Line */}
               <ReferenceLine
-                y={3.5}
+                y={8.5}
                 stroke="#f59e0b"
                 strokeDasharray="4 4"
                 label={{
-                  value: "Honors Benchmark (3.50)",
+                  value: "Honors Benchmark (8.50)",
                   position: 'insideTopRight',
                   fill: '#d97706',
                   fontSize: 10,
@@ -452,7 +453,7 @@ export const SGPAProgressionChart: React.FC<SGPAProgressionChartProps> = ({ clas
 
             <div className="flex items-center gap-1.5">
               <span className="w-3 h-0.5 border-t-2 border-dashed border-amber-500"></span>
-              <span className="font-semibold text-amber-700">Honors Cutoff (3.50)</span>
+              <span className="font-semibold text-amber-700">Honors Cutoff (8.50 / 10)</span>
             </div>
           </div>
 

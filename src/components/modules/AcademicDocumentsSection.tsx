@@ -621,7 +621,7 @@ export const AcademicDocumentsSection: React.FC = () => {
             </div>
 
             {/* Field Dropdown Selection */}
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex flex-wrap items-center gap-2 max-w-full">
               <label
                 htmlFor="faculty-field-select"
                 className="text-xs font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap"
@@ -740,12 +740,12 @@ export const AcademicDocumentsSection: React.FC = () => {
           </div>
         )}
 
-        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2.5">
+        <div className="flex flex-col lg:flex-row lg:flex-wrap items-stretch lg:items-center gap-2.5">
           {/* Subject Dropdown List */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2 min-w-0 w-full sm:w-auto">
             <label
               htmlFor="subject-filter-select"
-              className="text-xs font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap"
+              className="text-xs font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap shrink-0"
             >
               Subject:
             </label>
@@ -754,7 +754,7 @@ export const AcademicDocumentsSection: React.FC = () => {
               aria-label="Select subject to filter faculty documents"
               value={selectedSubjectKey}
               onChange={(e) => setSelectedSubjectKey(e.target.value)}
-              className="w-full md:w-64 px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#16191f] border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800 dark:text-slate-100 font-medium"
+              className="w-full sm:w-60 px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#16191f] border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800 dark:text-slate-100 font-medium"
             >
               <option value="All">All Subjects ({academicDocuments.length})</option>
               {subjectFilterOptions.map((subjectOpt) => (
@@ -766,10 +766,10 @@ export const AcademicDocumentsSection: React.FC = () => {
           </div>
 
           {/* Semester Filter Dropdown */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2 min-w-0 w-full sm:w-auto">
             <label
               htmlFor="semester-filter-select"
-              className="text-xs font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap"
+              className="text-xs font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap shrink-0"
             >
               Semester:
             </label>
@@ -778,7 +778,7 @@ export const AcademicDocumentsSection: React.FC = () => {
               aria-label="Filter academic documents by semester"
               value={selectedSemester}
               onChange={(e) => setSelectedSemester(e.target.value)}
-              className="w-full md:w-36 px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#16191f] border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800 dark:text-slate-100 font-medium cursor-pointer"
+              className="w-full sm:w-36 px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#16191f] border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800 dark:text-slate-100 font-medium cursor-pointer"
             >
               <option value="All">All Semesters</option>
               {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
@@ -790,7 +790,7 @@ export const AcademicDocumentsSection: React.FC = () => {
           </div>
 
           {/* Search */}
-          <div className="relative flex-1">
+          <div className="relative flex-1 min-w-[200px]">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
@@ -806,13 +806,13 @@ export const AcademicDocumentsSection: React.FC = () => {
           </div>
 
           {/* Field Type Filter Dropdown */}
-          <div className="flex items-center gap-2 shrink-0">
-            <Filter className="w-3.5 h-3.5 text-slate-400 hidden sm:block" />
+          <div className="flex items-center gap-2 min-w-0 w-full sm:w-auto">
+            <Filter className="w-3.5 h-3.5 text-slate-400 hidden sm:block shrink-0" />
             <select
               aria-label="Filter by academic field type"
               value={selectedFieldOption}
               onChange={(e) => setSelectedFieldOption(e.target.value as FacultyFieldSelection)}
-              className="w-full md:w-44 px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#16191f] border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800 dark:text-slate-100 font-medium"
+              className="w-full sm:w-44 px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#16191f] border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-brand text-slate-800 dark:text-slate-100 font-medium"
             >
               <option value="All">All Fields ({countsByType.All})</option>
               {ACADEMIC_FIELD_TYPES.map((fieldType) => (

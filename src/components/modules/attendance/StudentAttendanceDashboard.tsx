@@ -77,7 +77,7 @@ export const StudentAttendanceDashboard: React.FC = () => {
       program: 'B.Tech in Artificial Intelligence',
       semester: 6,
       section: 'CS-A',
-      cgpa: 3.92,
+      cgpa: 9.8,
       attendancePct: 92.5,
       feeStatus: 'Paid',
       status: 'Active',
@@ -217,11 +217,11 @@ export const StudentAttendanceDashboard: React.FC = () => {
   return (
     <div className="space-y-4">
       {/* 1. STUDENT HEADER & PROFILE BANNER */}
-      <div className="bg-white rounded-xl p-4 md:p-5 border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-3.5">
+      <div className="bg-white rounded-xl p-4 md:p-5 border border-slate-200 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div className="flex items-center gap-3.5 min-w-0">
           <div
             onClick={() => setViewMode(viewMode === 'monthly' ? 'overview' : 'monthly')}
-            className="cursor-pointer group flex items-center gap-3.5"
+            className="cursor-pointer group flex items-center gap-3.5 min-w-0"
             title="Click to view monthly attendance visualizer"
           >
             <img
@@ -229,15 +229,15 @@ export const StudentAttendanceDashboard: React.FC = () => {
               alt={activeStudent.name}
               className="w-12 h-12 rounded-full border-2 border-brand/30 group-hover:border-brand object-cover shrink-0 shadow-xs transition-all"
             />
-            <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-base font-bold text-slate-900 group-hover:text-brand group-hover:underline transition-colors flex items-center gap-1.5">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <h3 className="text-xl sm:text-2xl font-black text-slate-900 group-hover:text-brand group-hover:underline transition-colors flex flex-wrap items-center gap-2 tracking-tight">
                   <span>{activeStudent.name}</span>
                   <span className="text-xs font-normal text-brand bg-brand-light px-2 py-0.5 rounded-full border border-brand/20">
                     {viewMode === 'monthly' ? 'Viewing Monthly Calendar' : 'Click for Monthly View'}
                   </span>
                 </h3>
-                <span className="px-2 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-brand-light text-brand border border-brand/20">
+                <span className="px-3 py-0.5 rounded-full text-sm sm:text-base font-mono font-extrabold bg-brand-light text-brand border border-brand/20">
                   {activeStudent.enrollmentNo}
                 </span>
                 <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-700">
@@ -252,8 +252,8 @@ export const StudentAttendanceDashboard: React.FC = () => {
         </div>
 
         {/* Header Action Controls */}
-        <div className="flex items-center gap-2 shrink-0 flex-wrap">
-          <div className="relative flex items-center gap-1 bg-slate-100 dark:bg-[#1e2229] p-1 rounded-xl border border-slate-200/80 dark:border-[#373e4b] shadow-2xs">
+        <div className="flex items-center gap-2 flex-wrap max-w-full">
+          <div className="relative flex flex-wrap items-center gap-1 bg-slate-100 dark:bg-[#1e2229] p-1 rounded-xl border border-slate-200/80 dark:border-[#373e4b] shadow-2xs max-w-full">
             <button
               type="button"
               onClick={() => setViewMode('overview')}
@@ -421,7 +421,7 @@ export const StudentAttendanceDashboard: React.FC = () => {
 
       {/* 4. COURSE-WISE ATTENDANCE BREAKDOWN */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-4 md:p-5">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+        <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100 mb-3">
           <div className="flex items-center gap-2">
             <span className="p-1.5 rounded-lg bg-brand-light text-brand border border-brand/20">
               <BookOpen className="w-4 h-4" />
@@ -532,7 +532,7 @@ export const StudentAttendanceDashboard: React.FC = () => {
           </div>
 
           {/* Quick Filters */}
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
               onClick={() => setStatusFilter('all')}

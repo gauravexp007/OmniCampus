@@ -79,9 +79,9 @@ export const HRModule: React.FC = () => {
   return (
     <div className="space-y-4 animate-in fade-in duration-150">
       {/* Header */}
-      <div className="bg-white rounded-xl p-4 md:p-5 border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <div className="flex items-center gap-2">
+      <div className="bg-white rounded-xl p-4 md:p-5 border border-slate-200 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
             <h2 className="text-lg font-bold text-slate-900">Human Resources & Staff Payroll</h2>
             <span className="px-2 py-0.5 rounded-md text-xs font-semibold bg-slate-100 text-slate-700">
               {employees.length} {employees.length === 1 ? 'Employee' : 'Employees'}
@@ -92,7 +92,7 @@ export const HRModule: React.FC = () => {
         {role === 'Admin' && (
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-brand hover:bg-brand-hover text-white text-xs font-semibold transition-colors"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-brand hover:bg-brand-hover text-white text-xs font-semibold transition-colors self-start lg:self-auto"
           >
             <Plus className="w-4 h-4" />
             <span>Add Employee</span>

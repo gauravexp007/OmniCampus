@@ -40,6 +40,7 @@ import {
   LayoutPresetId,
   QuickAccessModuleId,
 } from '../../context/DashboardLayoutContext';
+import { normalizeToTenScale } from '../../utils/cgpaScale';
 
 interface ModularQuickAccessProps {
   onNavigate: (module: ERPModuleId) => void;
@@ -250,7 +251,10 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
       id: 'results',
       title: 'Results',
       subtitle: 'SGPA & CGPA Chart',
-      metric: results.length > 0 && results[0].cgpa ? `${results[0].cgpa} CGPA` : `${results.length} Marks`,
+      metric:
+        results.length > 0 && results[0].cgpa
+          ? `${normalizeToTenScale(results[0].cgpa).toFixed(2)} / 10 CGPA`
+          : `${results.length} Marks`,
       icon: Award,
       iconBg: 'bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 border border-purple-200/80 dark:border-purple-800/80',
       glowColor: 'from-purple-500/25',
@@ -478,10 +482,10 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
                     width: dropdownPosition.width,
                     maxHeight: dropdownPosition.maxHeight,
                   }}
-                  className="bg-white dark:bg-[#252b35] rounded-2xl shadow-2xl border-2 border-slate-300 dark:border-[#55666d] p-2.5 z-[9999] text-slate-900 dark:text-white backdrop-blur-xl ring-2 ring-black/15 overflow-y-auto"
+                  className="theme-dropdown-panel rounded-2xl shadow-2xl border-2 p-2.5 z-[9999] backdrop-blur-xl ring-2 ring-black/15 overflow-y-auto"
                 >
-                  <div className="px-3 py-2 border-b border-slate-100 dark:border-[#435055] flex items-center justify-between sticky top-0 bg-white/95 dark:bg-[#252b35]/95 backdrop-blur-sm -mt-1 pt-1 z-10">
-                    <span className="text-xs font-bold text-slate-900 dark:text-white">Quick Access Customizer</span>
+                  <div className="px-3 py-2 border-b border-brand/20 flex items-center justify-between sticky top-0 -mt-1 pt-1 z-10 backdrop-blur-sm">
+                    <span className="text-xs font-bold">Quick Access Customizer</span>
                     <button
                       type="button"
                       onClick={() => setIsMenuOpen(false)}
@@ -522,10 +526,10 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
                         setIsMenuOpen(false);
                         applyPreset('all-squares');
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer"
+                      className="theme-dropdown-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left cursor-pointer"
                     >
-                      <Square className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
-                      <span className="text-xs font-bold text-slate-700 dark:text-slate-200">All Large Squares</span>
+                      <Square className="w-3.5 h-3.5 text-brand" />
+                      <span className="text-xs font-bold">All Large Squares</span>
                     </button>
 
                     <button
@@ -534,10 +538,10 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
                         setIsMenuOpen(false);
                         applyPreset('all-bars');
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer"
+                      className="theme-dropdown-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left cursor-pointer"
                     >
-                      <RectangleHorizontal className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
-                      <span className="text-xs font-bold text-slate-700 dark:text-slate-200">All Wide Bars</span>
+                      <RectangleHorizontal className="w-3.5 h-3.5 text-brand" />
+                      <span className="text-xs font-bold">All Wide Bars</span>
                     </button>
 
                     <button
@@ -546,10 +550,10 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
                         setIsMenuOpen(false);
                         applyPreset('compact-circles');
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer"
+                      className="theme-dropdown-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left cursor-pointer"
                     >
-                      <CircleDot className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
-                      <span className="text-xs font-bold text-slate-700 dark:text-slate-200">Compact Circles</span>
+                      <CircleDot className="w-3.5 h-3.5 text-brand" />
+                      <span className="text-xs font-bold">Compact Circles</span>
                     </button>
 
                     <button
@@ -558,10 +562,10 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
                         setIsMenuOpen(false);
                         resetLayout();
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#435055] transition-colors cursor-pointer border-t border-slate-100 dark:border-[#435055] pt-2"
+                      className="theme-dropdown-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left cursor-pointer border-t border-brand/20 pt-2"
                     >
-                      <RotateCcw className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                      <span className="text-xs font-bold text-slate-700 dark:text-slate-200">Reset Shortcuts Layout</span>
+                      <RotateCcw className="w-3.5 h-3.5 text-amber-500" />
+                      <span className="text-xs font-bold">Reset Shortcuts Layout</span>
                     </button>
                   </div>
                 </motion.div>

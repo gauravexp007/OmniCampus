@@ -78,9 +78,9 @@ export const ReportsModule: React.FC = () => {
       ) : (
         <div className="space-y-4">
           {/* Header */}
-          <div className="bg-white rounded-xl p-4 md:p-5 border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <div className="flex items-center gap-2">
+          <div className="bg-white rounded-xl p-4 md:p-5 border border-slate-200 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
                 <h2 className="text-lg font-bold text-slate-900">Institutional Analytics & Reports</h2>
               </div>
             </div>
@@ -88,7 +88,7 @@ export const ReportsModule: React.FC = () => {
             <button
               onClick={handleExportComprehensiveReport}
               disabled={downloading}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition-colors disabled:opacity-50"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition-colors disabled:opacity-50 self-start lg:self-auto"
             >
               <Download className="w-4 h-4" />
               <span>{downloading ? 'Compiling...' : 'Export Report'}</span>

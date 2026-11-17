@@ -375,7 +375,7 @@ export const FacultyAttendanceRegister: React.FC = () => {
       program: newStudentForm.program,
       semester: Number(newStudentForm.semester),
       section: newStudentForm.section || 'A',
-      cgpa: 3.75,
+      cgpa: 9.4,
       attendancePct: 95.0,
       feeStatus: 'Paid',
       status: 'Active',
@@ -441,7 +441,7 @@ export const FacultyAttendanceRegister: React.FC = () => {
           </div>
 
           {/* Quick Roster Management Actions */}
-          <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
+          <div className="flex items-center gap-2.5 flex-wrap max-w-full">
             {departmentStudents.length > 0 && (
               <button
                 type="button"
@@ -480,13 +480,13 @@ export const FacultyAttendanceRegister: React.FC = () => {
         </div>
 
         {/* Assigned Faculty Selector */}
-        <div className="mt-4 p-3.5 rounded-xl bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] flex flex-col md:flex-row md:items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <span className="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+        <div className="mt-4 p-3.5 rounded-xl bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 shrink-0">
               <Users className="w-4 h-4" />
             </span>
-            <div>
-              <div className="flex items-center gap-2">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs font-bold text-slate-900 dark:text-white">
                   {role === 'Admin' ? 'Assign Attendance Register to Faculty' : 'Assigned Faculty Register'}
                 </span>
@@ -498,11 +498,11 @@ export const FacultyAttendanceRegister: React.FC = () => {
           </div>
 
           {role === 'Admin' ? (
-            <div className="flex items-center gap-2 min-w-[280px] sm:w-96">
+            <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full sm:w-96 max-w-full">
               <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap shrink-0">
                 Assigned Faculty:
               </span>
-              <div className="flex-1 min-w-0">
+              <div className="flex-1 min-w-[200px]">
                 <FacultySearchSelector
                   facultyList={faculty}
                   selectedFacultyId={assignedFacultyId}
@@ -515,7 +515,7 @@ export const FacultyAttendanceRegister: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                 Instructor: <strong className="text-slate-900 dark:text-white">{currentAssignedFaculty.name}</strong>
               </span>
@@ -685,8 +685,8 @@ export const FacultyAttendanceRegister: React.FC = () => {
 
       {/* HISTORICAL VIEW-ONLY WARNING */}
       {isPastDate && (
-        <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-2xl p-3.5 flex items-center justify-between gap-3 text-xs text-amber-900 dark:text-amber-200">
-          <div className="flex items-center gap-2">
+        <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-3 text-xs text-amber-900 dark:text-amber-200">
+          <div className="flex items-center gap-2 min-w-0">
             <Lock className="w-4 h-4 text-amber-700 dark:text-amber-400 shrink-0" />
             <span className="font-semibold">
               Viewing historical attendance for {selectedDate}. Past date attendance can be viewed only and cannot be edited.
@@ -695,7 +695,7 @@ export const FacultyAttendanceRegister: React.FC = () => {
           <button
             type="button"
             onClick={() => setSelectedDate(todayStr)}
-            className="px-3 py-1 rounded-lg bg-white dark:bg-[#252b35] border border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-300 font-bold hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-colors cursor-pointer shrink-0"
+            className="px-3 py-1 rounded-lg bg-white dark:bg-[#252b35] border border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-300 font-bold hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-colors cursor-pointer"
           >
             Return to Today ({todayStr})
           </button>
@@ -766,9 +766,9 @@ export const FacultyAttendanceRegister: React.FC = () => {
       </div>
 
       {/* 3. ROSTER FILTER & BATCH ACTION BAR */}
-      <div className="bg-white dark:bg-[#252b35] rounded-2xl p-3.5 border border-slate-200 dark:border-[#373e4b] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+      <div className="bg-white dark:bg-[#252b35] rounded-2xl p-3.5 border border-slate-200 dark:border-[#373e4b] shadow-xs flex flex-col xl:flex-row xl:items-center justify-between gap-3 text-xs">
         {/* Search */}
-        <div className="relative flex-1 max-w-sm">
+        <div className="relative flex-1 min-w-[200px] xl:max-w-sm">
           <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
           <input
             type="text"
@@ -780,7 +780,7 @@ export const FacultyAttendanceRegister: React.FC = () => {
         </div>
 
         {/* Status Filter Segmented Toggle */}
-        <div className="flex items-center gap-1.5 flex-wrap">
+        <div className="flex items-center gap-1.5 flex-wrap max-w-full">
           <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold mr-1">Show:</span>
           <AnimatedSegmentedToggle
             value={filterStatus}
@@ -811,7 +811,7 @@ export const FacultyAttendanceRegister: React.FC = () => {
         </div>
 
         {/* Batch Shortcuts */}
-        <div className="flex items-center gap-2 border-t md:border-t-0 pt-2 md:pt-0">
+        <div className="flex flex-wrap items-center gap-2 border-t xl:border-t-0 pt-2 xl:pt-0">
           <ConfettiButton
             type="button"
             variant="outline"
@@ -923,11 +923,11 @@ export const FacultyAttendanceRegister: React.FC = () => {
                             className="w-8 h-8 rounded-full border border-slate-300 dark:border-[#4b5563] object-cover shrink-0 group-hover:ring-2 group-hover:ring-brand transition-all shadow-2xs"
                           />
                           <div>
-                            <p className="font-bold text-slate-950 dark:text-white text-sm group-hover:text-brand dark:group-hover:text-brand-light transition-colors flex items-center gap-1.5">
+                            <p className="font-extrabold text-slate-950 dark:text-white text-base sm:text-[17px] leading-snug group-hover:text-brand dark:group-hover:text-brand-light transition-colors flex items-center gap-1.5">
                               <span>{student.name}</span>
-                              <CalendarDays className="w-3.5 h-3.5 text-brand opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                              <CalendarDays className="w-4 h-4 text-brand opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                             </p>
-                            <p className="text-[11px] font-mono text-slate-700 dark:text-slate-300 font-bold">
+                            <p className="text-sm font-mono text-slate-700 dark:text-slate-200 font-extrabold tracking-tight mt-0.5">
                               {student.enrollmentNo}
                             </p>
                           </div>

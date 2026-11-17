@@ -260,9 +260,9 @@ export const CommandDialog: React.FC<CommandDialogProps> = ({
                     className="flex items-center justify-between w-full p-2.5 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all text-left"
                   >
                     <div>
-                      <p className="text-xs font-bold text-slate-800">{s.name}</p>
-                      <p className="text-[11px] text-slate-500">
-                        {s.enrollmentNo} • {s.program}
+                      <p className="text-sm sm:text-base font-extrabold text-slate-800">{s.name}</p>
+                      <p className="text-xs sm:text-sm font-mono font-bold text-slate-600 mt-0.5">
+                        {s.enrollmentNo} <span className="font-sans font-normal text-slate-500">• {s.program}</span>
                       </p>
                     </div>
                   </button>

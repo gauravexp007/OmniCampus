@@ -23,6 +23,7 @@ import { Student } from '../../types';
 import { cn } from '../../lib/utils';
 import { SKETCH_STUDENT } from '../../utils/sketchAvatars';
 import { RightSideModal } from '../common/RightSideModal';
+import { normalizeToTenScale } from '../../utils/cgpaScale';
 
 export const StudentsModule: React.FC = () => {
   const { students, courses, results, addStudent, deleteStudent, updateStudent, role } = useERP();
@@ -44,21 +45,22 @@ export const StudentsModule: React.FC = () => {
     );
 
     if (studentResults.length === 0) {
-      return student.cgpa && student.cgpa > 0 ? Number(student.cgpa).toFixed(2) : 'Pending';
+      const normalized = normalizeToTenScale(student.cgpa);
+      return normalized > 0 ? normalized.toFixed(2) : 'Pending';
     }
 
     let totalWeighted = 0;
     let totalCredits = 0;
     studentResults.forEach((r) => {
       const credits = r.creditsCompleted || 20;
-      const sgpa = Number(r.sgpa) || 0;
+      const sgpa = normalizeToTenScale(r.sgpa);
       totalWeighted += sgpa * credits;
       totalCredits += credits;
     });
 
     if (totalCredits === 0) {
       const avg =
-        studentResults.reduce((acc, r) => acc + (Number(r.cgpa || r.sgpa) || 0), 0) /
+        studentResults.reduce((acc, r) => acc + normalizeToTenScale(r.cgpa || r.sgpa), 0) /
         studentResults.length;
       return avg.toFixed(2);
     }
@@ -187,14 +189,14 @@ export const StudentsModule: React.FC = () => {
   return (
     <div className="space-y-4 animate-in fade-in duration-150">
       {/* Top Banner / Actions Bar */}
-      <div className="bg-white dark:bg-[#252b35] rounded-2xl p-4 md:p-5 border border-slate-200 dark:border-[#373e4b] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-brand/10 dark:bg-brand/25 text-brand flex items-center justify-center">
+      <div className="bg-white dark:bg-[#252b35] rounded-2xl p-4 md:p-5 border border-slate-200 dark:border-[#373e4b] shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-9 h-9 rounded-xl bg-brand/10 dark:bg-brand/25 text-brand flex items-center justify-center shrink-0">
               <GraduationCap className="w-5 h-5" />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">Student Directory</h2>
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 dark:bg-[#2c3342] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-[#373e4b]">
                   {students.length} {students.length === 1 ? 'Record' : 'Records'}
@@ -205,7 +207,7 @@ export const StudentsModule: React.FC = () => {
         </div>
 
         {/* Action Buttons Zone: Uniquely Identifiable Primary Button & Secondary Tools */}
-        <div className="flex flex-wrap items-center gap-2.5 self-start md:self-auto">
+        <div className="flex flex-wrap items-center gap-2.5 max-w-full">
           {students.length > 0 && (
             <button
               onClick={handleExportCSV}
@@ -246,7 +248,7 @@ export const StudentsModule: React.FC = () => {
             </span>
           </div>
 
-          <div className="w-full sm:w-72 shrink-0">
+          <div className="w-full sm:w-72 max-w-full">
             <select
               aria-label="Interactive option to select student for overview"
               value={selectedStudent ? selectedStudent.id : ''}
@@ -271,8 +273,8 @@ export const StudentsModule: React.FC = () => {
         </div>
 
         {/* Row 2: Search Query & Filtering by Department / Semester */}
-        <div className="flex flex-col sm:flex-row items-center gap-2.5">
-          <div className="relative flex-1 w-full">
+        <div className="flex flex-col lg:flex-row lg:flex-wrap items-stretch lg:items-center gap-2.5">
+          <div className="relative flex-1 min-w-[200px]">
             <Search className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
@@ -283,7 +285,7 @@ export const StudentsModule: React.FC = () => {
             />
           </div>
 
-          <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
             <select
               value={selectedDepartment}
               onChange={(e) => setSelectedDepartment(e.target.value)}
@@ -325,7 +327,7 @@ export const StudentsModule: React.FC = () => {
                   <th className="px-4 py-3.5">Enrollment ID</th>
                   <th className="px-4 py-3.5">Department & Program</th>
                   <th className="px-4 py-3.5">Semester</th>
-                  <th className="px-4 py-3.5">CGPA</th>
+                  <th className="px-4 py-3.5">CGPA (/ 10)</th>
                   <th className="px-4 py-3.5">Attendance</th>
                   <th className="px-4 py-3.5">Fee Status</th>
                   <th className="px-4 py-3.5 text-right">Interactive Actions</th>
@@ -345,14 +347,14 @@ export const StudentsModule: React.FC = () => {
                           {student.name.charAt(0)}
                         </div>
                         <div>
-                          <p className="font-bold text-slate-900 dark:text-white group-hover:text-brand transition-colors">
+                          <p className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white group-hover:text-brand transition-colors leading-snug">
                             {student.name}
                           </p>
                           <p className="text-[11px] text-slate-400 dark:text-slate-500">{student.email}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3 font-mono text-[11px] text-slate-600 dark:text-slate-400 font-semibold">
+                    <td className="px-4 py-3 font-mono text-sm text-slate-700 dark:text-slate-200 font-bold tracking-tight">
                       {student.enrollmentNo}
                     </td>
                     <td className="px-4 py-3">
@@ -368,8 +370,8 @@ export const StudentsModule: React.FC = () => {
                           Pending Exams
                         </span>
                       ) : (
-                        <span className="text-brand font-extrabold bg-brand/10 dark:bg-brand/20 px-2 py-0.5 rounded-md">
-                          {getStudentCalculatedCGPA(student)}
+                        <span className="text-brand font-extrabold bg-brand/10 dark:bg-brand/20 px-2 py-0.5 rounded-md tabular-nums">
+                          {getStudentCalculatedCGPA(student)} / 10
                         </span>
                       )}
                     </td>
@@ -698,16 +700,16 @@ export const StudentsModule: React.FC = () => {
                   {selectedStudent.name.charAt(0)}
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
                       {selectedStudent.name}
                     </h3>
                     <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60">
                       Active Student
                     </span>
                   </div>
-                  <p className="text-slate-400 dark:text-slate-500 font-mono text-xs mt-0.5">
-                    Enrollment ID: <span className="font-bold text-slate-700 dark:text-slate-300">{selectedStudent.enrollmentNo}</span>
+                  <p className="text-slate-500 dark:text-slate-400 font-mono text-sm sm:text-base mt-1">
+                    Roll / Enrollment ID: <span className="font-extrabold text-slate-800 dark:text-slate-100">{selectedStudent.enrollmentNo}</span>
                   </p>
                 </div>
               </div>
@@ -728,9 +730,9 @@ export const StudentsModule: React.FC = () => {
                   <Award className="w-3.5 h-3.5 text-brand" />
                   <span>Current CGPA</span>
                 </div>
-                <div className="text-base font-extrabold text-brand">
+                <div className="text-base font-extrabold text-brand tabular-nums">
                   {getStudentCalculatedCGPA(selectedStudent)}{' '}
-                  <span className="text-[10px] font-normal text-slate-400">/ 4.0</span>
+                  <span className="text-[10px] font-normal text-slate-400">/ 10</span>
                 </div>
               </div>
 
@@ -871,8 +873,8 @@ export const StudentsModule: React.FC = () => {
                         <span className="text-[11px] text-slate-400 ml-2">Sem {res.semester}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-bold text-brand bg-brand/10 dark:bg-brand/20 px-2 py-0.5 rounded">
-                          SGPA: {res.sgpa}
+                        <span className="font-mono text-xs font-bold text-brand bg-brand/10 dark:bg-brand/20 px-2 py-0.5 rounded tabular-nums">
+                          SGPA: {normalizeToTenScale(res.sgpa).toFixed(2)} / 10
                         </span>
                         <span className="text-[10px] text-slate-500 dark:text-slate-400">
                           {res.creditsCompleted || 20} Credits

@@ -49,7 +49,7 @@ export function AnimatedSegmentedToggle<T extends string | number>({
       role="radiogroup"
       data-segmented-toggle="true"
       className={cn(
-        'inline-flex items-center bg-slate-100 dark:bg-[#1e2229] border border-slate-200/90 dark:border-[#373e4b] shadow-2xs select-none transition-colors',
+        'inline-flex flex-wrap items-center max-w-full bg-slate-100 dark:bg-[#1e2229] border border-slate-200/90 dark:border-[#373e4b] shadow-2xs select-none transition-colors',
         sizeStyles[size],
         className
       )}
@@ -65,7 +65,7 @@ export function AnimatedSegmentedToggle<T extends string | number>({
             aria-checked={isSelected}
             onClick={() => onChange(option.value)}
             className={cn(
-              'relative z-10 transition-colors cursor-pointer flex items-center justify-center whitespace-nowrap focus:outline-hidden',
+              'relative z-10 transition-colors cursor-pointer flex items-center justify-center sm:whitespace-nowrap text-center max-w-full focus:outline-hidden',
               buttonSizeStyles[size],
               isSelected
                 ? 'text-slate-900 dark:text-white font-extrabold'

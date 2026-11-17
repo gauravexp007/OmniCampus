@@ -118,16 +118,16 @@ export const FacultySearchSelector: React.FC<FacultySearchSelectorProps> = ({
           }
         }}
         className={cn(
-          'w-full flex items-center justify-between gap-2 border bg-white dark:bg-[#1f2633] border-slate-300 dark:border-[#373e4b] shadow-2xs hover:border-slate-400 dark:hover:border-slate-500 transition-all cursor-pointer select-none',
+          'theme-dropdown-trigger w-full flex items-center justify-between gap-2 border shadow-2xs transition-all cursor-pointer select-none',
           sizeStyles[size],
-          isOpen ? 'ring-2 ring-brand/30 border-brand dark:border-brand' : ''
+          isOpen ? 'ring-2 ring-brand/30 border-brand-solid' : ''
         )}
       >
         <div className="flex items-center gap-2 min-w-0 flex-1">
           {selectedFaculty ? (
             <>
               {/* Faculty ID Shown at the Front of Name */}
-              <span className="font-mono text-[10px] font-black px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 shrink-0">
+              <span className="theme-dropdown-badge font-mono text-[10px] font-black px-2 py-0.5 rounded-md border shrink-0">
                 [{selectedFaculty.employeeId}]
               </span>
 
@@ -136,13 +136,13 @@ export const FacultySearchSelector: React.FC<FacultySearchSelectorProps> = ({
                 {selectedFaculty.name}
               </span>
 
-              <span className="text-[11px] text-slate-400 dark:text-slate-400 truncate hidden sm:inline">
+              <span className="text-[11px] text-slate-500 dark:text-slate-300 truncate hidden sm:inline">
                 • {selectedFaculty.department}
               </span>
             </>
           ) : showAllOption && selectedFacultyId === 'ALL' ? (
             <div className="flex items-center gap-2">
-              <span className="font-mono text-[10px] font-black px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shrink-0">
+              <span className="theme-dropdown-badge font-mono text-[10px] font-black px-2 py-0.5 rounded-md border shrink-0">
                 [ALL]
               </span>
               <span className="font-extrabold text-slate-900 dark:text-white truncate">
@@ -150,8 +150,8 @@ export const FacultySearchSelector: React.FC<FacultySearchSelectorProps> = ({
               </span>
             </div>
           ) : (
-            <div className="flex items-center gap-2 text-slate-400 dark:text-slate-400">
-              <Search className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-2 text-slate-500 dark:text-slate-300">
+              <Search className="w-3.5 h-3.5 text-brand" />
               <span className="truncate">{placeholder}</span>
             </div>
           )}
@@ -161,7 +161,7 @@ export const FacultySearchSelector: React.FC<FacultySearchSelectorProps> = ({
         <div className="flex items-center gap-1.5 shrink-0 ml-1">
           {selectedFaculty && (
             <span
-              className="font-mono text-[9px] font-black px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hidden md:inline"
+              className="theme-dropdown-badge font-mono text-[9px] font-black px-1.5 py-0.5 rounded border hidden md:inline"
               title="Assigned Faculty Identifier"
             >
               {selectedFaculty.employeeId}
@@ -184,7 +184,7 @@ export const FacultySearchSelector: React.FC<FacultySearchSelectorProps> = ({
 
           <ChevronDown
             className={cn(
-              'w-3.5 h-3.5 text-slate-400 dark:text-slate-400 transition-transform duration-200',
+              'w-3.5 h-3.5 text-slate-500 dark:text-slate-300 transition-transform duration-200',
               isOpen ? 'rotate-180 text-brand' : ''
             )}
           />
@@ -193,17 +193,17 @@ export const FacultySearchSelector: React.FC<FacultySearchSelectorProps> = ({
 
       {/* Dropdown Popover */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-1.5 z-50 bg-white dark:bg-[#1a202c] rounded-xl shadow-xl border border-slate-300 dark:border-[#384252] p-2 space-y-2 backdrop-blur-md animate-in fade-in duration-150 max-w-full sm:min-w-[340px]">
+        <div className="theme-dropdown-panel absolute top-full left-0 right-0 mt-1.5 z-50 rounded-xl shadow-xl border p-2 space-y-2 backdrop-blur-md animate-in fade-in duration-150 max-w-full sm:min-w-[340px]">
           {/* Live Search Input Box */}
           <div className="relative">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-brand absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               ref={inputRef}
               type="text"
               placeholder="Search faculty name or ID..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-8 py-2 text-xs font-semibold bg-slate-50 dark:bg-[#141820] border border-slate-200 dark:border-[#373e4b] rounded-lg text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-brand"
+              className="w-full pl-9 pr-8 py-2 text-xs font-semibold bg-white/90 dark:bg-[#141820]/80 border border-brand/30 rounded-lg text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-brand"
             />
             {searchQuery && (
               <button
@@ -229,31 +229,31 @@ export const FacultySearchSelector: React.FC<FacultySearchSelectorProps> = ({
                   setSearchQuery('');
                 }}
                 className={cn(
-                  'w-full flex items-center justify-between p-2 rounded-lg text-left text-xs transition-colors cursor-pointer',
+                  'theme-dropdown-item w-full flex items-center justify-between p-2 rounded-lg text-left text-xs cursor-pointer border',
                   selectedFacultyId === 'ALL'
-                    ? 'bg-brand/10 dark:bg-brand/20 border border-brand/40 text-brand font-black'
-                    : 'hover:bg-slate-100 dark:hover:bg-[#252c38] text-slate-800 dark:text-slate-200 font-bold'
+                    ? 'theme-dropdown-item-active font-black'
+                    : 'border-transparent font-bold'
                 )}
               >
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-md bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300">
+                  <div className="theme-dropdown-badge w-6 h-6 rounded-md border flex items-center justify-center">
                     <Users className="w-3.5 h-3.5" />
                   </div>
                   <div>
-                    <span className="font-black text-xs text-slate-900 dark:text-white">
+                    <span className="font-black text-xs">
                       [ALL] {allOptionLabel}
                     </span>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400">
+                    <p className="text-[10px] opacity-75">
                       View records across all faculty members
                     </p>
                   </div>
                 </div>
-                {selectedFacultyId === 'ALL' && <Check className="w-3.5 h-3.5 text-brand" />}
+                {selectedFacultyId === 'ALL' && <Check className="w-3.5 h-3.5" />}
               </button>
             )}
 
             {filteredFaculty.length === 0 ? (
-              <div className="p-4 text-center text-slate-400 text-xs">
+              <div className="p-4 text-center opacity-70 text-xs">
                 No faculty members match &quot;{searchQuery}&quot;
               </div>
             ) : (
@@ -272,31 +272,31 @@ export const FacultySearchSelector: React.FC<FacultySearchSelectorProps> = ({
                       setSearchQuery('');
                     }}
                     className={cn(
-                      'w-full flex items-center justify-between gap-2 p-2 rounded-lg text-left text-xs transition-colors cursor-pointer border',
+                      'theme-dropdown-item w-full flex items-center justify-between gap-2 p-2 rounded-lg text-left text-xs cursor-pointer border',
                       isSelected
-                        ? 'bg-indigo-50/80 dark:bg-indigo-950/40 border-indigo-200 dark:border-indigo-800 text-indigo-900 dark:text-indigo-200'
-                        : 'border-transparent hover:bg-slate-50 dark:hover:bg-[#222834] text-slate-800 dark:text-slate-200'
+                        ? 'theme-dropdown-item-active'
+                        : 'border-transparent'
                     )}
                   >
                     <div className="flex items-center gap-2 min-w-0 flex-1">
                       {/* Avatar */}
-                      <div className="w-7 h-7 rounded-md bg-brand/10 dark:bg-brand/20 text-brand font-black text-xs flex items-center justify-center shrink-0 border border-brand/20">
+                      <div className="theme-dropdown-badge w-7 h-7 rounded-md font-black text-xs flex items-center justify-center shrink-0 border">
                         {fac.name.charAt(0)}
                       </div>
 
                       <div className="min-w-0">
                         {/* Faculty ID Shown at the Front of Name */}
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className="font-mono text-[10px] font-black px-1.5 py-0.2 rounded bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 border border-indigo-200 dark:border-indigo-700">
+                          <span className="theme-dropdown-badge font-mono text-[10px] font-black px-1.5 py-0.2 rounded border">
                             [{fac.employeeId}]
                           </span>
-                          <span className="font-extrabold text-xs text-slate-900 dark:text-white truncate">
+                          <span className="font-extrabold text-xs truncate">
                             {fac.name}
                           </span>
                         </div>
 
                         {/* Designation & Department */}
-                        <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                        <p className="text-[10px] opacity-75 truncate mt-0.5">
                           {fac.designation} • {fac.department}
                         </p>
                       </div>
@@ -304,10 +304,10 @@ export const FacultySearchSelector: React.FC<FacultySearchSelectorProps> = ({
 
                     {/* Faculty ID Shown at the End Corner While Searching */}
                     <div className="flex items-center gap-1.5 shrink-0 ml-2">
-                      <span className="font-mono text-[10px] font-black px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 shadow-2xs">
+                      <span className="theme-dropdown-badge font-mono text-[10px] font-black px-2 py-0.5 rounded-md border shadow-2xs">
                         {fac.employeeId}
                       </span>
-                      {isSelected && <Check className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />}
+                      {isSelected && <Check className="w-3.5 h-3.5" />}
                     </div>
                   </button>
                 );

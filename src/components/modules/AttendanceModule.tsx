@@ -67,14 +67,14 @@ export const AttendanceModule: React.FC = () => {
   return (
     <div className="space-y-4">
       {/* 1. TOP HEADER: TITLE & ROLE BADGE (Clutter-free, extra descriptive text removed) */}
-      <div className="bg-white rounded-xl p-4 md:p-5 border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2.5">
-            <span className="p-2 rounded-xl bg-brand-light text-brand border border-brand/20">
+      <div className="bg-white dark:bg-[#252b35] rounded-xl p-4 md:p-5 border border-slate-200 dark:border-[#373e4b] shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="p-2 rounded-xl bg-brand-light text-brand border border-brand/20 shrink-0">
               <CalendarCheck2 className="w-5 h-5" />
             </span>
-            <div>
-              <h2 className="text-lg font-bold text-slate-900">
+            <div className="min-w-0">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                 Campus Attendance Management
               </h2>
             </div>
@@ -82,16 +82,16 @@ export const AttendanceModule: React.FC = () => {
         </div>
 
         {/* Right side: Role badge & Quick Duty button for faculty */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex flex-wrap items-center gap-2 max-w-full min-w-0">
           {role === 'Admin' ? (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-800 border border-slate-300">
-              <ShieldCheck className="w-4 h-4 text-slate-600" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 dark:bg-[#2c3342] text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-[#373e4b]">
+              <ShieldCheck className="w-4 h-4 text-slate-600 dark:text-slate-300 shrink-0" />
               <span>Admin: Read-Only Audit</span>
             </span>
           ) : role === 'Faculty' ? (
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-50 text-purple-800 border border-purple-200">
-                <Award className="w-4 h-4 text-purple-600" />
+            <div className="flex flex-wrap items-center gap-2 max-w-full">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-50 dark:bg-purple-950/50 text-purple-800 dark:text-purple-200 border border-purple-200 dark:border-purple-800">
+                <Award className="w-4 h-4 text-purple-600 dark:text-purple-300 shrink-0" />
                 <span>Faculty: Authorized Marker</span>
               </span>
               <ConfettiButton
@@ -102,13 +102,13 @@ export const AttendanceModule: React.FC = () => {
                 enableClickCelebration={false}
                 className="bg-brand-light text-brand border-brand/20 hover:bg-brand-lighter"
               >
-                <Plus className="w-3.5 h-3.5" />
+                <Plus className="w-3.5 h-3.5 shrink-0" />
                 <span>Log Duty Check-In</span>
               </ConfettiButton>
             </div>
           ) : (
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-light text-brand border border-brand/20">
-              <GraduationCap className="w-4 h-4 text-brand" />
+              <GraduationCap className="w-4 h-4 text-brand shrink-0" />
               <span>Student Portal</span>
             </span>
           )}
@@ -116,7 +116,7 @@ export const AttendanceModule: React.FC = () => {
       </div>
 
       {/* 2. NAVIGATION TABS (ANIMATED SEGMENTED TOGGLE) */}
-      <div className="border-b border-slate-200 dark:border-[#373e4b] pb-3 flex items-center justify-between flex-wrap gap-2">
+      <div className="border-b border-slate-200 dark:border-[#373e4b] pb-3 flex items-center justify-between flex-wrap gap-2 max-w-full">
         <AnimatedSegmentedToggle
           value={activeTab}
           onChange={(val) => setActiveTab(val as typeof activeTab)}

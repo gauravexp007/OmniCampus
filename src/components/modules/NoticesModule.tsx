@@ -186,13 +186,13 @@ export const NoticesModule: React.FC<NoticesModuleProps> = ({ initialAssignedFac
   return (
     <div className="space-y-4 animate-in fade-in duration-150 pb-12">
       {/* Top Banner */}
-      <div className="bg-white dark:bg-[#1f242e] rounded-2xl p-5 border border-slate-200 dark:border-[#373e4b] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
+      <div className="bg-white dark:bg-[#1f242e] rounded-2xl p-5 border border-slate-200 dark:border-[#373e4b] shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div className="flex items-center gap-3 min-w-0">
           <div className="w-10 h-10 rounded-xl bg-brand/10 dark:bg-brand/20 text-brand flex items-center justify-center font-bold shrink-0">
             <Megaphone className="w-5 h-5" />
           </div>
-          <div>
-            <div className="flex items-center gap-2">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-lg font-bold text-slate-900 dark:text-white">
                 Notices & Administrative Circulars
               </h1>
@@ -216,7 +216,7 @@ export const NoticesModule: React.FC<NoticesModuleProps> = ({ initialAssignedFac
           <button
             type="button"
             onClick={() => handleOpenPublish()}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand hover:brightness-105 text-white font-bold text-xs shadow-xs transition-all cursor-pointer self-start md:self-auto"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand hover:brightness-105 text-white font-bold text-xs shadow-xs transition-all cursor-pointer self-start lg:self-auto"
           >
             <Plus className="w-4 h-4" />
             <span>Publish Notice to Faculty</span>
@@ -227,7 +227,7 @@ export const NoticesModule: React.FC<NoticesModuleProps> = ({ initialAssignedFac
       {/* Tabs & Controls Filter Bar */}
       <div className="bg-white dark:bg-[#1f242e] rounded-xl p-3 border border-slate-200 dark:border-[#373e4b] shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-3">
         {/* Navigation Tabs */}
-        <div className="flex items-center gap-1.5 overflow-x-auto">
+        <div className="flex flex-wrap items-center gap-1.5 max-w-full">
           <button
             type="button"
             onClick={() => setActiveTab('all')}
@@ -272,7 +272,7 @@ export const NoticesModule: React.FC<NoticesModuleProps> = ({ initialAssignedFac
         </div>
 
         {/* Search & Faculty Filter */}
-        <div className="flex items-center gap-2 flex-wrap lg:flex-nowrap flex-1 lg:max-w-xl">
+        <div className="flex items-center gap-2 flex-wrap flex-1 lg:max-w-xl">
           {/* Search Box */}
           <div className="relative flex-1 min-w-[200px]">
             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />

@@ -61,13 +61,13 @@ export const TimetableHeader: React.FC<TimetableHeaderProps> = ({
   return (
     <div className="space-y-4">
       {/* Top Banner & Title Row */}
-      <div className="bg-white dark:bg-[#2b2b2b] rounded-3xl p-4 sm:p-5 border border-slate-200/90 dark:border-[#525252] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#2b2b2b] rounded-3xl p-4 sm:p-5 border border-slate-200/90 dark:border-[#525252] shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         {/* Title & Metadata */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           <div className="w-11 h-11 rounded-2xl bg-linear-to-br from-[#1E3A8A] via-[#2563EB] to-[#60A5FA] text-white flex items-center justify-center shadow-md shrink-0">
             <CalendarDays className="w-6 h-6 text-white" />
           </div>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <h1 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight uppercase">
                 {isFaculty ? 'My Teaching Timetable' : 'Weekly Timetable Schedule'}
@@ -85,7 +85,7 @@ export const TimetableHeader: React.FC<TimetableHeaderProps> = ({
         </div>
 
         {/* Action Buttons Toolbar */}
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap max-w-full">
           {/* Conflict Badge (Admin Only) */}
           {isAdmin && (
             conflictCount > 0 ? (
@@ -107,7 +107,7 @@ export const TimetableHeader: React.FC<TimetableHeaderProps> = ({
 
           {/* Admin Faculty Filter Selector (Admin can search & view schedule per faculty) */}
           {isAdmin && (
-            <div className="w-56 sm:w-64">
+            <div className="w-full sm:w-64 max-w-full">
               <FacultySearchSelector
                 facultyList={facultyList}
                 selectedFacultyId={selectedFacultyFilter}
@@ -124,12 +124,12 @@ export const TimetableHeader: React.FC<TimetableHeaderProps> = ({
           )}
 
           {/* Class Selector */}
-          <div className="flex items-center gap-1 bg-slate-100 dark:bg-[#383838] px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-[#525252]">
-            <Filter className="w-3 h-3 text-slate-400" />
+          <div className="theme-dropdown-trigger flex items-center gap-1 px-2.5 py-1.5 rounded-xl border transition-colors">
+            <Filter className="w-3 h-3 text-brand shrink-0" />
             <select
               value={selectedBatch}
               onChange={(e) => onSelectBatch(e.target.value)}
-              className="text-xs font-bold bg-transparent text-slate-800 dark:text-white border-none focus:outline-hidden cursor-pointer"
+              className="text-xs font-bold bg-transparent border-none focus:outline-hidden cursor-pointer"
             >
               <option value="ALL">All Classes</option>
               {availableBatches.map((b) => (
@@ -204,8 +204,8 @@ export const TimetableHeader: React.FC<TimetableHeaderProps> = ({
 
       {/* Signature Top Category Tag Bar */}
       <div className="bg-white/95 dark:bg-[#2b2b2b] rounded-2xl p-2.5 sm:p-3 border border-slate-200/80 dark:border-[#525252] shadow-2xs">
-        <div className="flex items-center justify-between gap-2 overflow-x-auto pb-1 scrollbar-none">
-          <div className="flex items-center gap-2 min-w-max">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-2 max-w-full">
             <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 mr-1">
               Category:
             </span>

@@ -297,7 +297,7 @@ export const ProfileModule: React.FC = () => {
         </div>
 
         {/* Top Actions: Save & Log Out */}
-        <div className="flex items-center gap-2 self-start sm:self-center">
+        <div className="flex flex-wrap items-center gap-2 self-start sm:self-center max-w-full">
           <button
             type="button"
             onClick={() => handleSaveProfile()}
@@ -382,10 +382,15 @@ export const ProfileModule: React.FC = () => {
 
               <div className="space-y-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-white">{name || 'User'}</h2>
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">{name || 'User'}</h2>
                   <span className="px-2 py-0.5 rounded-md bg-brand/10 dark:bg-brand/20 text-brand text-[11px] font-bold">
                     {currentUser.role}
                   </span>
+                  {currentUser.role === 'Student' && (currentUser.idNumber || idNumber) && (
+                    <span className="font-mono text-sm font-extrabold px-2.5 py-0.5 rounded-md bg-brand-light text-brand border border-brand/25 shadow-2xs">
+                      {currentUser.idNumber || idNumber}
+                    </span>
+                  )}
                   {currentUser.role === 'Faculty' && (
                     <span className="font-mono text-[10px] font-black px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 shadow-2xs flex items-center gap-1">
                       <Lock className="w-3 h-3" />

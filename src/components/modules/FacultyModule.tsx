@@ -126,9 +126,9 @@ export const FacultyModule: React.FC = () => {
   return (
     <div className="space-y-4 animate-in fade-in duration-150">
       {/* Header */}
-      <div className="bg-white rounded-xl p-4 md:p-5 border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <div className="flex items-center gap-2">
+      <div className="bg-white rounded-xl p-4 md:p-5 border border-slate-200 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
             <h2 className="text-lg font-bold text-slate-900">Faculty Directory</h2>
             <span className="px-2 py-0.5 rounded-md text-xs font-semibold bg-slate-100 text-slate-700">
               {faculty.length} {faculty.length === 1 ? 'Member' : 'Members'}
@@ -139,7 +139,7 @@ export const FacultyModule: React.FC = () => {
         {(role === 'Admin' || role === 'Faculty') && (
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-brand hover:bg-brand-hover text-white text-xs font-semibold transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-brand hover:bg-brand-hover text-white text-xs font-semibold transition-colors cursor-pointer self-start lg:self-auto"
           >
             <Plus className="w-4 h-4" />
             <span>Add Faculty</span>
@@ -148,8 +148,8 @@ export const FacultyModule: React.FC = () => {
       </div>
 
       {/* Filter / Search Bar */}
-      <div className="bg-white rounded-xl p-3 border border-slate-200 shadow-xs flex flex-col sm:flex-row items-center gap-2.5">
-        <div className="relative flex-1 w-full">
+      <div className="bg-white rounded-xl p-3 border border-slate-200 shadow-xs flex flex-col lg:flex-row lg:flex-wrap items-stretch lg:items-center gap-2.5">
+        <div className="relative flex-1 min-w-[200px]">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
@@ -160,7 +160,7 @@ export const FacultyModule: React.FC = () => {
           />
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           <select
             value={selectedDept}
             onChange={(e) => setSelectedDept(e.target.value)}

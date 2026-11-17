@@ -169,17 +169,17 @@ export const Navbar: React.FC<NavbarProps> = ({
         </button>
 
         {/* Academic Term Selector (Large 2XL screens only) */}
-        <div className="hidden 2xl:flex items-center bg-white/80 dark:bg-[#354146] border border-slate-300/70 dark:border-[#55666d] rounded-full px-2.5 py-1 text-xs text-slate-700 dark:text-[#e5e5e5] shadow-2xs shrink-0">
-          <Calendar className="w-3 h-3 mr-1 text-slate-500 dark:text-[#a3f7bf]" />
+        <div className="theme-dropdown-trigger hidden 2xl:flex items-center border rounded-full px-2.5 py-1 text-xs shadow-2xs shrink-0">
+          <Calendar className="w-3 h-3 mr-1 text-brand" />
           <select
             id="term-selector"
             value={selectedTerm}
             onChange={(e) => setSelectedTerm(e.target.value)}
             aria-label="Academic Term"
-            className="bg-transparent border-0 text-[11px] font-bold text-slate-800 dark:text-[#ffffff] focus:outline-hidden cursor-pointer"
+            className="bg-transparent border-0 text-[11px] font-bold focus:outline-hidden cursor-pointer"
           >
-            <option value="Fall 2026" className="dark:bg-[#354146]">Fall 2026</option>
-            <option value="Spring 2027" className="dark:bg-[#354146]">Spring 2027</option>
+            <option value="Fall 2026">Fall 2026</option>
+            <option value="Spring 2027">Spring 2027</option>
           </select>
         </div>
 
@@ -229,7 +229,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: -4 }}
                 transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-[#435055] rounded-2xl shadow-xl border border-slate-200/80 dark:border-[#55666d] py-2.5 z-50 origin-top-right text-slate-900 dark:text-white"
+                className="theme-dropdown-panel absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl shadow-xl border py-2.5 z-50 origin-top-right"
               >
                 <div className="flex items-center justify-between px-3.5 pb-2.5 border-b border-slate-100">
                   <div className="flex items-center gap-2">
@@ -348,7 +348,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: -4 }}
                 transition={{ duration: 0.15 }}
-                className="absolute right-0 mt-2 w-56 bg-white dark:bg-[#435055] rounded-2xl shadow-xl border border-slate-200/90 dark:border-[#55666d] py-1.5 z-50 origin-top-right text-slate-900 dark:text-white"
+                className="theme-dropdown-panel absolute right-0 mt-2 w-56 rounded-2xl shadow-xl border py-1.5 z-50 origin-top-right"
               >
                 <div className="px-3.5 py-2 border-b border-slate-100">
                   <p className="text-xs font-bold text-slate-900 truncate">{currentUser.name}</p>

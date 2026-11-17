@@ -9,6 +9,7 @@ import {
   SemesterProgressDataPoint,
 } from '../types';
 import { calculateMonthAttendanceBreakdown } from './attendanceCalculator';
+import { normalizeToTenScale } from './cgpaScale';
 
 export interface ComprehensiveStudentPerformance {
   student: Student;
@@ -156,8 +157,12 @@ export function computeStudentComprehensivePerformance(
     return Boolean(matchEnroll || matchName);
   });
 
-  const baseCgpa = studentResult?.cgpa || Number(student.cgpa) || 3.82;
-  const latestSgpa = studentResult?.sgpa || Math.min(4.0, Math.round((baseCgpa + ((seed % 15) - 7) * 0.02) * 100) / 100);
+  const baseCgpa = normalizeToTenScale(studentResult?.cgpa || student.cgpa) || 9.55;
+  const normalizedLatestSgpa = normalizeToTenScale(studentResult?.sgpa);
+  const latestSgpa =
+    normalizedLatestSgpa > 0
+      ? normalizedLatestSgpa
+      : Math.min(10.0, Math.round((baseCgpa + ((seed % 15) - 7) * 0.05) * 100) / 100);
   const rank = studentResult?.rank || (seed % 8) + 1;
 
   // 3. Department curriculum subjects
@@ -171,10 +176,10 @@ export function computeStudentComprehensivePerformance(
   // 4. Generate Subject-wise performance metrics
   const subjectPerformances: StudentSubjectPerformance[] = fallbackCourses.map((c, index) => {
     const subSeed = (seed + index * 17) % 100;
-    // Base marks derived from student CGPA
+    // Base marks derived from student CGPA (out of 10)
     const baseSubjectMarks = Math.min(
       98,
-      Math.max(48, Math.round(baseCgpa * 23.5 + ((subSeed % 18) - 9)))
+      Math.max(48, Math.round(baseCgpa * 9.4 + ((subSeed % 18) - 9)))
     );
 
     // Subject attendance
@@ -193,12 +198,12 @@ export function computeStudentComprehensivePerformance(
     const highestScore = Math.min(100, Math.max(totalScore, 92 + (index % 6)));
 
     let grade: StudentSubjectPerformance['grade'] = 'B+';
-    let gpaEquiv = 3.3;
-    if (totalScore >= 90) { grade = 'A+'; gpaEquiv = 4.0; }
-    else if (totalScore >= 80) { grade = 'A'; gpaEquiv = 3.7; }
-    else if (totalScore >= 70) { grade = 'B+'; gpaEquiv = 3.3; }
-    else if (totalScore >= 60) { grade = 'B'; gpaEquiv = 3.0; }
-    else if (totalScore >= 50) { grade = 'C'; gpaEquiv = 2.0; }
+    let gpaEquiv = 8.0;
+    if (totalScore >= 90) { grade = 'A+'; gpaEquiv = 10.0; }
+    else if (totalScore >= 80) { grade = 'A'; gpaEquiv = 9.0; }
+    else if (totalScore >= 70) { grade = 'B+'; gpaEquiv = 8.0; }
+    else if (totalScore >= 60) { grade = 'B'; gpaEquiv = 7.0; }
+    else if (totalScore >= 50) { grade = 'C'; gpaEquiv = 6.0; }
     else { grade = 'F'; gpaEquiv = 0.0; }
 
     const isWeak = totalScore < 65 || subAttPct < 75;
@@ -317,10 +322,10 @@ export function computeStudentComprehensivePerformance(
     const isCurrent = s === currentSemesterNum;
 
     if (isCompleted || isCurrent) {
-      // Deterministic realistic SGPA curve
-      const delta = Math.sin((s + seed) * 1.2) * 0.18;
-      const semSgpa = Math.min(4.0, Math.max(3.2, Math.round((baseCgpa + delta) * 100) / 100));
-      const runningCgpa = Math.min(4.0, Math.max(3.3, Math.round((baseCgpa + delta * 0.5) * 100) / 100));
+      // Deterministic realistic SGPA curve (out of 10)
+      const delta = Math.sin((s + seed) * 1.2) * 0.45;
+      const semSgpa = Math.min(10.0, Math.max(6.5, Math.round((baseCgpa + delta) * 100) / 100));
+      const runningCgpa = Math.min(10.0, Math.max(6.8, Math.round((baseCgpa + delta * 0.5) * 100) / 100));
       const semAtt = Math.min(100, Math.max(76, Math.round(calculatedAttendancePct + Math.cos(s * 0.9) * 4)));
 
       semesterProgression.push({
@@ -330,7 +335,7 @@ export function computeStudentComprehensivePerformance(
         cgpa: runningCgpa,
         creditsEarned: s * 22,
         attendancePct: semAtt,
-        totalMarksPct: Math.round(runningCgpa * 23.8),
+        totalMarksPct: Math.round(runningCgpa * 9.5),
         rank: Math.max(1, (seed % 6) + (s % 3)),
         status: isCurrent ? 'Current' : 'Completed',
       });
@@ -352,7 +357,7 @@ export function computeStudentComprehensivePerformance(
   // 7. Performance growth delta
   const previousSem = semesterProgression[currentSemesterNum - 2];
   const currentSem = semesterProgression[currentSemesterNum - 1];
-  const sgpaDelta = currentSem && previousSem ? Math.round((currentSem.sgpa - previousSem.sgpa) * 100) / 100 : 0.08;
+  const sgpaDelta = currentSem && previousSem ? Math.round((currentSem.sgpa - previousSem.sgpa) * 100) / 100 : 0.2;
   const attDelta = currentSem && previousSem ? Math.round((currentSem.attendancePct - previousSem.attendancePct) * 10) / 10 : 1.2;
 
   // 8. Alerts generation
@@ -372,7 +377,7 @@ export function computeStudentComprehensivePerformance(
     });
   }
 
-  if (sgpaDelta < -0.25) {
+  if (sgpaDelta < -0.6) {
     alerts.push({
       id: `alert-declining-${student.id}`,
       type: 'declining_grades',
@@ -402,15 +407,15 @@ export function computeStudentComprehensivePerformance(
     });
   }
 
-  if (baseCgpa >= 3.8 && calculatedAttendancePct >= 75) {
+  if (baseCgpa >= 8.5 && calculatedAttendancePct >= 75) {
     alerts.push({
       id: `alert-excellence-${student.id}`,
       type: 'academic_excellence',
       severity: 'success',
       title: "Dean's List Academic Distinction",
-      message: `${student.name} ranks in the top cohort percentile with a CGPA of ${baseCgpa.toFixed(2)} and exemplary attendance compliance.`,
+      message: `${student.name} ranks in the top cohort percentile with a CGPA of ${baseCgpa.toFixed(2)} / 10 and exemplary attendance compliance.`,
       metricLabel: 'Cumulative CGPA',
-      metricValue: `${baseCgpa.toFixed(2)} / 4.00`,
+      metricValue: `${baseCgpa.toFixed(2)} / 10`,
       recommendation: 'Eligible for President’s Merit Fellowship and accelerated research mentorship.',
       date: '2026-10-01',
     });
@@ -422,7 +427,7 @@ export function computeStudentComprehensivePerformance(
       monthKey: '2026-08',
       monthName: 'August 2026',
       attendancePct: Math.min(100, Math.round(calculatedAttendancePct - 1.5)),
-      averageMarks: Math.round(baseCgpa * 23.0),
+      averageMarks: Math.round(baseCgpa * 9.2),
       sessionsRecorded: 22,
       assignmentsCompleted: 4,
     },
@@ -430,7 +435,7 @@ export function computeStudentComprehensivePerformance(
       monthKey: '2026-09',
       monthName: 'September 2026',
       attendancePct: sepBreakdown.calculatedPercentage,
-      averageMarks: Math.round(baseCgpa * 23.4),
+      averageMarks: Math.round(baseCgpa * 9.4),
       sessionsRecorded: sepBreakdown.netWorkingDays,
       assignmentsCompleted: 6,
     },
@@ -438,7 +443,7 @@ export function computeStudentComprehensivePerformance(
       monthKey: '2026-10',
       monthName: 'October 2026',
       attendancePct: octBreakdown.calculatedPercentage,
-      averageMarks: Math.round(baseCgpa * 23.9),
+      averageMarks: Math.round(baseCgpa * 9.6),
       sessionsRecorded: octBreakdown.netWorkingDays,
       assignmentsCompleted: 5,
     },
@@ -448,13 +453,13 @@ export function computeStudentComprehensivePerformance(
   const yearlyProgress = [
     {
       academicYear: '2023-2024 (Year 1)',
-      cgpa: Math.min(4.0, Math.round((baseCgpa - 0.12) * 100) / 100),
+      cgpa: Math.min(10.0, Math.round((baseCgpa - 0.3) * 100) / 100),
       attendancePct: 91.5,
       creditsEarned: 44,
     },
     {
       academicYear: '2024-2025 (Year 2)',
-      cgpa: Math.min(4.0, Math.round((baseCgpa - 0.05) * 100) / 100),
+      cgpa: Math.min(10.0, Math.round((baseCgpa - 0.12) * 100) / 100),
       attendancePct: 93.0,
       creditsEarned: 88,
     },
@@ -539,15 +544,15 @@ export function computeCohortAnalytics(
     filteredStudents.reduce((acc, s) => acc + (Number(s.attendancePct) || 85), 0) / total
   );
   const avgCgpa = Math.round(
-    (filteredStudents.reduce((acc, s) => acc + (Number(s.cgpa) || 3.5), 0) / total) * 100
+    (filteredStudents.reduce((acc, s) => acc + (normalizeToTenScale(s.cgpa) || 8.75), 0) / total) * 100
   ) / 100;
 
   const atRiskCount = filteredStudents.filter(
-    (s) => Number(s.attendancePct) < 75 || Number(s.cgpa) < 2.5
+    (s) => Number(s.attendancePct) < 75 || (normalizeToTenScale(s.cgpa) > 0 && normalizeToTenScale(s.cgpa) < 6.0)
   ).length;
 
   const honorsCount = filteredStudents.filter(
-    (s) => Number(s.cgpa) >= 3.75 && Number(s.attendancePct) >= 75
+    (s) => normalizeToTenScale(s.cgpa) >= 8.5 && Number(s.attendancePct) >= 75
   ).length;
 
   const attDist = {
@@ -557,12 +562,12 @@ export function computeCohortAnalytics(
   };
 
   const gradeDist = {
-    aPlus: filteredStudents.filter((s) => Number(s.cgpa) >= 3.9).length,
-    a: filteredStudents.filter((s) => Number(s.cgpa) >= 3.7 && Number(s.cgpa) < 3.9).length,
-    bPlus: filteredStudents.filter((s) => Number(s.cgpa) >= 3.3 && Number(s.cgpa) < 3.7).length,
-    b: filteredStudents.filter((s) => Number(s.cgpa) >= 3.0 && Number(s.cgpa) < 3.3).length,
-    c: filteredStudents.filter((s) => Number(s.cgpa) >= 2.0 && Number(s.cgpa) < 3.0).length,
-    f: filteredStudents.filter((s) => Number(s.cgpa) < 2.0).length,
+    aPlus: filteredStudents.filter((s) => normalizeToTenScale(s.cgpa) >= 9.0).length,
+    a: filteredStudents.filter((s) => normalizeToTenScale(s.cgpa) >= 8.0 && normalizeToTenScale(s.cgpa) < 9.0).length,
+    bPlus: filteredStudents.filter((s) => normalizeToTenScale(s.cgpa) >= 7.0 && normalizeToTenScale(s.cgpa) < 8.0).length,
+    b: filteredStudents.filter((s) => normalizeToTenScale(s.cgpa) >= 6.0 && normalizeToTenScale(s.cgpa) < 7.0).length,
+    c: filteredStudents.filter((s) => normalizeToTenScale(s.cgpa) >= 5.0 && normalizeToTenScale(s.cgpa) < 6.0).length,
+    f: filteredStudents.filter((s) => normalizeToTenScale(s.cgpa) < 5.0).length,
   };
 
   const subjectAverages = courses.slice(0, 5).map((c, i) => ({
@@ -578,7 +583,7 @@ export function computeCohortAnalytics(
     totalStudents: filteredStudents.length,
     averageAttendancePct: avgAtt,
     averageCgpa: avgCgpa,
-    averageMarksPct: Math.round(avgCgpa * 23.6),
+    averageMarksPct: Math.round(avgCgpa * 9.5),
     atRiskCount,
     honorsCount,
     subjectAverages,

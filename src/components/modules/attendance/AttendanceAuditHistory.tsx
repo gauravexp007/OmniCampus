@@ -233,8 +233,8 @@ export const AttendanceAuditHistory: React.FC = () => {
       {/* FILTER BAR: SEPARATE STUDENTS & FACULTIES, CHOOSE DEPARTMENT & DATE */}
       <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-xs space-y-3">
         {/* Row 1: Attendee Type Separation (All, Students, Faculties) */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
-          <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-lg w-fit">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+          <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-100 rounded-lg max-w-full w-fit">
             <button
               type="button"
               onClick={() => setAttendeeType('all')}
@@ -299,7 +299,7 @@ export const AttendanceAuditHistory: React.FC = () => {
           </div>
 
           {/* Quick status selector */}
-          <div className="flex items-center gap-1 text-xs">
+          <div className="flex flex-wrap items-center gap-1 text-xs">
             <span className="text-[11px] text-slate-400 font-medium mr-1">Status:</span>
             <button
               type="button"
@@ -344,14 +344,14 @@ export const AttendanceAuditHistory: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
           {/* Department Selection Filter */}
           <div className="sm:col-span-3 relative">
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs">
-              <Building2 className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+            <div className="theme-dropdown-trigger flex items-center gap-2 px-3 py-1.5 border rounded-lg text-xs">
+              <Building2 className="w-3.5 h-3.5 text-brand shrink-0" />
               <div className="flex-1">
                 <select
                   aria-label="Filter attendance history by department"
                   value={selectedDepartment}
                   onChange={(e) => setSelectedDepartment(e.target.value)}
-                  className="w-full bg-transparent text-slate-800 font-medium focus:outline-hidden cursor-pointer"
+                  className="w-full bg-transparent font-medium focus:outline-hidden cursor-pointer"
                 >
                   {DEPARTMENTS.map((dept) => (
                     <option key={dept} value={dept}>
@@ -365,15 +365,15 @@ export const AttendanceAuditHistory: React.FC = () => {
 
           {/* Semester Selection Filter */}
           <div className="sm:col-span-2">
-            <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs">
-              <GraduationCap className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+            <div className="theme-dropdown-trigger flex items-center gap-1.5 px-2.5 py-1.5 border rounded-lg text-xs">
+              <GraduationCap className="w-3.5 h-3.5 text-brand shrink-0" />
               <select
                 aria-label="Filter attendance history by semester"
                 value={selectedSemester}
                 onChange={(e) =>
                   setSelectedSemester(e.target.value === 'All' ? 'All' : Number(e.target.value))
                 }
-                className="w-full bg-transparent text-slate-800 font-medium focus:outline-hidden cursor-pointer"
+                className="w-full bg-transparent font-medium focus:outline-hidden cursor-pointer"
               >
                 <option value="All">All Semesters</option>
                 {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
@@ -479,12 +479,13 @@ export const AttendanceAuditHistory: React.FC = () => {
                           className="text-left group cursor-pointer focus:outline-hidden"
                           title={`Click to view ${rec.studentName}'s monthly attendance`}
                         >
-                          <p className="font-bold text-slate-900 group-hover:text-brand group-hover:underline transition-colors flex items-center gap-1.5">
+                          <p className="text-sm sm:text-base font-extrabold text-slate-900 group-hover:text-brand group-hover:underline transition-colors flex items-center gap-1.5 leading-snug">
                             <span>{rec.studentName}</span>
-                            <CalendarDays className="w-3 h-3 text-brand opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                            <CalendarDays className="w-3.5 h-3.5 text-brand opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                           </p>
-                          <p className="text-[11px] font-mono text-slate-500">
-                            {rec.enrollmentNo} • {rec.courseCode}: {rec.courseTitle}
+                          <p className="text-xs sm:text-sm font-mono font-bold text-slate-700 mt-0.5">
+                            <span>{rec.enrollmentNo}</span>
+                            <span className="font-sans font-normal text-[11px] text-slate-500"> • {rec.courseCode}: {rec.courseTitle}</span>
                           </p>
                         </button>
                       </td>
@@ -646,14 +647,14 @@ export const AttendanceAuditHistory: React.FC = () => {
 
             <div className="mt-4 space-y-2.5 text-xs">
               <div className="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                <p className="font-bold text-slate-900 text-sm">
+                <p className="font-extrabold text-slate-900 text-base sm:text-lg">
                   {selectedDetailRecord.type === 'student'
                     ? selectedDetailRecord.data.studentName
                     : selectedDetailRecord.type === 'faculty'
                     ? selectedDetailRecord.data.facultyName
                     : selectedDetailRecord.data.courseTitle}
                 </p>
-                <p className="text-slate-500 mt-0.5">
+                <p className="text-slate-700 font-mono text-sm font-bold mt-0.5">
                   {selectedDetailRecord.type === 'student'
                     ? `${selectedDetailRecord.data.enrollmentNo} • ${selectedDetailRecord.data.courseCode}`
                     : selectedDetailRecord.type === 'faculty'

@@ -53,6 +53,7 @@ import {
 } from '../../utils/attendanceCalculator';
 import { MonthlyAttendanceDonutChart } from '../common/MonthlyAttendanceDonutChart';
 import { AnimatedCounter, SpotlightCard } from '../common/DribbbleAnimations';
+import { normalizeToTenScale } from '../../utils/cgpaScale';
 
 interface DashboardAnalyticsSectionProps {
   onNavigate?: (module: ERPModuleId) => void;
@@ -168,11 +169,29 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
   const [marksChartType, setMarksChartType] = useState<MarksChartType>('bar');
 
   // 3. Student Inspection Selector:
-  // Default to Aayush Verma ('230101010001') so that Aayush and all students have the same graph representation!
-  const [selectedStudentEnrollment, setSelectedStudentEnrollment] = useState<string>('230101010001');
+  // Faculty starts with NO student selected so default student analytics are not shown automatically.
+  // Students resolve directly to their own profile; Admin defaults to Aayush Verma or selectable cohort.
+  const [selectedStudentEnrollment, setSelectedStudentEnrollment] = useState<string>(() => {
+    if (role === 'Faculty') return '';
+    if (role === 'Student') return 'self';
+    return '230101010001';
+  });
   const [isStudentDropdownOpen, setIsStudentDropdownOpen] = useState(false);
   const [studentDropdownSearch, setStudentDropdownSearch] = useState('');
   const studentDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Ensure switching roles resets Faculty selection to empty (no default student analytics)
+  useEffect(() => {
+    if (role === 'Faculty') {
+      setSelectedStudentEnrollment('');
+      setIsStudentDropdownOpen(false);
+      setStudentDropdownSearch('');
+    } else if (role === 'Student') {
+      setSelectedStudentEnrollment('self');
+    } else {
+      setSelectedStudentEnrollment((prev) => prev || '230101010001');
+    }
+  }, [role, currentUser?.id]);
 
   // Click outside listener for student dropdown popover
   useEffect(() => {
@@ -186,30 +205,35 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
   }, []);
 
   // Resolve current active student:
-  // - If selectedStudentEnrollment !== 'all-class': use selected student (e.g. Aayush Verma or any selected student)
-  // - If role is Student: default to logged-in student or Aayush Verma
+  // - If role is Faculty and selectedStudentEnrollment is empty: return null (no default student)
+  // - If role is Student: resolve to logged-in student
+  // - Otherwise match selected student enrollment
   const activeStudent = useMemo<Student | null>(() => {
-    if (selectedStudentEnrollment !== 'all-class') {
+    if (role === 'Student' || selectedStudentEnrollment === 'self') {
       const match = students.find(
         (s) =>
-          s.enrollmentNo.toLowerCase() === selectedStudentEnrollment.toLowerCase() ||
-          s.id === selectedStudentEnrollment
-      );
-      if (match) return match;
-    }
-
-    if (role === 'Student') {
-      const match = students.find(
-        (s) =>
-          s.email.toLowerCase() === currentUser.email?.toLowerCase() ||
-          s.name.toLowerCase() === currentUser.name?.toLowerCase() ||
+          (currentUser.idNumber && s.enrollmentNo.toLowerCase() === currentUser.idNumber.toLowerCase()) ||
+          (currentUser.email && s.email.toLowerCase() === currentUser.email.toLowerCase()) ||
+          s.name.toLowerCase() === (currentUser.name || '').toLowerCase() ||
           s.id === currentUser.id
       );
       return match || students[0] || null;
     }
 
-    return null;
+    if (!selectedStudentEnrollment || selectedStudentEnrollment === 'all-class') {
+      return null;
+    }
+
+    const match = students.find(
+      (s) =>
+        s.enrollmentNo.toLowerCase() === selectedStudentEnrollment.toLowerCase() ||
+        s.id === selectedStudentEnrollment
+    );
+    return match || null;
   }, [role, currentUser, students, selectedStudentEnrollment]);
+
+  // Whether analytics graphs should be displayed (Faculty must choose a student or cohort first)
+  const hasSelectedAnalyticsTarget = role !== 'Faculty' || Boolean(selectedStudentEnrollment);
 
   // Determine if we are visualizing an individual student or class-wide turnout
   const isIndividualStudentView = Boolean(activeStudent);
@@ -438,12 +462,12 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
       // If student has saved result records
       if (studentResults.length > 0) {
         return studentResults.map((r) => {
-          const sgpaNum = Number(r.sgpa) || 3.5;
-          const scoreEquivalent = Math.min(100, Math.round(sgpaNum * 25)); // 4.0 GPA -> 100%
+          const sgpaNum = normalizeToTenScale(r.sgpa) || 8.75;
+          const scoreEquivalent = Math.min(100, Math.round(sgpaNum * 10)); // 10.0 GPA -> 100%
           const semLabel = `Semester ${r.semester}`;
 
           return {
-            label: `${semLabel}: SGPA ${sgpaNum} (${r.grade})`,
+            label: `${semLabel}: SGPA ${sgpaNum.toFixed(2)} / 10 (${r.grade})`,
             shortLabel: `Sem ${r.semester}`,
             score: scoreEquivalent,
             classAverage: 78,
@@ -457,8 +481,8 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
 
       // If no result records, but student has CGPA on record
       if (activeStudent.cgpa) {
-        const cgpa = Number(activeStudent.cgpa);
-        const scoreEquiv = Math.min(100, Math.round(cgpa * 25));
+        const cgpa = normalizeToTenScale(activeStudent.cgpa);
+        const scoreEquiv = Math.min(100, Math.round(cgpa * 10));
         return [
           {
             label: `Semester ${activeStudent.semester || 1} Cumulative Score`,
@@ -467,8 +491,8 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
             classAverage: 76,
             highestScore: 96,
             gpaEquivalent: cgpa,
-            gradeLabel: cgpa >= 3.8 ? 'A+' : cgpa >= 3.5 ? 'A' : 'B+',
-            examType: `${activeStudent.program || 'Undergraduate'} GPA Record`,
+            gradeLabel: cgpa >= 9.0 ? 'A+' : cgpa >= 8.0 ? 'A' : 'B+',
+            examType: `${activeStudent.program || 'Undergraduate'} CGPA Record`,
           },
         ];
       }
@@ -485,8 +509,8 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
 
     // Display each saved result record across students
     return results.map((r, idx) => {
-      const sgpa = Number(r.sgpa) || 3.5;
-      const score = Math.min(100, Math.round(sgpa * 25));
+      const sgpa = normalizeToTenScale(r.sgpa) || 8.75;
+      const score = Math.min(100, Math.round(sgpa * 10));
 
       return {
         label: `${r.studentName} (Sem ${r.semester})`,
@@ -538,7 +562,7 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
   const currentMarksAverage = useMemo(() => {
     if (marksData.length === 0) {
       if (isIndividualStudentView && activeStudent?.cgpa) {
-        return (Number(activeStudent.cgpa) * 25).toFixed(1);
+        return (normalizeToTenScale(activeStudent.cgpa) * 10).toFixed(1);
       }
       return '0';
     }
@@ -604,10 +628,17 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
             <h3 className="text-lg md:text-xl font-bold text-slate-950 dark:text-white tracking-tight">
               Attendance & Marks Visualization
             </h3>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/60">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              Live Data ({attendanceData.length} Attendance • {marksData.length} Marks)
-            </span>
+            {hasSelectedAnalyticsTarget ? (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/60">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Live Data ({attendanceData.length} Attendance • {marksData.length} Marks)
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-brand-light text-brand border border-brand/25">
+                <Users className="w-3 h-3" />
+                Select Student ({students.length} Available)
+              </span>
+            )}
           </div>
         </div>
 
@@ -615,11 +646,11 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
         <div className="flex items-center gap-3 flex-wrap">
           {/* MODULAR ARCHITECTURAL STUDENT SELECTOR CONTROL */}
           <div className="relative" ref={studentDropdownRef}>
-            <div className="flex items-center p-1 rounded-xl bg-slate-100 dark:bg-[#181d26] border border-slate-300 dark:border-[#384252] shadow-xs hover:border-slate-400 dark:hover:border-slate-500 transition-all">
+            <div className="flex items-center p-1 rounded-xl bg-slate-100 dark:bg-[#181d26] border border-brand/30 shadow-xs transition-all">
               <button
                 type="button"
                 onClick={() => setIsStudentDropdownOpen((prev) => !prev)}
-                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-white dark:bg-[#1f2633] text-slate-900 dark:text-white border border-slate-200/90 dark:border-[#2d3748] shadow-2xs hover:shadow-xs transition-all cursor-pointer group"
+                className="theme-dropdown-trigger flex items-center gap-2 px-2.5 py-1.5 rounded-lg border shadow-2xs hover:shadow-xs transition-all cursor-pointer group"
                 title="Select student or class cohort analytics"
               >
                 {/* Modular Segment 1: Bold Mode Tag */}
@@ -642,19 +673,23 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
                   </div>
 
                   <div className="text-left flex flex-col justify-center min-w-0">
-                    <span className="text-xs font-black truncate max-w-[150px] sm:max-w-[210px] text-slate-950 dark:text-white tracking-tight flex items-center gap-1">
-                      {selectedStudentEnrollment === 'all-class' ? (
+                    <span className="text-sm sm:text-[15px] font-black truncate max-w-[170px] sm:max-w-[230px] text-slate-950 dark:text-white tracking-tight flex items-center gap-1 leading-snug">
+                      {!selectedStudentEnrollment ? (
+                        <span>Choose Student</span>
+                      ) : selectedStudentEnrollment === 'all-class' ? (
                         <span>All Students (Class Turnout)</span>
                       ) : (
-                        <span className="truncate">{activeStudent?.name || 'Aayush Verma'}</span>
+                        <span className="truncate">{activeStudent?.name || 'Choose Student'}</span>
                       )}
                     </span>
-                    <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 font-mono leading-none">
-                      {selectedStudentEnrollment === 'all-class'
+                    <span className="text-xs sm:text-[13px] font-bold text-slate-600 dark:text-slate-300 font-mono leading-none mt-0.5">
+                      {!selectedStudentEnrollment
+                        ? 'Select from dropdown'
+                        : selectedStudentEnrollment === 'all-class'
                         ? 'Cohort Overview'
                         : activeStudent
                         ? `${activeStudent.enrollmentNo} • Sem ${activeStudent.semester}`
-                        : '230101010001'}
+                        : 'Select from dropdown'}
                     </span>
                   </div>
                 </div>
@@ -679,7 +714,7 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
               onChange={(e) => setSelectedStudentEnrollment(e.target.value)}
               className="sr-only"
             >
-              <option value="230101010001">Aayush Verma</option>
+              <option value="">Choose Student</option>
               <option value="all-class">All Students</option>
               {students.map((s) => (
                 <option key={s.id} value={s.enrollmentNo}>
@@ -696,17 +731,17 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 8, scale: 0.96 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute top-full left-0 mt-2 z-50 w-80 sm:w-96 bg-white dark:bg-[#1c222c] rounded-2xl shadow-2xl border border-slate-300 dark:border-[#384252] p-3 space-y-2.5 backdrop-blur-md"
+                  className="theme-dropdown-panel absolute top-full left-0 mt-2 z-50 w-80 sm:w-96 rounded-2xl shadow-2xl border p-3 space-y-2.5 backdrop-blur-md"
                 >
                   {/* Search box */}
                   <div className="relative">
-                    <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Search className="w-3.5 h-3.5 text-brand absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       placeholder="Search student by name, roll no, department..."
                       value={studentDropdownSearch}
                       onChange={(e) => setStudentDropdownSearch(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 text-xs font-semibold bg-slate-50 dark:bg-[#141820] border border-slate-200 dark:border-[#373e4b] rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-brand font-medium"
+                      className="w-full pl-9 pr-3 py-2 text-xs font-semibold bg-white/90 dark:bg-[#141820]/80 border border-brand/30 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-brand font-medium"
                       autoFocus
                     />
                   </div>
@@ -721,10 +756,10 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
                         setIsStudentDropdownOpen(false);
                       }}
                       className={cn(
-                        'w-full flex items-center justify-between p-2.5 rounded-xl text-left text-xs transition-colors cursor-pointer',
+                        'theme-dropdown-item w-full flex items-center justify-between p-2.5 rounded-xl text-left text-xs cursor-pointer border',
                         selectedStudentEnrollment === 'all-class'
-                          ? 'bg-brand/10 dark:bg-brand/20 border border-brand/40 text-brand font-black'
-                          : 'hover:bg-slate-100 dark:hover:bg-[#252c38] text-slate-800 dark:text-slate-200 font-bold'
+                          ? 'theme-dropdown-item-active font-black'
+                          : 'border-transparent font-bold'
                       )}
                     >
                       <div className="flex items-center gap-2.5">
@@ -758,10 +793,10 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
                               setIsStudentDropdownOpen(false);
                             }}
                             className={cn(
-                              'w-full flex items-center justify-between p-2 rounded-xl text-left text-xs transition-colors cursor-pointer',
+                              'theme-dropdown-item w-full flex items-center justify-between p-2 rounded-xl text-left text-xs cursor-pointer border',
                               selectedStudentEnrollment === student.enrollmentNo
-                                ? 'bg-brand/10 dark:bg-brand/20 border border-brand/40 text-brand font-black'
-                                : 'hover:bg-slate-100 dark:hover:bg-[#252c38] text-slate-800 dark:text-slate-200'
+                                ? 'theme-dropdown-item-active font-black'
+                                : 'border-transparent'
                             )}
                           >
                             <div className="flex items-center gap-2.5 min-w-0">
@@ -769,10 +804,10 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
                                 {student.name.charAt(0)}
                               </div>
                               <div className="min-w-0">
-                                <p className="font-black text-xs truncate text-slate-900 dark:text-white flex items-center gap-1">
+                                <p className="font-black text-sm truncate text-slate-900 dark:text-white flex items-center gap-1">
                                   <span className="truncate">{student.name}</span>
                                 </p>
-                                <p className="text-[10px] text-slate-400 font-mono font-bold truncate">
+                                <p className="text-xs text-slate-500 dark:text-slate-300 font-mono font-bold truncate mt-0.5">
                                   {student.enrollmentNo} • Sem {student.semester}
                                 </p>
                               </div>
@@ -803,10 +838,10 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
                                 setIsStudentDropdownOpen(false);
                               }}
                               className={cn(
-                                'w-full flex items-center justify-between p-2 rounded-xl text-left text-xs transition-colors cursor-pointer',
+                                'theme-dropdown-item w-full flex items-center justify-between p-2 rounded-xl text-left text-xs cursor-pointer border',
                                 selectedStudentEnrollment === student.enrollmentNo
-                                  ? 'bg-brand/10 dark:bg-brand/20 border border-brand/40 text-brand font-black'
-                                  : 'hover:bg-slate-100 dark:hover:bg-[#252c38] text-slate-800 dark:text-slate-200'
+                                  ? 'theme-dropdown-item-active font-black'
+                                  : 'border-transparent'
                               )}
                             >
                               <div className="flex items-center gap-2 min-w-0">
@@ -814,8 +849,8 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
                                   {student.name.charAt(0)}
                                 </div>
                                 <div className="min-w-0">
-                                  <p className="font-black text-xs truncate text-slate-800 dark:text-slate-200">{student.name}</p>
-                                  <p className="text-[10px] text-slate-400 font-mono font-bold truncate">{student.enrollmentNo}</p>
+                                  <p className="font-black text-sm truncate text-slate-800 dark:text-slate-200">{student.name}</p>
+                                  <p className="text-xs text-slate-500 dark:text-slate-300 font-mono font-bold truncate mt-0.5">{student.enrollmentNo}</p>
                                 </div>
                               </div>
                               <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400">
@@ -831,79 +866,106 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
             </AnimatePresence>
           </div>
 
-          {/* TIMEFRAME SWITCHER: MONTHLY | YEARLY (Daily removed per user request) */}
-          <div className="inline-flex items-center p-1 rounded-2xl bg-slate-100 dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700/80 shadow-inner">
-            <button
-              type="button"
-              onClick={() => setTimeframe('monthly')}
-              className={cn(
-                'relative px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer',
-                timeframe === 'monthly'
-                  ? 'bg-white dark:bg-slate-900 text-brand shadow-xs border border-slate-200/60 dark:border-slate-700'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
-              )}
-            >
-              {timeframe === 'monthly' && (
-                <motion.div
-                  layoutId="active-timeframe-pill-sub"
-                  className="absolute inset-0 bg-white dark:bg-slate-900 rounded-xl -z-10 shadow-xs"
-                  transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                />
-              )}
-              Monthly Basis
-            </button>
-            <button
-              type="button"
-              onClick={() => setTimeframe('yearly')}
-              className={cn(
-                'relative px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer',
-                timeframe === 'yearly'
-                  ? 'bg-white dark:bg-slate-900 text-brand shadow-xs border border-slate-200/60 dark:border-slate-700'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
-              )}
-            >
-              {timeframe === 'yearly' && (
-                <motion.div
-                  layoutId="active-timeframe-pill-sub"
-                  className="absolute inset-0 bg-white dark:bg-slate-900 rounded-xl -z-10 shadow-xs"
-                  transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                />
-              )}
-              Yearly Basis
-            </button>
-          </div>
+          {/* TIMEFRAME SWITCHER & LAYOUT CONTROLS (Shown once analytics target is selected) */}
+          {hasSelectedAnalyticsTarget && (
+            <>
+              <div className="inline-flex items-center p-1 rounded-2xl bg-slate-100 dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700/80 shadow-inner">
+                <button
+                  type="button"
+                  onClick={() => setTimeframe('monthly')}
+                  className={cn(
+                    'relative px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer',
+                    timeframe === 'monthly'
+                      ? 'bg-white dark:bg-slate-900 text-brand shadow-xs border border-slate-200/60 dark:border-slate-700'
+                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                  )}
+                >
+                  {timeframe === 'monthly' && (
+                    <motion.div
+                      layoutId="active-timeframe-pill-sub"
+                      className="absolute inset-0 bg-white dark:bg-slate-900 rounded-xl -z-10 shadow-xs"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                  Monthly Basis
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTimeframe('yearly')}
+                  className={cn(
+                    'relative px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer',
+                    timeframe === 'yearly'
+                      ? 'bg-white dark:bg-slate-900 text-brand shadow-xs border border-slate-200/60 dark:border-slate-700'
+                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                  )}
+                >
+                  {timeframe === 'yearly' && (
+                    <motion.div
+                      layoutId="active-timeframe-pill-sub"
+                      className="absolute inset-0 bg-white dark:bg-slate-900 rounded-xl -z-10 shadow-xs"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                  Yearly Basis
+                </button>
+              </div>
 
-          {/* Graph Order / Position Customizer (Move Up / Down) */}
-          <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800/90 p-1 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-inner">
-            <button
-              type="button"
-              onClick={handleSwapGraphs}
-              className="px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-900 shadow-2xs"
-              title="Move Graphs Up / Down (Swap Attendance & Marks)"
-            >
-              <ArrowUpDown className="w-3.5 h-3.5 text-brand" />
-              <span className="text-[11px]">
-                {effectiveGraphOrder === 'attendance-first' ? 'Attendance First' : 'Marks First'}
-              </span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleToggleLayout(effectiveGraphLayout === 'grid' ? 'stacked' : 'grid')}
-              className={cn(
-                'px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1',
-                effectiveGraphLayout === 'stacked'
-                  ? 'bg-white dark:bg-slate-900 text-brand shadow-xs border border-slate-200/60 dark:border-slate-700'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
-              )}
-              title={effectiveGraphLayout === 'stacked' ? 'Switch to Side-by-Side Grid' : 'Switch to Stacked (Top & Down)'}
-            >
-              <LayoutGrid className="w-3 h-3" />
-              <span className="hidden md:inline">{effectiveGraphLayout === 'stacked' ? 'Stacked' : 'Grid'}</span>
-            </button>
-          </div>
+              {/* Graph Order / Position Customizer (Move Up / Down) */}
+              <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800/90 p-1 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-inner">
+                <button
+                  type="button"
+                  onClick={handleSwapGraphs}
+                  className="px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-900 shadow-2xs"
+                  title="Move Graphs Up / Down (Swap Attendance & Marks)"
+                >
+                  <ArrowUpDown className="w-3.5 h-3.5 text-brand" />
+                  <span className="text-[11px]">
+                    {effectiveGraphOrder === 'attendance-first' ? 'Attendance First' : 'Marks First'}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleToggleLayout(effectiveGraphLayout === 'grid' ? 'stacked' : 'grid')}
+                  className={cn(
+                    'px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1',
+                    effectiveGraphLayout === 'stacked'
+                      ? 'bg-white dark:bg-slate-900 text-brand shadow-xs border border-slate-200/60 dark:border-slate-700'
+                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                  )}
+                  title={effectiveGraphLayout === 'stacked' ? 'Switch to Side-by-Side Grid' : 'Switch to Stacked (Top & Down)'}
+                >
+                  <LayoutGrid className="w-3 h-3" />
+                  <span className="hidden md:inline">{effectiveGraphLayout === 'stacked' ? 'Stacked' : 'Grid'}</span>
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
+      {/* FACULTY PROMPT WHEN NO STUDENT IS SELECTED YET */}
+      {!hasSelectedAnalyticsTarget ? (
+        <div className="relative z-10 rounded-3xl border border-dashed border-brand/40 bg-brand-lighter/40 dark:bg-[#2b373d]/50 p-8 sm:p-10 flex flex-col items-center justify-center text-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-brand-light text-brand border border-brand/25 flex items-center justify-center shadow-2xs">
+            <TrendingUp className="w-6 h-6" />
+          </div>
+          <div className="space-y-1 max-w-md">
+            <h4 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white">
+              Choose a Student to View Analytics
+            </h4>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsStudentDropdownOpen(true)}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand hover:bg-brand-hover text-white text-xs font-bold shadow-xs transition-all cursor-pointer"
+          >
+            <Users className="w-4 h-4" />
+            <span>Select Student</span>
+            <ChevronDown className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      ) : (
+      <>
       {/* SELECTED STUDENT DETAIL BANNER */}
       {isIndividualStudentView && activeStudent && (
         <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-2xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
@@ -912,11 +974,11 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
               {activeStudent.name.charAt(0)}
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <span className="font-extrabold text-slate-900 dark:text-white text-sm">
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <span className="font-black text-slate-900 dark:text-white text-base sm:text-lg tracking-tight">
                   {activeStudent.name}
                 </span>
-                <span className="font-mono text-[11px] bg-white dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">
+                <span className="font-mono text-sm font-extrabold bg-white dark:bg-slate-900 px-2.5 py-0.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200">
                   {activeStudent.enrollmentNo}
                 </span>
                 {activeStudent.enrollmentNo === '230101010001' && (
@@ -931,14 +993,24 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setSelectedStudentEnrollment('all-class')}
-              className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-100 text-slate-700 dark:text-slate-300 text-xs font-bold border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer"
-            >
-              Class Overview
-            </button>
+          <div className="flex items-center gap-2 flex-wrap">
+            {role === 'Faculty' ? (
+              <button
+                type="button"
+                onClick={() => setSelectedStudentEnrollment('')}
+                className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-100 text-slate-700 dark:text-slate-300 text-xs font-bold border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer"
+              >
+                Clear Student
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setSelectedStudentEnrollment('all-class')}
+                className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-100 text-slate-700 dark:text-slate-300 text-xs font-bold border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer"
+              >
+                Class Overview
+              </button>
+            )}
             {onNavigate && (
               <button
                 type="button"
@@ -1473,10 +1545,12 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
               </span>
             </div>
             <div>
-              <span className="text-[10px] font-semibold text-slate-400 block">GPA Equivalent</span>
-              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-purple-700 dark:text-purple-300">
+              <span className="text-[10px] font-semibold text-slate-400 block">CGPA (Out of 10)</span>
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-purple-700 dark:text-purple-300 tabular-nums">
                 <GraduationCap className="w-3 h-3 text-purple-500" />
-                {isIndividualStudentView ? activeStudent?.cgpa || '3.80' : '3.85 Class Avg'}
+                {isIndividualStudentView
+                  ? `${normalizeToTenScale(activeStudent?.cgpa || 9.5).toFixed(2)} / 10`
+                  : '9.63 / 10 Class Avg'}
               </span>
             </div>
           </div>
@@ -1683,6 +1757,8 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
         </div>
       );
     })()}
+      </>
+      )}
   </div>
 );
 };
@@ -1798,9 +1874,9 @@ const CustomMarksTooltip: React.FC<TooltipProps> = ({ active, payload }) => {
           </span>
         </div>
         <div className="flex items-center justify-between text-[11px]">
-          <span className="text-slate-400">GPA Equivalent:</span>
-          <span className="font-bold text-slate-800 dark:text-slate-200">
-            {data.gpaEquivalent.toFixed(2)}
+          <span className="text-slate-400">CGPA Equivalent:</span>
+          <span className="font-bold text-slate-800 dark:text-slate-200 tabular-nums">
+            {data.gpaEquivalent.toFixed(2)} / 10
           </span>
         </div>
       </div>

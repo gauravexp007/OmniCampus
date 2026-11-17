@@ -87,7 +87,7 @@ export const StudentMonthlyAttendanceVisualizer: React.FC<StudentMonthlyAttendan
         program: 'B.Tech in Artificial Intelligence',
         semester: 6,
         section: 'CS-A',
-        cgpa: 3.92,
+        cgpa: 9.8,
         attendancePct: 96.4,
         feeStatus: 'Paid',
         status: 'Active',
@@ -289,10 +289,10 @@ export const StudentMonthlyAttendanceVisualizer: React.FC<StudentMonthlyAttendan
       )}
 
       {/* 1. HEADER & CONTROLS */}
-      <div className={cn('flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100', onClose && 'pr-12')}>
-        <div>
+      <div className={cn('flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-100', onClose && 'pr-12')}>
+        <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-lg bg-brand-light text-brand border border-brand/20">
+            <span className="p-1.5 rounded-lg bg-brand-light text-brand border border-brand/20 shrink-0">
               <CalendarIcon className="w-4 h-4" />
             </span>
             <h3 className="text-base font-bold text-slate-900">
@@ -302,17 +302,17 @@ export const StudentMonthlyAttendanceVisualizer: React.FC<StudentMonthlyAttendan
         </div>
 
         {/* Student Selector & Month Navigation */}
-        <div className="flex flex-wrap items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2.5 max-w-full">
           {/* Student Selector Dropdown */}
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs">
-            <User className="w-3.5 h-3.5 text-slate-500" />
+          <div className="theme-dropdown-trigger flex items-center gap-1.5 px-3 py-1.5 border rounded-lg text-xs max-w-full min-w-0">
+            <User className="w-3.5 h-3.5 text-brand shrink-0" />
             <select
               value={selectedStudentId}
               onChange={(e) => {
                 setSelectedStudentId(e.target.value);
                 setInspectedDay(null);
               }}
-              className="bg-transparent text-slate-800 font-bold focus:outline-hidden cursor-pointer"
+              className="bg-transparent font-bold focus:outline-hidden cursor-pointer max-w-full min-w-0 truncate"
             >
               {students.map((stu) => (
                 <option key={stu.id} value={stu.id}>
@@ -366,10 +366,10 @@ export const StudentMonthlyAttendanceVisualizer: React.FC<StudentMonthlyAttendan
           />
           <div className="min-w-0">
             <div className="flex items-center gap-1.5">
-              <p className="font-bold text-slate-900 text-sm truncate">{activeStudent.name}</p>
+              <p className="font-extrabold text-slate-900 text-base sm:text-lg truncate leading-snug">{activeStudent.name}</p>
             </div>
-            <p className="text-[11px] font-mono text-slate-500 truncate">{activeStudent.enrollmentNo}</p>
-            <p className="text-[10px] text-slate-600 truncate mt-0.5">
+            <p className="text-sm font-mono font-bold text-slate-700 truncate mt-0.5">{activeStudent.enrollmentNo}</p>
+            <p className="text-[11px] text-slate-600 truncate mt-0.5">
               {activeStudent.department} • Sem {activeStudent.semester}
             </p>
           </div>

@@ -22,6 +22,7 @@ import { cn } from '../../lib/utils';
 import { SGPAProgressionChart } from './results/SGPAProgressionChart';
 import { ConfettiButton } from '../ui/ConfettiButton';
 import { RightSideModal } from '../common/RightSideModal';
+import { normalizeToTenScale } from '../../utils/cgpaScale';
 
 interface SubjectMarkEntry {
   subjectName: string;
@@ -63,11 +64,11 @@ const DEFAULT_SUBJECTS: Record<string, SubjectMarkEntry[]> = {
 };
 
 const getGradePointFromMarks = (marks: number): { point: number; grade: ResultRecord['grade'] } => {
-  if (marks >= 90) return { point: 4.0, grade: 'A+' };
-  if (marks >= 80) return { point: 3.7, grade: 'A' };
-  if (marks >= 70) return { point: 3.3, grade: 'B+' };
-  if (marks >= 60) return { point: 3.0, grade: 'B' };
-  if (marks >= 50) return { point: 2.0, grade: 'C' };
+  if (marks >= 90) return { point: 10.0, grade: 'A+' };
+  if (marks >= 80) return { point: 9.0, grade: 'A' };
+  if (marks >= 70) return { point: 8.0, grade: 'B+' };
+  if (marks >= 60) return { point: 7.0, grade: 'B' };
+  if (marks >= 50) return { point: 6.0, grade: 'C' };
   return { point: 0.0, grade: 'F' };
 };
 
@@ -128,7 +129,7 @@ export const ResultsModule: React.FC = () => {
     let priorPoints = 0;
     existingStudentResults.forEach((r) => {
       const cr = Number(r.creditsCompleted) || 20;
-      const s = Number(r.sgpa) || 0;
+      const s = normalizeToTenScale(r.sgpa);
       priorCredits += cr;
       priorPoints += s * cr;
     });
@@ -140,13 +141,13 @@ export const ResultsModule: React.FC = () => {
         ? Number((cumulativePoints / cumulativeCredits).toFixed(2))
         : calculatedSGPA;
 
-    // Overall Letter Grade derived from SGPA
+    // Overall Letter Grade derived from SGPA (out of 10)
     let overallGrade: ResultRecord['grade'] = 'F';
-    if (calculatedSGPA >= 3.8) overallGrade = 'A+';
-    else if (calculatedSGPA >= 3.5) overallGrade = 'A';
-    else if (calculatedSGPA >= 3.0) overallGrade = 'B+';
-    else if (calculatedSGPA >= 2.5) overallGrade = 'B';
-    else if (calculatedSGPA >= 2.0) overallGrade = 'C';
+    if (calculatedSGPA >= 9.0) overallGrade = 'A+';
+    else if (calculatedSGPA >= 8.0) overallGrade = 'A';
+    else if (calculatedSGPA >= 7.0) overallGrade = 'B+';
+    else if (calculatedSGPA >= 6.0) overallGrade = 'B';
+    else if (calculatedSGPA >= 5.0) overallGrade = 'C';
 
     const totalMarks = subjectMarks.reduce((acc, sub) => acc + (Number(sub.marks) || 0), 0);
     const avgPercentage = subjectMarks.length > 0 ? (totalMarks / subjectMarks.length).toFixed(1) : '0';
@@ -260,11 +261,11 @@ export const ResultsModule: React.FC = () => {
     if (results.length === 0) return;
     const csvContent =
       'data:text/csv;charset=utf-8,' +
-      ['Enrollment,Student Name,Department,Semester,SGPA,CGPA,Grade,Status']
+      ['Enrollment,Student Name,Department,Semester,SGPA (/10),CGPA (/10),Grade,Status']
         .concat(
           results.map(
             (r) =>
-              `${r.enrollmentNo},"${r.studentName}","${r.department}",${r.semester},${r.sgpa},${r.cgpa},${r.grade},${r.status}`
+              `${r.enrollmentNo},"${r.studentName}","${r.department}",${r.semester},${normalizeToTenScale(r.sgpa).toFixed(2)},${normalizeToTenScale(r.cgpa).toFixed(2)},${r.grade},${r.status}`
           )
         )
         .join('\n');
@@ -280,9 +281,9 @@ export const ResultsModule: React.FC = () => {
   return (
     <div className="space-y-4 animate-in fade-in duration-150">
       {/* Header */}
-      <div className="bg-white rounded-xl p-4 md:p-5 border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="bg-white rounded-xl p-4 md:p-5 border border-slate-200 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-3">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <h2 className="text-lg font-bold text-slate-900">
               {role === 'Student' ? 'My Grades & Transcripts' : 'Results & Grade Management'}
             </h2>
@@ -292,7 +293,7 @@ export const ResultsModule: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 max-w-full">
           {results.length > 0 && (
             <ConfettiButton
               variant="outline"
@@ -363,8 +364,8 @@ export const ResultsModule: React.FC = () => {
                   <th className="px-4 py-3">Enrollment</th>
                   <th className="px-4 py-3">Department</th>
                   <th className="px-4 py-3">Semester</th>
-                  <th className="px-4 py-3">SGPA</th>
-                  <th className="px-4 py-3">CGPA</th>
+                  <th className="px-4 py-3">SGPA (/ 10)</th>
+                  <th className="px-4 py-3">CGPA (/ 10)</th>
                   <th className="px-4 py-3">Grade</th>
                   <th className="px-4 py-3">Status</th>
                   {role !== 'Student' && <th className="px-4 py-3 text-right">Action</th>}
@@ -373,14 +374,20 @@ export const ResultsModule: React.FC = () => {
               <tbody className="divide-y divide-slate-100 text-slate-700">
                 {filteredResults.map((result) => (
                   <tr key={result.id} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="px-4 py-3 font-semibold text-slate-900">{result.studentName}</td>
-                    <td className="px-4 py-3 font-mono text-[11px] text-slate-600">
+                    <td className="px-4 py-3 text-sm sm:text-base font-bold text-slate-900">{result.studentName}</td>
+                    <td className="px-4 py-3 font-mono text-sm font-bold text-slate-700">
                       {result.enrollmentNo}
                     </td>
                     <td className="px-4 py-3 text-slate-600">{result.department}</td>
                     <td className="px-4 py-3 font-medium">Sem {result.semester}</td>
-                    <td className="px-4 py-3 font-bold text-brand">{result.sgpa}</td>
-                    <td className="px-4 py-3 font-semibold text-slate-800">{result.cgpa}</td>
+                    <td className="px-4 py-3 font-bold text-brand tabular-nums">
+                      {normalizeToTenScale(result.sgpa).toFixed(2)}{' '}
+                      <span className="text-[10px] font-medium text-slate-400">/ 10</span>
+                    </td>
+                    <td className="px-4 py-3 font-semibold text-slate-800 tabular-nums">
+                      {normalizeToTenScale(result.cgpa).toFixed(2)}{' '}
+                      <span className="text-[10px] font-medium text-slate-400">/ 10</span>
+                    </td>
                     <td className="px-4 py-3">
                       <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-800">
                         {result.grade}
@@ -586,8 +593,8 @@ export const ResultsModule: React.FC = () => {
               <div className="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-2xs">
                 {/* Header Toolbar */}
                 <div className="bg-slate-50 px-4 py-2.5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <BookOpen className="w-4 h-4 text-brand" />
+                  <div className="flex flex-wrap items-center gap-2">
+                    <BookOpen className="w-4 h-4 text-brand shrink-0" />
                     <span className="text-xs font-bold text-slate-800">
                       Subject Examination Marks & Credits
                     </span>
@@ -599,7 +606,7 @@ export const ResultsModule: React.FC = () => {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <button
                       type="button"
                       onClick={handleResetDepartmentSubjects}
@@ -745,14 +752,14 @@ export const ResultsModule: React.FC = () => {
 
               {/* Broader, Compact Automatic Academic Analysis Section */}
               <div className="bg-brand-light/60 p-4 rounded-xl border border-brand/20 space-y-3">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <Calculator className="w-4 h-4 text-brand" />
+                    <Calculator className="w-4 h-4 text-brand shrink-0" />
                     <span className="text-xs font-bold text-slate-900">
                       Automatic Academic Analysis (Calculated)
                     </span>
                   </div>
-                  <div className="flex items-center gap-3 text-[11px] font-medium text-slate-600">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-medium text-slate-600">
                     <span>Average Marks: <strong className="text-slate-900">{calculationSummary.avgPercentage}%</strong></span>
                     <span>Total Points: <strong className="text-slate-900">{calculationSummary.totalPoints.toFixed(1)} pts</strong></span>
                     <span className="text-brand font-semibold">Based on {subjectMarks.length} Course Subjects</span>
@@ -763,8 +770,9 @@ export const ResultsModule: React.FC = () => {
                   {/* SGPA Card */}
                   <div className="bg-white p-3 rounded-xl border border-brand/20 shadow-2xs hover:shadow-xs transition-shadow">
                     <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">SEMESTER SGPA</p>
-                    <p className="text-xl sm:text-2xl font-black text-brand tracking-tight mt-0.5">
+                    <p className="text-xl sm:text-2xl font-black text-brand tracking-tight mt-0.5 tabular-nums">
                       {calculationSummary.sgpa.toFixed(2)}
+                      <span className="text-xs font-semibold text-slate-400"> / 10</span>
                     </p>
                     <p className="text-[10px] font-medium text-slate-400 mt-0.5">Sem {newResult.semester} Grade Point</p>
                   </div>
@@ -772,8 +780,9 @@ export const ResultsModule: React.FC = () => {
                   {/* CGPA Card */}
                   <div className="bg-white p-3 rounded-xl border border-brand/20 shadow-2xs hover:shadow-xs transition-shadow">
                     <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">CUMULATIVE CGPA</p>
-                    <p className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-0.5">
+                    <p className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-0.5 tabular-nums">
                       {calculationSummary.cgpa.toFixed(2)}
+                      <span className="text-xs font-semibold text-slate-400"> / 10</span>
                     </p>
                     <p className="text-[10px] font-medium text-slate-400 mt-0.5">
                       {calculationSummary.priorSemestersCount > 0
@@ -813,7 +822,7 @@ export const ResultsModule: React.FC = () => {
 
               {/* Publication Status & Action Buttons */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <label className="text-[11px] font-semibold text-slate-700 shrink-0">
                     Publication Status:
                   </label>
@@ -833,7 +842,7 @@ export const ResultsModule: React.FC = () => {
                   </select>
                 </div>
 
-                <div className="flex items-center justify-end gap-2">
+                <div className="flex flex-wrap items-center justify-end gap-2">
                   <button
                     type="button"
                     onClick={() => setIsAddModalOpen(false)}

@@ -869,11 +869,11 @@ export const AuthScreen: React.FC<AuthModalProps> = ({ initialMode = 'signin', o
                       isDarkMode ? 'text-white' : 'text-[#1e293b]'
                     )}
                   >
-                    <option className="bg-slate-900 text-white" value="Computer Science & Engineering">Computer Science & Engineering</option>
-                    <option className="bg-slate-900 text-white" value="Electrical & Electronics">Electrical & Electronics</option>
-                    <option className="bg-slate-900 text-white" value="Mechanical Engineering">Mechanical Engineering</option>
-                    <option className="bg-slate-900 text-white" value="Business Administration">Business Administration</option>
-                    <option className="bg-slate-900 text-white" value="Data Science & Artificial Intelligence">Data Science & Artificial Intelligence</option>
+                    <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                    <option value="Electrical & Electronics">Electrical & Electronics</option>
+                    <option value="Mechanical Engineering">Mechanical Engineering</option>
+                    <option value="Business Administration">Business Administration</option>
+                    <option value="Data Science & Artificial Intelligence">Data Science & Artificial Intelligence</option>
                   </select>
                 </div>
               )}

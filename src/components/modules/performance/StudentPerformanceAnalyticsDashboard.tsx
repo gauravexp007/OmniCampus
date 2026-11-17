@@ -72,6 +72,7 @@ import {
   AnimatedProgressRing,
   triggerDribbbleConfetti,
 } from '../../common/DribbbleAnimations';
+import { normalizeToTenScale } from '../../../utils/cgpaScale';
 
 const ProgressRing: React.FC<{
   value: number;
@@ -204,7 +205,7 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
       program: 'B.Tech Computer Science & AI',
       semester: 7,
       section: 'CS-A',
-      cgpa: 3.84,
+      cgpa: 9.6,
       attendancePct: 96.0,
       feeStatus: 'Paid',
       status: 'Active',
@@ -254,14 +255,15 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
       // Semester filter
       const matchSem = semesterFilter === 0 || s.semester === semesterFilter;
 
-      // Risk status filter
+      // Risk status filter (10-point CGPA scale)
       let matchRisk = true;
+      const cgpaTen = normalizeToTenScale(s.cgpa);
       if (riskFilter === 'at-risk') {
-        matchRisk = Number(s.attendancePct) < 75 || Number(s.cgpa) < 2.8;
+        matchRisk = Number(s.attendancePct) < 75 || (cgpaTen > 0 && cgpaTen < 6.5);
       } else if (riskFilter === 'declining') {
-        matchRisk = Number(s.cgpa) < 3.2;
+        matchRisk = cgpaTen > 0 && cgpaTen < 7.5;
       } else if (riskFilter === 'honors') {
-        matchRisk = Number(s.cgpa) >= 3.75;
+        matchRisk = cgpaTen >= 8.5;
       }
 
       return matchSearch && matchDept && matchSem && matchRisk;
@@ -307,8 +309,8 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
       [`Academic Advisor: ${activeStudent.mentor}`],
       [''],
       ['OVERALL PERFORMANCE KPIS'],
-      ['Cumulative CGPA', `${studentMetrics.cgpa.toFixed(2)} / 4.00`],
-      ['Latest SGPA', `${studentMetrics.latestSgpa.toFixed(2)} / 4.00`],
+      ['Cumulative CGPA', `${studentMetrics.cgpa.toFixed(2)} / 10`],
+      ['Latest SGPA', `${studentMetrics.latestSgpa.toFixed(2)} / 10`],
       ['Overall Attendance %', `${studentMetrics.overallAttendancePct}%`],
       ['Attended Sessions', studentMetrics.attendedSessions],
       ['Total Working Sessions', studentMetrics.totalWorkingSessions],
@@ -533,9 +535,9 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
       {/* ---------------------------------------------------- */}
       {role !== 'Student' && (
         <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-4">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
-            <div className="flex items-center gap-2">
-              <SlidersHorizontal className="w-4 h-4 text-brand" />
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+            <div className="flex flex-wrap items-center gap-2 min-w-0">
+              <SlidersHorizontal className="w-4 h-4 text-brand shrink-0" />
               <h3 className="text-sm font-extrabold text-slate-950 dark:text-white">
                 Faculty Student Directory & Risk Filters
               </h3>
@@ -595,7 +597,7 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
                 )}
               >
                 <Award className="w-3 h-3" />
-                <span>Dean's List (CGPA &ge; 3.75)</span>
+                <span>Dean's List (CGPA &ge; 8.50)</span>
               </button>
             </div>
           </div>
@@ -716,14 +718,14 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
                       alt={s.name}
                       className="w-4 h-4 rounded-full object-cover shrink-0"
                     />
-                    <span>{s.name}</span>
+                    <span className="text-sm font-extrabold">{s.name}</span>
                     <span
                       className={cn(
                         'text-[10px] px-1.5 py-0.2 rounded font-mono',
                         isSelected ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600'
                       )}
                     >
-                      CGPA {s.cgpa}
+                      CGPA {normalizeToTenScale(s.cgpa).toFixed(2)}/10
                     </span>
                   </button>
                 );
@@ -766,8 +768,8 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
 
             <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200/90 dark:border-slate-800 shadow-xs">
               <span className="text-xs font-bold text-slate-500 block">Cohort Average CGPA</span>
-              <p className="text-2xl font-black text-purple-700 dark:text-purple-400 mt-1">
-                {cohortAnalytics.averageCgpa.toFixed(2)} / 4.00
+              <p className="text-2xl font-black text-purple-700 dark:text-purple-400 mt-1 tabular-nums">
+                {cohortAnalytics.averageCgpa.toFixed(2)} / 10
               </p>
               <span className="text-[11px] text-purple-600 mt-0.5 block">
                 Grade A / Honors Benchmark
@@ -794,7 +796,7 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
                 {cohortAnalytics.honorsCount} Students
               </p>
               <span className="text-[11px] text-amber-600 mt-0.5 block">
-                CGPA &ge; 3.75 &amp; Clean Attendance
+                CGPA &ge; 8.50 &amp; Clean Attendance
               </span>
             </div>
           </div>
@@ -892,19 +894,19 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
           className="space-y-6"
         >
           {/* A. PERSONALIZED STUDENT PROFILE HERO BANNER */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-300/80 dark:border-slate-800 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-5">
-            <div className="flex items-center gap-4">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-300/80 dark:border-slate-800 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+            <div className="flex items-center gap-4 min-w-0">
               <img
                 src={activeStudent.avatar}
                 alt={activeStudent.name}
                 className="w-16 h-16 rounded-2xl object-cover border-2 border-brand/30 shadow-xs shrink-0"
               />
-              <div className="space-y-1">
+              <div className="space-y-1 min-w-0">
                 <div className="flex items-center gap-2.5 flex-wrap">
-                  <h3 className="text-lg md:text-xl font-black text-slate-950 dark:text-white">
+                  <h3 className="text-xl md:text-2xl font-black text-slate-950 dark:text-white tracking-tight">
                     {activeStudent.name}
                   </h3>
-                  <span className="font-mono text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2.5 py-0.5 rounded-lg border border-slate-200 dark:border-slate-700 font-bold">
+                  <span className="font-mono text-sm md:text-base bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 px-3 py-0.5 rounded-lg border border-slate-200 dark:border-slate-700 font-extrabold">
                     {activeStudent.enrollmentNo}
                   </span>
                   <span
@@ -931,7 +933,7 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
             </div>
 
             {/* Student Quick Action Buttons */}
-            <div className="flex items-center gap-2 shrink-0 self-start md:self-auto flex-wrap">
+            <div className="flex items-center gap-2 self-start lg:self-auto flex-wrap max-w-full">
               <button
                 type="button"
                 onClick={() => triggerDribbbleConfetti()}
@@ -1003,16 +1005,16 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
                   CGPA &amp; Standing
                 </span>
                 <AnimatedProgressRing
-                  value={(studentMetrics.cgpa / 4.0) * 100}
+                  value={(studentMetrics.cgpa / 10.0) * 100}
                   size={42}
                   strokeWidth={4}
                   color="#8B5CF6"
                   showText={false}
                 />
               </div>
-              <p className="text-2xl md:text-3xl font-black text-purple-700 dark:text-purple-400 mt-0.5">
+              <p className="text-2xl md:text-3xl font-black text-purple-700 dark:text-purple-400 mt-0.5 tabular-nums">
                 <AnimatedCounter value={studentMetrics.cgpa} decimals={2} />
-                <span className="text-xs text-slate-400 font-normal"> / 4.00</span>
+                <span className="text-xs text-slate-400 font-normal"> / 10</span>
               </p>
               <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
                 <span>Grade {studentMetrics.letterGrade}</span>
@@ -1226,7 +1228,7 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
                 </div>
                 <span className="text-xs font-mono font-bold text-purple-600 bg-purple-50 dark:bg-purple-950/40 px-2.5 py-1 rounded-xl border border-purple-200 dark:border-purple-800">
                   {timeHorizon === 'semester'
-                    ? `Current CGPA: ${studentMetrics.cgpa.toFixed(2)}`
+                    ? `Current CGPA: ${studentMetrics.cgpa.toFixed(2)} / 10`
                     : timeHorizon === 'monthly'
                     ? `Latest Month: ${studentMetrics.monthlyProgress[studentMetrics.monthlyProgress.length - 1]?.attendancePct}% Att.`
                     : `Degree Credits: ${activeStudent.creditsEarned} / 160`}
@@ -1249,10 +1251,10 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
                       <XAxis dataKey="semesterLabel" tickLine={false} tick={{ fill: '#64748B', fontSize: 11, fontWeight: 700 }} />
-                      <YAxis domain={[2.5, 4.0]} tickCount={6} tickLine={false} tick={{ fill: '#64748B', fontSize: 11 }} />
+                      <YAxis domain={[5.0, 10.0]} tickCount={6} tickLine={false} tick={{ fill: '#64748B', fontSize: 11 }} />
                       <RechartsTooltip />
                       <Legend />
-                      <ReferenceLine y={3.5} stroke="#10B981" strokeDasharray="3 3" label={{ value: 'Honors (3.50)', fill: '#10B981', fontSize: 10 }} />
+                      <ReferenceLine y={8.5} stroke="#10B981" strokeDasharray="3 3" label={{ value: 'Honors (8.50)', fill: '#10B981', fontSize: 10 }} />
                       <Area type="monotone" dataKey="sgpa" name="Semester SGPA" stroke="#8B5CF6" strokeWidth={2.5} fill="url(#sgpaGradDossier)" dot={{ r: 4, fill: '#8B5CF6', stroke: '#fff', strokeWidth: 2 }} />
                       <Line type="monotone" dataKey="cgpa" name="Cumulative CGPA" stroke="#6366F1" strokeWidth={2} strokeDasharray="4 4" dot={{ r: 3, fill: '#6366F1' }} />
                     </AreaChart>
@@ -1287,10 +1289,10 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
                     >
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
                       <XAxis dataKey="academicYear" tickLine={false} tick={{ fill: '#64748B', fontSize: 11, fontWeight: 700 }} />
-                      <YAxis domain={[0, 4.0]} tickCount={5} tickLine={false} tick={{ fill: '#64748B', fontSize: 11 }} />
+                      <YAxis domain={[0, 10.0]} tickCount={6} tickLine={false} tick={{ fill: '#64748B', fontSize: 11 }} />
                       <RechartsTooltip />
                       <Legend />
-                      <Bar dataKey="cgpa" name="Cumulative CGPA" fill="#8B5CF6" radius={[6, 6, 0, 0]} />
+                      <Bar dataKey="cgpa" name="Cumulative CGPA (/10)" fill="#8B5CF6" radius={[6, 6, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 )}
@@ -1505,8 +1507,8 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
                           {sub.grade}
                         </span>
                       </td>
-                      <td className="py-3 text-center font-mono font-bold text-slate-800 dark:text-slate-200">
-                        {sub.gpaEquivalent.toFixed(1)}
+                      <td className="py-3 text-center font-mono font-bold text-slate-800 dark:text-slate-200 tabular-nums">
+                        {sub.gpaEquivalent.toFixed(1)} / 10
                       </td>
                       <td className="py-3 text-center font-bold">
                         <span className={sub.attendancePct >= 75 ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400'}>

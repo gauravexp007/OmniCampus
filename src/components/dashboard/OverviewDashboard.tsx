@@ -25,6 +25,7 @@ import {
   Check,
   MoreVertical,
   LayoutGrid,
+  MapPin,
 } from 'lucide-react';
 import { useERP } from '../../context/ERPContext';
 import { ERPModuleId } from '../../types';
@@ -43,6 +44,7 @@ import {
   parseTimeToMinutes,
   formatMinutesToTime,
 } from '../timetable/TimetableTypes';
+import { normalizeToTenScale } from '../../utils/cgpaScale';
 
 interface OverviewDashboardProps {
   onNavigate: (module: ERPModuleId) => void;
@@ -138,8 +140,9 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
         },
         {
           id: 'results',
-          title: 'Cumulative GPA',
-          value: studentResult ? Number(studentResult.cgpa) : 3.84,
+          title: 'Cumulative CGPA',
+          value: studentResult ? normalizeToTenScale(studentResult.cgpa) : 9.6,
+          suffix: ' / 10',
           decimals: 2,
           tag: `${results.length} Semesters Evaluated`,
           icon: Award,
@@ -508,12 +511,12 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                     width: dropdownPosition.width,
                     maxHeight: dropdownPosition.maxHeight,
                   }}
-                  className="bg-white dark:bg-[#252b35] rounded-2xl shadow-2xl border-2 border-slate-300 dark:border-[#55666d] p-2.5 z-[9999] text-slate-900 dark:text-white backdrop-blur-xl ring-2 ring-black/15 overflow-y-auto"
+                  className="theme-dropdown-panel rounded-2xl shadow-2xl border-2 p-2.5 z-[9999] backdrop-blur-xl ring-2 ring-black/15 overflow-y-auto"
                 >
-                  <div className="px-3 py-2 border-b border-slate-100 dark:border-[#435055] flex items-center justify-between sticky top-0 bg-white/95 dark:bg-[#252b35]/95 backdrop-blur-sm -mt-1 pt-1 z-10">
+                  <div className="px-3 py-2 border-b border-brand/20 flex items-center justify-between sticky top-0 backdrop-blur-sm -mt-1 pt-1 z-10">
                     <div className="flex items-center gap-1.5">
-                      <Sliders className="w-3.5 h-3.5 text-[#29a19c]" />
-                      <span className="text-xs font-bold text-slate-900 dark:text-white">Customization Center</span>
+                      <Sliders className="w-3.5 h-3.5 text-brand" />
+                      <span className="text-xs font-bold">Customization Center</span>
                     </div>
                     <button
                       type="button"
@@ -534,7 +537,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                         setIsCustomizationMenuOpen(false);
                         setIsCustomizeOpen(true);
                       }}
-                      className="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-[#29a19c] dark:hover:bg-[#248f8a] text-white transition-all cursor-pointer shadow-xs group"
+                      className="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl bg-brand hover:bg-brand-hover text-white transition-all cursor-pointer shadow-xs group"
                     >
                       <div className="flex items-center gap-2.5">
                         <Sliders className="w-4 h-4 text-white" />
@@ -556,9 +559,9 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                         const btn = document.getElementById('quick-access-3dot-btn');
                         btn?.click();
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#354146] text-slate-800 dark:text-white transition-colors cursor-pointer group"
+                      className="theme-dropdown-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left cursor-pointer group"
                     >
-                      <LayoutGrid className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                      <LayoutGrid className="w-4 h-4 text-brand" />
                       <span className="text-xs font-bold">Customize Quick Access</span>
                     </button>
 
@@ -572,9 +575,9 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                         resetBlockOrder();
                         applyPreset('default-hybrid');
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#354146] text-slate-800 dark:text-white transition-colors cursor-pointer group"
+                      className="theme-dropdown-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left cursor-pointer group"
                     >
-                      <RotateCcw className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                      <RotateCcw className="w-4 h-4 text-amber-500" />
                       <span className="text-xs font-bold">Reset All Layouts</span>
                     </button>
 
@@ -586,9 +589,9 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                         setIsCustomizationMenuOpen(false);
                         onNavigate('settings');
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-[#354146] text-slate-800 dark:text-white transition-colors cursor-pointer group border-t border-slate-100 dark:border-[#435055] pt-2"
+                      className="theme-dropdown-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left cursor-pointer group border-t border-brand/20 pt-2"
                     >
-                      <Settings className="w-4 h-4 text-slate-500 dark:text-slate-300" />
+                      <Settings className="w-4 h-4 text-brand" />
                       <span className="text-xs font-bold">All System Customizations</span>
                     </button>
                   </div>
@@ -1288,69 +1291,126 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
 
       {/* =========================================================================
           SECTION 3: UPCOMING EXAMINATIONS
-          Clean cards positioned beneath the analytics graphs
+          Spacious vertical stack with responsive up-down details & larger fonts
           ========================================================================= */}
       <div className="w-full">
-        <div className="bg-white dark:bg-[#435055] rounded-3xl border border-slate-200/90 dark:border-[#55666d] p-5 sm:p-6 shadow-xs flex flex-col justify-between space-y-4">
+        <div className="bg-white dark:bg-[#435055] rounded-3xl border border-slate-200/90 dark:border-[#55666d] p-5 sm:p-7 shadow-xs flex flex-col justify-between space-y-5">
           <div>
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#55666d] pb-3 mb-4">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-[#a3f7bf] flex items-center justify-center shadow-2xs font-bold">
-                  <FileSpreadsheet className="w-4 h-4" />
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 dark:border-[#55666d] pb-4 mb-2">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-brand-light text-brand flex items-center justify-center shrink-0">
+                  <FileSpreadsheet className="w-5 h-5" />
                 </div>
-                <div>
-                  <h3 className="text-sm font-bold text-slate-950 dark:text-white">
+                <div className="min-w-0">
+                  <h3 className="text-lg sm:text-xl font-extrabold text-slate-950 dark:text-white tracking-tight">
                     Upcoming Examinations
                   </h3>
+                  <p className="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-300 mt-0.5">
+                    Scheduled assessments, timings &amp; venues
+                  </p>
                 </div>
               </div>
               <button
+                type="button"
                 onClick={() => onNavigate('exams')}
-                className="px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-[#29a19c] hover:bg-slate-200 dark:hover:bg-[#248f8a] text-slate-800 dark:text-white text-xs font-bold flex items-center gap-1 cursor-pointer transition-colors border border-slate-300 dark:border-[#29a19c] shadow-2xs"
+                className="px-4 py-2 rounded-xl bg-brand hover:bg-brand-hover text-white text-xs sm:text-sm font-bold inline-flex items-center gap-1.5 cursor-pointer transition-colors shadow-2xs shrink-0 whitespace-nowrap"
               >
-                <span className="text-slate-800 dark:text-white font-bold">All Exams</span>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-800 dark:text-white" />
+                <span>All Exams</span>
+                <ChevronRight className="w-4 h-4" />
               </button>
             </div>
 
             {exams.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="flex flex-col divide-y divide-slate-100 dark:divide-[#55666d]">
                 {exams.slice(0, 3).map((exam) => (
-                  <div
+                  <button
                     key={exam.id}
-                    className="p-3 bg-white dark:bg-[#354146] rounded-2xl border border-slate-200 dark:border-[#55666d] flex items-center justify-between text-xs text-slate-900 dark:text-white shadow-2xs"
+                    type="button"
+                    onClick={() => onNavigate('exams')}
+                    className="w-full text-left py-4 sm:py-5 px-2 sm:px-3 -mx-2 sm:-mx-3 rounded-2xl hover:bg-slate-50/70 dark:hover:bg-[#354146] transition-colors cursor-pointer group flex flex-col md:flex-row md:items-center md:justify-between gap-4"
                   >
-                    <div className="min-w-0 pr-2">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-[10px] font-bold text-white bg-slate-900 dark:bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-sm sm:text-base">
+                        <span className="font-mono font-extrabold text-brand dark:text-[#a3f7bf] tracking-wide">
                           {exam.courseCode}
                         </span>
-                        <h4 className="font-bold text-slate-900 dark:text-white truncate">
-                          {exam.courseTitle}
-                        </h4>
-                      </div>
-                      <p className="text-[11px] font-medium text-slate-600 dark:text-slate-300 mt-1">
-                        {exam.date} &bull; {exam.time} &bull;{' '}
-                        <span className="font-semibold text-slate-900 dark:text-white">
-                          {exam.venue}
+                        <span className="text-slate-300 dark:text-slate-400 font-bold" aria-hidden="true">
+                          &middot;
                         </span>
-                      </p>
+                        <span className="font-bold text-slate-700 dark:text-slate-200">
+                          {exam.examType}
+                        </span>
+                        {exam.semester && (
+                          <>
+                            <span className="text-slate-300 dark:text-slate-400 font-bold" aria-hidden="true">
+                              &middot;
+                            </span>
+                            <span className="font-semibold text-slate-600 dark:text-slate-300">
+                              Sem {exam.semester}
+                            </span>
+                          </>
+                        )}
+                      </div>
+
+                      <h4 className="text-lg sm:text-xl md:text-2xl font-extrabold text-slate-950 dark:text-white tracking-tight leading-snug mt-1.5">
+                        {exam.courseTitle}
+                      </h4>
+
+                      <div className="mt-3 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-x-6 sm:gap-y-2">
+                        <div className="inline-flex items-center gap-2 text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100 tabular-nums">
+                          <CalendarDays className="w-4 h-4 text-brand dark:text-[#a3f7bf] shrink-0" />
+                          <span>{exam.date}</span>
+                        </div>
+                        <div className="inline-flex items-center gap-2 text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100 tabular-nums">
+                          <Clock className="w-4 h-4 text-brand dark:text-[#a3f7bf] shrink-0" />
+                          <span>{exam.time}</span>
+                        </div>
+                        <div className="inline-flex items-center gap-2 text-sm sm:text-base font-extrabold text-slate-950 dark:text-white">
+                          <MapPin className="w-4 h-4 text-brand dark:text-[#a3f7bf] shrink-0" />
+                          <span>{exam.venue}</span>
+                        </div>
+                      </div>
                     </div>
-                    <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-900 dark:bg-[#1a202c] text-white shrink-0 border border-slate-700">
-                      {exam.examType}
-                    </span>
-                  </div>
+
+                    <div className="flex flex-wrap items-center justify-between md:flex-col md:items-end gap-2 pt-2 md:pt-0 border-t border-slate-100 md:border-t-0 dark:border-[#55666d]/60 shrink-0">
+                      <span className="text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-200">
+                        Hall Ticket:{' '}
+                        <span
+                          className={cn(
+                            'font-extrabold',
+                            exam.hallTicketStatus === 'Released'
+                              ? 'text-emerald-600 dark:text-[#a3f7bf]'
+                              : 'text-amber-600 dark:text-amber-300'
+                          )}
+                        >
+                          {exam.hallTicketStatus}
+                        </span>
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 text-sm font-bold text-brand dark:text-[#a3f7bf] group-hover:translate-x-0.5 transition-transform">
+                        <span>View Details</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </span>
+                    </div>
+                  </button>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-6 text-slate-400 dark:text-[#a3f7bf]/70 text-xs font-medium">
-                No active exam schedules.
+              <div className="py-10 text-center space-y-2">
+                <p className="text-base sm:text-lg font-bold text-slate-700 dark:text-slate-200">
+                  No active exam schedules
+                </p>
+                <p className="text-sm text-slate-500 dark:text-slate-300">
+                  Upcoming assessments and hall ticket dates will appear here once scheduled.
+                </p>
               </div>
             )}
           </div>
-          <div className="pt-2 border-t border-slate-100 dark:border-[#55666d] flex items-center justify-between text-[11px] text-slate-400 dark:text-[#a3f7bf]">
+
+          <div className="pt-3 border-t border-slate-100 dark:border-[#55666d] flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm font-semibold text-slate-500 dark:text-[#a3f7bf]">
             <span>Hall Ticket Generation Ready</span>
-            <span>{exams.length} Active Exams</span>
+            <span className="tabular-nums font-bold text-slate-800 dark:text-white">
+              {exams.length} Active {exams.length === 1 ? 'Exam' : 'Exams'}
+            </span>
           </div>
         </div>
       </div>

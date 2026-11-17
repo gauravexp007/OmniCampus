@@ -116,9 +116,9 @@ export const FinanceModule: React.FC = () => {
   return (
     <div className="space-y-4 animate-in fade-in duration-150">
       {/* Header */}
-      <div className="bg-white rounded-xl p-4 md:p-5 border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <div className="flex items-center gap-2">
+      <div className="bg-white rounded-xl p-4 md:p-5 border border-slate-200 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
             <h2 className="text-lg font-bold text-slate-900">Finance & Fee Invoices</h2>
             <span className="px-2 py-0.5 rounded-md text-xs font-semibold bg-slate-100 text-slate-700">
               {transactions.length} {transactions.length === 1 ? 'Record' : 'Records'}
@@ -132,6 +132,7 @@ export const FinanceModule: React.FC = () => {
             size="sm"
             onClick={() => setIsAddModalOpen(true)}
             enableClickCelebration={false}
+            className="self-start lg:self-auto"
           >
             <Plus className="w-4 h-4" />
             <span>Create Invoice</span>
@@ -165,8 +166,8 @@ export const FinanceModule: React.FC = () => {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-white rounded-xl p-3 border border-slate-200 shadow-xs flex flex-col sm:flex-row gap-2.5 sm:items-center justify-between">
-        <div className="relative flex-1">
+      <div className="bg-white rounded-xl p-3 border border-slate-200 shadow-xs flex flex-col lg:flex-row lg:flex-wrap gap-2.5 lg:items-center justify-between">
+        <div className="relative flex-1 min-w-[200px]">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
@@ -233,11 +234,11 @@ export const FinanceModule: React.FC = () => {
                       {tx.invoiceNo}
                     </td>
                     <td className="px-4 py-3">
-                      <div className="font-semibold text-slate-900">{tx.studentName}</div>
-                      <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-mono">
+                      <div className="text-sm sm:text-base font-bold text-slate-900">{tx.studentName}</div>
+                      <div className="flex items-center gap-1.5 text-xs sm:text-sm text-slate-600 font-mono font-bold mt-0.5">
                         <span>{tx.enrollmentNo}</span>
                         {resolveTxSemester(tx) && (
-                          <span className="px-1.5 py-0.2 rounded bg-brand/10 text-brand font-sans font-bold">
+                          <span className="px-1.5 py-0.2 rounded bg-brand/10 text-brand font-sans font-bold text-[10px]">
                             Sem {resolveTxSemester(tx)}
                           </span>
                         )}

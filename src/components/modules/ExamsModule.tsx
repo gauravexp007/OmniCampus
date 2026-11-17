@@ -89,9 +89,9 @@ export const ExamsModule: React.FC = () => {
   return (
     <div className="space-y-4 animate-in fade-in duration-150">
       {/* Header */}
-      <div className="bg-white rounded-xl p-4 md:p-5 border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <div className="flex items-center gap-2">
+      <div className="bg-white rounded-xl p-4 md:p-5 border border-slate-200 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
             <h2 className="text-lg font-bold text-slate-900">
               {role === 'Student' ? 'Examinations & Hall Tickets' : 'Examination Management & Hall Tickets'}
             </h2>
@@ -104,7 +104,7 @@ export const ExamsModule: React.FC = () => {
         {role !== 'Student' && (
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-brand hover:bg-brand-hover text-white text-xs font-semibold transition-colors"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-brand hover:bg-brand-hover text-white text-xs font-semibold transition-colors self-start lg:self-auto"
           >
             <Plus className="w-4 h-4" />
             <span>Schedule Exam</span>
@@ -113,7 +113,7 @@ export const ExamsModule: React.FC = () => {
       </div>
 
       {/* Search & Semester Filter Bar */}
-      <div className="bg-white rounded-xl p-3 border border-slate-200 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+      <div className="bg-white rounded-xl p-3 border border-slate-200 shadow-xs flex flex-col lg:flex-row lg:flex-wrap items-stretch lg:items-center gap-2.5">
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
