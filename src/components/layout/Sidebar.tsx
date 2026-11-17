@@ -28,6 +28,7 @@ import { ERPModuleId, UserRole } from '../../types';
 import { cn } from '../../lib/utils';
 import { useERP } from '../../context/ERPContext';
 import { ThemeToggleButton } from '../common/ThemeToggleButton';
+import sidebarBackdropImg from '../../assets/images/sidebar_unsplash_backdrop.jpg';
 
 interface SidebarProps {
   currentModule: ERPModuleId;
@@ -102,10 +103,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <aside
       id="sidebar-navigation"
       className={cn(
-        'relative hidden md:flex flex-col h-full bg-[#6C7D8A] border-r border-[#586976] text-white transition-all duration-300 ease-in-out select-none z-30 shrink-0 shadow-xs overflow-x-hidden',
+        'relative hidden md:flex flex-col h-full bg-[#6C7D8A] border-r border-[#586976] text-white transition-all duration-300 ease-in-out select-none z-30 shrink-0 shadow-xs overflow-hidden',
         isCollapsed ? 'w-[70px]' : 'w-[250px]'
       )}
     >
+      {/* Single Full-Bleed Background Image */}
+      <div aria-hidden="true" className="sidebar-backdrop-layer">
+        <img
+          src={sidebarBackdropImg}
+          alt=""
+          referrerPolicy="no-referrer"
+          className="sidebar-backdrop-img"
+          onError={(e) => {
+            e.currentTarget.style.display = 'none';
+          }}
+        />
+        <div className="sidebar-backdrop-scrim" />
+      </div>
+
       {/* Brand Header */}
       <div className={cn(
         'h-16 flex items-center border-b border-[#586976]/60 transition-all duration-200 overflow-hidden shrink-0 relative z-10',

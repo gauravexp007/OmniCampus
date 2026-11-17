@@ -612,14 +612,15 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
   return (
     <div
       className={cn(
-        'relative overflow-hidden bg-white dark:bg-[#435055] rounded-3xl p-6 border border-slate-200/90 dark:border-[#55666d] shadow-xs space-y-6 transition-all',
+        'relative overflow-visible bg-white dark:bg-[#435055] rounded-3xl p-6 border border-slate-200/90 dark:border-[#55666d] shadow-xs space-y-6 transition-all',
+        isStudentDropdownOpen ? 'z-40' : 'z-10',
         className
       )}
     >
       {/* ---------------------------------------------------- */}
       {/* SECTION HEADER & CONTROLS                            */}
       {/* ---------------------------------------------------- */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-5 relative z-10">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-5 relative z-40">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2.5 flex-wrap">
             <div className="w-8 h-8 rounded-xl bg-brand/10 dark:bg-brand/20 text-brand flex items-center justify-center font-bold">
@@ -731,7 +732,7 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 8, scale: 0.96 }}
                   transition={{ duration: 0.15 }}
-                  className="theme-dropdown-panel absolute top-full left-0 mt-2 z-50 w-80 sm:w-96 rounded-2xl shadow-2xl border p-3 space-y-2.5 backdrop-blur-md"
+                  className="theme-dropdown-panel absolute top-full left-0 lg:left-auto lg:right-0 mt-2 z-50 w-80 sm:w-96 max-w-[calc(100vw-2rem)] rounded-2xl shadow-2xl border p-3 space-y-2.5 backdrop-blur-md"
                 >
                   {/* Search box */}
                   <div className="relative">
@@ -945,7 +946,7 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
 
       {/* FACULTY PROMPT WHEN NO STUDENT IS SELECTED YET */}
       {!hasSelectedAnalyticsTarget ? (
-        <div className="relative z-10 rounded-3xl border border-dashed border-brand/40 bg-brand-lighter/40 dark:bg-[#2b373d]/50 p-8 sm:p-10 flex flex-col items-center justify-center text-center gap-3.5">
+        <div className="relative z-0 rounded-3xl border border-dashed border-brand/40 bg-brand-lighter/40 dark:bg-[#2b373d]/50 p-8 sm:p-10 flex flex-col items-center justify-center text-center gap-3.5">
           <div className="w-12 h-12 rounded-2xl bg-brand-light text-brand border border-brand/25 flex items-center justify-center shadow-2xs">
             <TrendingUp className="w-6 h-6" />
           </div>
@@ -956,7 +957,8 @@ export const DashboardAnalyticsSection: React.FC<DashboardAnalyticsSectionProps>
           </div>
           <button
             type="button"
-            onClick={() => setIsStudentDropdownOpen(true)}
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={() => setIsStudentDropdownOpen((prev) => !prev)}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand hover:bg-brand-hover text-white text-xs font-bold shadow-xs transition-all cursor-pointer"
           >
             <Users className="w-4 h-4" />
