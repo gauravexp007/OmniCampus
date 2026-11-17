@@ -170,16 +170,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
       )}
 
       {/* User Profile Card */}
-      <div className={cn('py-2 transition-all duration-200 shrink-0 overflow-hidden relative z-10', isCollapsed ? 'px-1' : 'px-3')}>
+      <div className={cn('py-2.5 transition-all duration-200 shrink-0 overflow-hidden relative z-10', isCollapsed ? 'px-1' : 'px-3')}>
         <button
           id="nav-item-profile-top"
           onClick={() => onSelectModule('profile')}
           className={cn(
             'group relative flex items-center w-full rounded-2xl transition-all duration-200 text-left cursor-pointer border overflow-hidden',
             currentModule === 'profile'
-              ? 'bg-white dark:bg-[#435055] text-slate-950 dark:text-white border-white dark:border-[#55666d] shadow-xs font-bold'
-              : 'border-white/20 bg-white/15 dark:bg-[#27323a]/60 hover:bg-white/25 dark:hover:bg-[#435055] text-white backdrop-blur-xs',
-            isCollapsed ? 'justify-center p-2 w-11 h-11 mx-auto' : 'p-2.5 gap-2.5'
+              ? 'bg-white dark:bg-[#232b36] text-slate-950 dark:text-white border-white dark:border-brand/60 shadow-lg ring-2 ring-brand/30 font-bold'
+              : 'border-white/20 bg-white/10 dark:bg-white/[0.06] hover:bg-white/20 dark:hover:bg-white/[0.12] hover:border-white/35 text-white backdrop-blur-md shadow-xs',
+            isCollapsed ? 'justify-center p-1.5 w-11 h-11 mx-auto' : 'p-2.5 gap-3'
           )}
           title={isCollapsed ? `Profile: ${currentUser.name}` : undefined}
         >
@@ -187,27 +187,44 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <img
               src={currentUser.avatar}
               alt={currentUser.name}
-              className="w-8 h-8 rounded-full object-cover ring-2 ring-white/80 shrink-0"
+              className={cn(
+                'w-9 h-9 rounded-xl object-cover shrink-0 transition-transform duration-200 group-hover:scale-105',
+                currentModule === 'profile'
+                  ? 'ring-2 ring-brand/60'
+                  : 'ring-2 ring-white/50'
+              )}
             />
             <span
-              className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 bg-white border-[#29a19c]"
+              className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 bg-emerald-400 border-slate-900"
               title="Online"
             />
           </div>
           {!isCollapsed && (
             <div className="min-w-0 flex-1 overflow-hidden whitespace-nowrap text-left">
+              <div className="flex items-center justify-between gap-1.5">
+                <p
+                  className={cn(
+                    'text-xs truncate font-extrabold tracking-tight',
+                    currentModule === 'profile' ? 'text-slate-950 dark:text-[#a3f7bf]' : 'text-white'
+                  )}
+                >
+                  {currentUser.name}
+                </p>
+                <span
+                  className={cn(
+                    'text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md shrink-0',
+                    currentModule === 'profile'
+                      ? 'bg-brand/15 text-brand dark:bg-brand/25 dark:text-[#a3f7bf]'
+                      : 'bg-white/15 text-white/90'
+                  )}
+                >
+                  {currentUser.role}
+                </span>
+              </div>
               <p
                 className={cn(
-                  'text-xs truncate font-bold',
-                  currentModule === 'profile' ? 'text-slate-950 dark:text-[#a3f7bf]' : 'text-white'
-                )}
-              >
-                {currentUser.name}
-              </p>
-              <p
-                className={cn(
-                  'text-[10px] truncate',
-                  currentModule === 'profile' ? 'text-slate-600 dark:text-slate-300' : 'text-slate-200'
+                  'text-[10px] truncate mt-0.5',
+                  currentModule === 'profile' ? 'text-slate-600 dark:text-slate-300' : 'text-slate-200/85'
                 )}
               >
                 {currentUser.email}

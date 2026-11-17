@@ -287,22 +287,25 @@ export const ProfileModule: React.FC = () => {
   };
 
   return (
-    <div className="space-y-5 pb-16 max-w-5xl mx-auto animate-in fade-in duration-150">
-      {/* Clean Top Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-[#252b35] p-5 rounded-2xl border border-slate-200 dark:border-[#373e4b] shadow-xs">
-        <div>
-          <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
-            User Profile
+    <div className="space-y-6 pb-16 max-w-5xl mx-auto animate-in fade-in duration-150">
+      {/* Top Action Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-[#252b35] px-5 py-4 rounded-2xl border border-slate-200/90 dark:border-[#373e4b] shadow-xs">
+        <div className="space-y-0.5">
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-950 dark:text-white tracking-tight">
+            Profile & Account Settings
           </h1>
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+            Manage your campus identity, verified contact details, and personal records
+          </p>
         </div>
 
         {/* Top Actions: Save & Log Out */}
-        <div className="flex flex-wrap items-center gap-2 self-start sm:self-center max-w-full">
+        <div className="flex flex-wrap items-center gap-2.5 self-start sm:self-center max-w-full">
           <button
             type="button"
             onClick={() => handleSaveProfile()}
             disabled={isSaving}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand text-white font-bold text-xs transition-all hover:brightness-105 shadow-xs disabled:opacity-50 cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand hover:bg-brand-hover text-white font-bold text-xs transition-all shadow-xs disabled:opacity-50 cursor-pointer whitespace-nowrap"
           >
             {isSaving ? (
               <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -317,7 +320,7 @@ export const ProfileModule: React.FC = () => {
           <button
             type="button"
             onClick={logout}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-rose-200 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-950/70 font-semibold text-xs transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-rose-200 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-950/70 font-semibold text-xs transition-colors cursor-pointer whitespace-nowrap"
             title="Log out of OmniCampus"
           >
             <LogOut className="w-3.5 h-3.5" />
@@ -333,7 +336,7 @@ export const ProfileModule: React.FC = () => {
             <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 dark:text-rose-400" />
             <span>{errorMsg}</span>
           </div>
-          <button onClick={() => setErrorMsg(null)} className="text-rose-500 hover:text-rose-800 dark:hover:text-rose-200">
+          <button onClick={() => setErrorMsg(null)} className="text-rose-500 hover:text-rose-800 dark:hover:text-rose-200 cursor-pointer">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -346,15 +349,28 @@ export const ProfileModule: React.FC = () => {
         </div>
       )}
 
-      {/* Hero Photo & Identity Card */}
-      <div className="bg-white dark:bg-[#252b35] rounded-2xl border border-slate-200 dark:border-[#373e4b] shadow-xs overflow-hidden">
-        {/* Cover Header */}
-        <div className="h-20 bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 dark:from-[#181c24] dark:to-[#1a202c] relative" />
+      {/* Editorial Hero Identity Card */}
+      <div className="bg-white dark:bg-[#252b35] rounded-3xl border border-slate-200/90 dark:border-[#373e4b] shadow-xs overflow-hidden">
+        {/* Theme-Synced Cover Banner */}
+        <div
+          className="h-28 sm:h-32 relative overflow-hidden bg-brand-gradient"
+        >
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 opacity-25"
+            style={{
+              backgroundImage:
+                'radial-gradient(circle at 18% 25%, rgba(255,255,255,0.45) 0%, transparent 45%), radial-gradient(circle at 85% 80%, rgba(15,23,42,0.45) 0%, transparent 55%)',
+            }}
+          />
+          <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-black/20 to-transparent" />
+        </div>
 
-        <div className="px-6 pb-5 pt-0 relative">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between -mt-10 mb-2 gap-4">
+        <div className="px-6 pb-6 pt-0 relative">
+          <div className="flex flex-col md:flex-row md:items-end justify-between -mt-12 mb-5 gap-4">
             <div className="flex flex-col sm:flex-row sm:items-end gap-4">
-              <div className="relative group w-20 h-20 rounded-2xl ring-4 ring-white dark:ring-[#252b35] shadow-md overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0">
+              {/* Avatar Frame */}
+              <div className="relative group w-24 h-24 rounded-2xl ring-4 ring-white dark:ring-[#252b35] shadow-lg overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0">
                 <img
                   src={avatar || currentUser.avatar}
                   alt={name}
@@ -364,11 +380,11 @@ export const ProfileModule: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white transition-opacity cursor-pointer"
+                  className="absolute inset-0 bg-slate-950/65 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white transition-opacity cursor-pointer"
                   title="Upload photo"
                 >
                   <Camera className="w-4 h-4 mb-0.5" />
-                  <span className="text-[9px] font-semibold">Change</span>
+                  <span className="text-[10px] font-bold">Change</span>
                 </button>
 
                 <input
@@ -380,30 +396,34 @@ export const ProfileModule: React.FC = () => {
                 />
               </div>
 
-              <div className="space-y-1">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">{name || 'User'}</h2>
-                  <span className="px-2 py-0.5 rounded-md bg-brand/10 dark:bg-brand/20 text-brand text-[11px] font-bold">
-                    {currentUser.role}
-                  </span>
+              {/* Primary Identity Block */}
+              <div className="space-y-1.5 pt-1">
+                <div className="flex items-center gap-2.5 flex-wrap">
+                  <h2 className="text-2xl sm:text-[26px] font-extrabold text-slate-950 dark:text-white tracking-tight leading-tight">
+                    {name || 'User'}
+                  </h2>
                   {currentUser.role === 'Student' && (currentUser.idNumber || idNumber) && (
-                    <span className="font-mono text-sm font-extrabold px-2.5 py-0.5 rounded-md bg-brand-light text-brand border border-brand/25 shadow-2xs">
+                    <span className="font-mono text-sm font-extrabold px-2.5 py-0.5 rounded-lg bg-brand-light text-brand border border-brand/30 tabular-nums">
                       {currentUser.idNumber || idNumber}
                     </span>
                   )}
                   {currentUser.role === 'Faculty' && (
-                    <span className="font-mono text-[10px] font-black px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 shadow-2xs flex items-center gap-1">
-                      <Lock className="w-3 h-3" />
+                    <span className="font-mono text-xs font-extrabold px-2.5 py-0.5 rounded-lg bg-slate-100 dark:bg-[#1b222c] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-[#373e4b] flex items-center gap-1.5 tabular-nums">
+                      <Lock className="w-3 h-3 text-brand" />
                       <span>{currentUser.idNumber || currentUser.employeeId || idNumber || 'FAC-2026-ACTIVE'}</span>
                     </span>
                   )}
                 </div>
-                <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 flex-wrap">
+
+                {/* Clean Unboxed Metadata Line */}
+                <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 flex-wrap font-medium">
+                  <span className="font-bold text-brand">{currentUser.role}</span>
+                  <span aria-hidden="true" className="text-slate-300 dark:text-slate-600">·</span>
                   <span className="flex items-center gap-1">
                     <Building className="w-3.5 h-3.5 text-slate-400" />
                     {department}
                   </span>
-                  <span>•</span>
+                  <span aria-hidden="true" className="text-slate-300 dark:text-slate-600">·</span>
                   <span className="flex items-center gap-1">
                     <MapPin className="w-3.5 h-3.5 text-slate-400" />
                     {campus}
@@ -417,28 +437,74 @@ export const ProfileModule: React.FC = () => {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-[#373e4b] hover:bg-slate-50 dark:hover:bg-[#1e232d] text-slate-700 dark:text-slate-300 font-semibold text-xs transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-[#373e4b] bg-slate-50/70 dark:bg-[#1e232d] hover:bg-slate-100 dark:hover:bg-[#2a3240] text-slate-700 dark:text-slate-200 font-semibold text-xs transition-colors cursor-pointer whitespace-nowrap"
               >
-                <Upload className="w-3.5 h-3.5 text-slate-500" />
-                <span>Upload</span>
+                <Upload className="w-3.5 h-3.5 text-brand" />
+                <span>Upload Photo</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setShowAvatarPresets(!showAvatarPresets)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-[#373e4b] hover:bg-slate-50 dark:hover:bg-[#1e232d] text-slate-700 dark:text-slate-300 font-semibold text-xs transition-colors cursor-pointer"
+                className={cn(
+                  'flex items-center gap-1.5 px-3.5 py-2 rounded-xl border font-semibold text-xs transition-colors cursor-pointer whitespace-nowrap',
+                  showAvatarPresets
+                    ? 'bg-brand text-white border-brand shadow-xs'
+                    : 'border-slate-200 dark:border-[#373e4b] bg-slate-50/70 dark:bg-[#1e232d] hover:bg-slate-100 dark:hover:bg-[#2a3240] text-slate-700 dark:text-slate-200'
+                )}
               >
-                <Sparkles className="w-3.5 h-3.5 text-brand" />
-                <span>Presets</span>
+                <Sparkles className={cn('w-3.5 h-3.5', showAvatarPresets ? 'text-white' : 'text-brand')} />
+                <span>Avatar Presets</span>
               </button>
+            </div>
+          </div>
+
+          {/* 3-Column Identity Summary Strip (Hairline Dividers, Zero Nested Cards) */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80 dark:divide-[#373e4b] border-t border-slate-200/80 dark:border-[#373e4b] pt-4 text-xs">
+            <div className="py-2 sm:py-0 sm:pr-4 flex items-center justify-between sm:block">
+              <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Primary Account</span>
+              <p className="font-semibold text-slate-900 dark:text-white truncate sm:mt-0.5">
+                {firebaseUser?.email || currentUser.email || 'Not linked'}
+              </p>
+            </div>
+            <div className="py-2 sm:py-0 sm:px-4 flex items-center justify-between sm:block">
+              <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                {currentUser.role === 'Student' ? 'Academic Track' : 'Role & Designation'}
+              </span>
+              <p className="font-semibold text-slate-900 dark:text-white truncate sm:mt-0.5">
+                {currentUser.role === 'Student'
+                  ? `${program} · Sem ${semester}`
+                  : designation || `${currentUser.role} Member`}
+              </p>
+            </div>
+            <div className="py-2 sm:py-0 sm:pl-4 flex items-center justify-between sm:block">
+              <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Phone Verification</span>
+              <p
+                className={cn(
+                  'font-bold sm:mt-0.5 flex items-center gap-1.5',
+                  isPhoneVerified ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'
+                )}
+              >
+                {isPhoneVerified ? (
+                  <>
+                    <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                    <span>Verified {phone ? `· ${phone}` : ''}</span>
+                  </>
+                ) : (
+                  <>
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    <span>Pending Verification</span>
+                  </>
+                )}
+              </p>
             </div>
           </div>
 
           {/* Avatar Presets Drawer */}
           {showAvatarPresets && (
-            <div className="mt-4 p-4 rounded-xl bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] animate-in fade-in duration-150">
+            <div className="mt-5 p-4 rounded-2xl bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] animate-in fade-in duration-150">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-xs font-bold text-slate-800 dark:text-white">Choose Avatar</p>
+                <p className="text-xs font-bold text-slate-800 dark:text-white">Choose Avatar Preset</p>
                 <button
                   type="button"
                   onClick={() => setShowAvatarPresets(false)}
@@ -447,7 +513,7 @@ export const ProfileModule: React.FC = () => {
                   <X className="w-4 h-4" />
                 </button>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-2 mt-2">
+              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-2.5 mt-2">
                 {SKETCH_AVATAR_PRESETS.map((preset) => (
                   <button
                     key={preset.id}
@@ -478,27 +544,38 @@ export const ProfileModule: React.FC = () => {
       </div>
 
       {/* Main Form Sections */}
-      <form onSubmit={handleSaveProfile} className="space-y-5">
+      <form onSubmit={handleSaveProfile} className="space-y-6">
         {/* 1. Account Credentials & Contact */}
-        <div className="bg-white dark:bg-[#252b35] rounded-2xl border border-slate-200 dark:border-[#373e4b] shadow-xs p-5 sm:p-6 space-y-4">
-          <div className="flex items-center gap-2 border-b border-slate-100 dark:border-[#373e4b] pb-3">
-            <Mail className="w-4 h-4 text-brand" />
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Contact & Security</h3>
+        <div className="bg-white dark:bg-[#252b35] rounded-3xl border border-slate-200/90 dark:border-[#373e4b] shadow-xs p-5 sm:p-6 space-y-5">
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#373e4b] pb-3.5">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-brand-light text-brand border border-brand/20 flex items-center justify-center">
+                <Mail className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-sm font-extrabold text-slate-950 dark:text-white tracking-tight">
+                  Contact & Security
+                </h3>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                  Official email address and SMS phone verification
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Primary Email */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1.5">
                 Primary Email
               </label>
-              <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <div className="relative group">
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="email"
                   disabled
                   value={firebaseUser?.email || currentUser.email || ''}
-                  className="w-full pl-9 pr-24 py-2 text-xs bg-slate-100/80 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-xl text-slate-600 dark:text-slate-400 font-medium cursor-not-allowed"
+                  className="w-full pl-10 pr-24 py-2.5 text-xs font-medium cursor-not-allowed"
                 />
                 <span className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
                   <ShieldCheck className="w-3 h-3" />
@@ -509,23 +586,23 @@ export const ProfileModule: React.FC = () => {
 
             {/* Alternate Email */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1.5">
                 Alternate Email
               </label>
-              <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <div className="relative group">
+                <Mail className="w-4 h-4 text-slate-400 group-focus-within:text-brand transition-colors absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="email"
                   placeholder="personal@example.com"
                   value={alternateEmail}
                   onChange={(e) => setAlternateEmail(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-xl focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 dark:text-slate-100"
+                  className="w-full pl-10 pr-3.5 py-2.5 text-xs font-medium"
                 />
               </div>
             </div>
 
             {/* Mobile Phone */}
-            <div className="md:col-span-2 bg-slate-50/70 dark:bg-[#1e232d] rounded-xl p-4 border border-slate-200 dark:border-[#373e4b] space-y-3">
+            <div className="md:col-span-2 bg-slate-50/80 dark:bg-[#1c222b] rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-[#373e4b] space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <Phone className="w-4 h-4 text-brand" />
@@ -548,8 +625,8 @@ export const ProfileModule: React.FC = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
-                <div className="relative flex-1">
-                  <PhoneCall className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <div className="relative flex-1 group">
+                  <PhoneCall className="w-4 h-4 text-slate-400 group-focus-within:text-brand transition-colors absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                   <input
                     type="tel"
                     placeholder="+1 (555) 234-5678"
@@ -558,7 +635,7 @@ export const ProfileModule: React.FC = () => {
                       setPhone(e.target.value);
                       if (isPhoneVerified) setIsPhoneVerified(false);
                     }}
-                    className="w-full pl-9 pr-3 py-2 text-xs bg-white dark:bg-[#252b35] border border-slate-200 dark:border-[#373e4b] rounded-xl focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 dark:text-slate-100"
+                    className="w-full pl-10 pr-3.5 py-2.5 text-xs font-medium"
                   />
                 </div>
 
@@ -579,7 +656,7 @@ export const ProfileModule: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setIsPhoneVerified(false)}
-                    className="px-3 py-2 rounded-xl border border-slate-200 dark:border-[#373e4b] bg-white dark:bg-[#252b35] hover:bg-slate-100 dark:hover:bg-[#1e232d] text-slate-600 dark:text-slate-300 font-medium text-xs transition-colors shrink-0 cursor-pointer"
+                    className="px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-[#373e4b] bg-white dark:bg-[#252b35] hover:bg-slate-100 dark:hover:bg-[#1e232d] text-slate-700 dark:text-slate-200 font-semibold text-xs transition-colors shrink-0 cursor-pointer"
                   >
                     Change Phone
                   </button>
@@ -590,7 +667,7 @@ export const ProfileModule: React.FC = () => {
 
               {/* OTP Prompt */}
               {isVerifyingPhone && (
-                <div className="mt-3 p-3.5 bg-brand/10 dark:bg-brand/20 rounded-xl border border-brand/20 space-y-2.5 animate-in fade-in duration-150">
+                <div className="mt-3 p-4 bg-brand/10 dark:bg-brand/20 rounded-xl border border-brand/25 space-y-2.5 animate-in fade-in duration-150">
                   <div className="flex items-center justify-between">
                     <p className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
                       <KeyRound className="w-3.5 h-3.5 text-brand" />
@@ -599,7 +676,7 @@ export const ProfileModule: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setIsVerifyingPhone(false)}
-                      className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                      className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
@@ -634,7 +711,7 @@ export const ProfileModule: React.FC = () => {
                       placeholder="6-digit code"
                       value={verificationCode}
                       onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, ''))}
-                      className="w-full sm:w-44 px-3 py-1.5 text-center tracking-widest font-mono text-sm bg-white dark:bg-[#252b35] border border-slate-300 dark:border-[#373e4b] rounded-lg focus:outline-hidden focus:ring-2 focus:ring-brand text-slate-900 dark:text-white"
+                      className="w-full sm:w-44 px-3 py-2 text-center tracking-widest font-mono text-sm"
                     />
                     <ConfettiButton
                       type="button"
@@ -650,7 +727,7 @@ export const ProfileModule: React.FC = () => {
                       type="button"
                       onClick={handleSendVerificationCode}
                       disabled={resendCooldown > 0 || isSendingOtp}
-                      className="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-[#373e4b] bg-white dark:bg-[#252b35] hover:bg-slate-50 dark:hover:bg-[#1e232d] text-slate-700 dark:text-slate-300 text-xs font-semibold disabled:opacity-50 transition-colors"
+                      className="px-3 py-2 rounded-lg border border-slate-300 dark:border-[#373e4b] bg-white dark:bg-[#252b35] hover:bg-slate-50 dark:hover:bg-[#1e232d] text-slate-700 dark:text-slate-300 text-xs font-semibold disabled:opacity-50 transition-colors cursor-pointer"
                     >
                       {resendCooldown > 0 ? `Resend (${resendCooldown}s)` : 'Resend'}
                     </button>
@@ -661,39 +738,53 @@ export const ProfileModule: React.FC = () => {
           </div>
         </div>
 
-        {/* 2. Personal Information */}
-        <div className="bg-white dark:bg-[#252b35] rounded-2xl border border-slate-200 dark:border-[#373e4b] shadow-xs p-5 sm:p-6 space-y-4">
-          <div className="flex items-center gap-2 border-b border-slate-100 dark:border-[#373e4b] pb-3">
-            <User className="w-4 h-4 text-brand" />
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Personal Information</h3>
+        {/* 2. Personal & Academic Information */}
+        <div className="bg-white dark:bg-[#252b35] rounded-3xl border border-slate-200/90 dark:border-[#373e4b] shadow-xs p-5 sm:p-6 space-y-5">
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#373e4b] pb-3.5">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-brand-light text-brand border border-brand/20 flex items-center justify-center">
+                <User className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-sm font-extrabold text-slate-950 dark:text-white tracking-tight">
+                  Personal & Academic Information
+                </h3>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                  Identity, department placement, and emergency contact details
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {/* Full Name */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1.5">
                 Full Name *
               </label>
-              <input
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-xl focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 dark:text-slate-100"
-              />
+              <div className="relative group">
+                <User className="w-4 h-4 text-slate-400 group-focus-within:text-brand transition-colors absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full pl-10 pr-3.5 py-2.5 text-xs font-medium"
+                />
+              </div>
             </div>
 
             {/* ID Number */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1.5">
                 {currentUser.role === 'Faculty'
                   ? 'Permanent Faculty ID'
                   : currentUser.role === 'Student'
                   ? 'Enrollment Number'
                   : 'Employee ID'}
               </label>
-              <div className="relative">
-                <FileBadge className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <div className="relative group">
+                <FileBadge className="w-4 h-4 text-slate-400 group-focus-within:text-brand transition-colors absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="text"
                   placeholder="ID Number"
@@ -709,16 +800,16 @@ export const ProfileModule: React.FC = () => {
                     }
                   }}
                   className={cn(
-                    'w-full pl-9 pr-3 py-2 text-xs border rounded-xl font-mono transition-colors',
+                    'w-full pl-10 py-2.5 text-xs font-mono font-bold transition-colors',
                     currentUser.role === 'Faculty'
-                      ? 'bg-slate-100/90 dark:bg-[#191d24] border-slate-300 dark:border-[#373e4b] text-slate-700 dark:text-slate-300 font-bold cursor-not-allowed select-none pr-28'
-                      : 'bg-slate-50 dark:bg-[#1e232d] border-slate-200 dark:border-[#373e4b] focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 dark:text-slate-100'
+                      ? 'cursor-not-allowed select-none pr-28'
+                      : 'pr-3.5'
                   )}
                 />
                 {currentUser.role === 'Faculty' && (
                   <span className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1 text-[10px] font-black px-2 py-0.5 rounded-md bg-slate-200/80 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-700">
                     <Lock className="w-3 h-3 text-slate-500" />
-                    Permanent ID
+                    Permanent
                   </span>
                 )}
               </div>
@@ -726,13 +817,13 @@ export const ProfileModule: React.FC = () => {
 
             {/* Department */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1.5">
                 Department
               </label>
               <select
                 value={department}
                 onChange={(e) => setDepartment(e.target.value)}
-                className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-xl focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 dark:text-slate-100"
+                className="w-full px-3.5 py-2.5 text-xs font-medium border rounded-xl focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand"
               >
                 <option value="Computer Science & Engineering">Computer Science & Engineering</option>
                 <option value="Electrical & Electronics">Electrical & Electronics</option>
@@ -745,13 +836,13 @@ export const ProfileModule: React.FC = () => {
 
             {/* Campus */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1.5">
                 Campus Location
               </label>
               <select
                 value={campus}
                 onChange={(e) => setCampus(e.target.value)}
-                className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-xl focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 dark:text-slate-100"
+                className="w-full px-3.5 py-2.5 text-xs font-medium border rounded-xl focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand"
               >
                 <option value="Main Tech Campus">Main Tech Campus</option>
                 <option value="South Science Center">South Science Center</option>
@@ -764,29 +855,29 @@ export const ProfileModule: React.FC = () => {
             {currentUser.role === 'Student' ? (
               <>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1.5">
                     Academic Program
                   </label>
-                  <div className="relative">
-                    <GraduationCap className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <div className="relative group">
+                    <GraduationCap className="w-4 h-4 text-slate-400 group-focus-within:text-brand transition-colors absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <input
                       type="text"
                       placeholder="e.g. B.Tech Computer Science"
                       value={program}
                       onChange={(e) => setProgram(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-xl focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 dark:text-slate-100"
+                      className="w-full pl-10 pr-3.5 py-2.5 text-xs font-medium"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1.5">
                     Semester
                   </label>
                   <select
                     value={semester}
                     onChange={(e) => setSemester(Number(e.target.value))}
-                    className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-xl focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 dark:text-slate-100"
+                    className="w-full px-3.5 py-2.5 text-xs font-medium border rounded-xl focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand"
                   >
                     {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
                       <option key={s} value={s}>
@@ -798,7 +889,7 @@ export const ProfileModule: React.FC = () => {
               </>
             ) : (
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1.5">
                   Designation
                 </label>
                 <input
@@ -806,38 +897,38 @@ export const ProfileModule: React.FC = () => {
                   placeholder="e.g. Associate Professor"
                   value={designation}
                   onChange={(e) => setDesignation(e.target.value)}
-                  className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-xl focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 dark:text-slate-100"
+                  className="w-full px-3.5 py-2.5 text-xs font-medium"
                 />
               </div>
             )}
 
             {/* Date of Birth */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1.5">
                 Date of Birth
               </label>
-              <div className="relative">
-                <Calendar className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <div className="relative group">
+                <Calendar className="w-4 h-4 text-slate-400 group-focus-within:text-brand transition-colors absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="date"
                   value={dob}
                   onChange={(e) => setDob(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-xl focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 dark:text-slate-100"
+                  className="w-full pl-10 pr-3.5 py-2.5 text-xs font-medium"
                 />
               </div>
             </div>
 
             {/* Blood Group */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1.5">
                 Blood Group
               </label>
-              <div className="relative">
-                <Heart className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <div className="relative group">
+                <Heart className="w-4 h-4 text-slate-400 group-focus-within:text-brand transition-colors absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <select
                   value={bloodGroup}
                   onChange={(e) => setBloodGroup(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-xl focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 dark:text-slate-100"
+                  className="w-full pl-10 pr-3.5 py-2.5 text-xs font-medium border rounded-xl focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand"
                 >
                   <option value="A+">A+</option>
                   <option value="A-">A-</option>
@@ -853,7 +944,7 @@ export const ProfileModule: React.FC = () => {
 
             {/* Emergency Contact Name */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1.5">
                 Emergency Contact Name
               </label>
               <input
@@ -861,13 +952,13 @@ export const ProfileModule: React.FC = () => {
                 placeholder="Name"
                 value={emergencyContactName}
                 onChange={(e) => setEmergencyContactName(e.target.value)}
-                className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-xl focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 dark:text-slate-100"
+                className="w-full px-3.5 py-2.5 text-xs font-medium"
               />
             </div>
 
             {/* Emergency Contact Phone */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1.5">
                 Emergency Contact Phone
               </label>
               <input
@@ -875,44 +966,46 @@ export const ProfileModule: React.FC = () => {
                 placeholder="+1 (555) 000-0000"
                 value={emergencyContactPhone}
                 onChange={(e) => setEmergencyContactPhone(e.target.value)}
-                className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-xl focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 dark:text-slate-100"
+                className="w-full px-3.5 py-2.5 text-xs font-medium"
               />
             </div>
           </div>
 
-          {/* Address */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Address
-            </label>
-            <textarea
-              rows={2}
-              placeholder="Campus residence or home address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-xl focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 dark:text-slate-100 resize-none"
-            />
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+            {/* Address */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1.5">
+                Address
+              </label>
+              <textarea
+                rows={3}
+                placeholder="Campus residence or home address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className="w-full px-3.5 py-2.5 text-xs font-medium resize-none"
+              />
+            </div>
 
-          {/* Bio */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Bio
-            </label>
-            <textarea
-              rows={2}
-              placeholder="Academic summary or research focus..."
-              value={bio}
-              onChange={(e) => setBio(e.target.value)}
-              className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-[#1e232d] border border-slate-200 dark:border-[#373e4b] rounded-xl focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 dark:text-slate-100 resize-none"
-            />
+            {/* Bio */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1.5">
+                Bio
+              </label>
+              <textarea
+                rows={3}
+                placeholder="Academic summary or research focus..."
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                className="w-full px-3.5 py-2.5 text-xs font-medium resize-none"
+              />
+            </div>
           </div>
         </div>
 
         {/* Admin Security */}
         {isAdminAccount && (
-          <div className="bg-slate-900 dark:bg-[#1e232d] text-white rounded-2xl border border-slate-800 dark:border-[#373e4b] shadow-xs p-5 sm:p-6 space-y-4">
-            <div className="flex items-center justify-between border-b border-white/10 dark:border-[#373e4b] pb-3">
+          <div className="bg-slate-900 dark:bg-[#1e232d] text-white rounded-3xl border border-slate-800 dark:border-[#373e4b] shadow-xs p-5 sm:p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-white/10 dark:border-[#373e4b] pb-3.5">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-brand/20 text-brand flex items-center justify-center border border-brand/30">
                   <ShieldCheck className="w-4 h-4" />
@@ -927,7 +1020,7 @@ export const ProfileModule: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <div className="p-3 rounded-xl bg-slate-950/60 dark:bg-[#181c24] border border-white/5 space-y-1">
+              <div className="p-3.5 rounded-2xl bg-slate-950/60 dark:bg-[#181c24] border border-white/5 space-y-1">
                 <span className="text-slate-400 text-[11px] font-medium">Account Email</span>
                 <div className="font-mono text-slate-200 font-semibold text-xs flex items-center gap-1.5">
                   <Mail className="w-3.5 h-3.5 text-brand" />
@@ -935,7 +1028,7 @@ export const ProfileModule: React.FC = () => {
                 </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-slate-950/60 dark:bg-[#181c24] border border-white/5 space-y-1">
+              <div className="p-3.5 rounded-2xl bg-slate-950/60 dark:bg-[#181c24] border border-white/5 space-y-1">
                 <span className="text-slate-400 text-[11px] font-medium">Security Status</span>
                 <div className="font-mono text-emerald-400 font-semibold text-xs flex items-center gap-1.5">
                   <KeyRound className="w-3.5 h-3.5 text-emerald-400" />
@@ -986,16 +1079,19 @@ export const ProfileModule: React.FC = () => {
         )}
 
         {/* 3. Account Session */}
-        <div className="bg-white dark:bg-[#252b35] rounded-2xl border border-slate-200 dark:border-[#373e4b] shadow-xs p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div>
-            <h4 className="text-xs font-bold text-slate-900 dark:text-white">Account Session</h4>
+        <div className="bg-white dark:bg-[#252b35] rounded-3xl border border-slate-200/90 dark:border-[#373e4b] shadow-xs p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="text-center sm:text-left">
+            <h4 className="text-xs font-extrabold text-slate-900 dark:text-white">Account Session</h4>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+              Save profile updates or sign out of your current workspace session
+            </p>
           </div>
 
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <button
               type="button"
               onClick={logout}
-              className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-950/70 text-rose-700 dark:text-rose-300 font-bold text-xs transition-colors shadow-xs cursor-pointer"
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-950/70 text-rose-700 dark:text-rose-300 font-bold text-xs transition-colors shadow-xs cursor-pointer whitespace-nowrap"
             >
               <LogOut className="w-4 h-4" />
               <span>Log Out</span>
@@ -1007,7 +1103,7 @@ export const ProfileModule: React.FC = () => {
               size="md"
               disabled={isSaving}
               enableClickCelebration={true}
-              className="flex-1 sm:flex-initial px-6 py-2.5 rounded-xl font-bold cursor-pointer"
+              className="flex-1 sm:flex-initial px-6 py-2.5 rounded-xl font-bold cursor-pointer whitespace-nowrap"
             >
               {isSaving ? (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
