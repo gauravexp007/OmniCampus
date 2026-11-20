@@ -64,27 +64,27 @@
     --starline-bg: #E2E4E9;
   }
 
-  [data-theme="hotel"] {
-    --brand-primary: #13b497;
-    --brand-hover: #0f9b82;
-    --brand-light: #e8f8f5;
-    --brand-lighter: #f2fbf9;
-    --brand-border: #a3e7dc;
-    --brand-dark: #0b6e5c;
-    --brand-text: #0b6e5c;
-    --brand-ring: rgba(19, 180, 151, 0.35);
-    --brand-gradient-from: #13b497;
-    --brand-gradient-to: #00a389;
-    --dropdown-bg: #effbf8;
+  [data-theme="pink"] {
+    --brand-primary: #ec6ca3;
+    --brand-hover: #db528d;
+    --brand-light: #fdf0f6;
+    --brand-lighter: #fff6fa;
+    --brand-border: #f9bdd9;
+    --brand-dark: #831843;
+    --brand-text: #9d174d;
+    --brand-ring: rgba(236, 108, 163, 0.35);
+    --brand-gradient-from: #f472b6;
+    --brand-gradient-to: #ec6ca3;
+    --dropdown-bg: #fff5fa;
     --dropdown-surface: #ffffff;
-    --dropdown-border: #86dfd0;
-    --dropdown-text: #064e3b;
-    --dropdown-muted: #0f766e;
-    --dropdown-hover-bg: #d9f5ef;
-    --dropdown-selected-bg: #13b497;
+    --dropdown-border: #f7b5d4;
+    --dropdown-text: #701a42;
+    --dropdown-muted: #9d174d;
+    --dropdown-hover-bg: #fce4ef;
+    --dropdown-selected-bg: #ec6ca3;
     --dropdown-selected-text: #ffffff;
-    --dropdown-badge-bg: #dcf7f1;
-    --dropdown-badge-text: #0b6e5c;
+    --dropdown-badge-bg: #fce4ef;
+    --dropdown-badge-text: #831843;
   }
 
   [data-theme="indigo"] {
@@ -286,37 +286,39 @@
   }
 }
 
-/* Dynamic theme classes */
-.bg-brand {
-  background-color: var(--brand-primary);
-}
-.bg-brand-hover:hover {
-  background-color: var(--brand-hover);
-}
-.bg-brand-light {
-  background-color: var(--brand-light);
-}
-.bg-brand-lighter {
-  background-color: var(--brand-lighter);
-}
-.text-brand {
-  color: var(--brand-primary);
-}
-.text-brand-dark {
-  color: var(--brand-dark);
-}
-.border-brand {
-  border-color: var(--brand-border);
-}
-.border-brand-solid {
-  border-color: var(--brand-primary);
-}
-.ring-brand:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--brand-ring);
-}
-.bg-brand-gradient {
-  background-image: linear-gradient(135deg, var(--brand-gradient-from), var(--brand-gradient-to));
+/* Dynamic theme classes inside @layer components so Tailwind dark:* utilities always take precedence */
+@layer components {
+  .bg-brand {
+    background-color: var(--brand-primary);
+  }
+  .bg-brand-hover:hover {
+    background-color: var(--brand-hover);
+  }
+  .bg-brand-light {
+    background-color: var(--brand-light);
+  }
+  .bg-brand-lighter {
+    background-color: var(--brand-lighter);
+  }
+  .text-brand {
+    color: var(--brand-text, var(--brand-primary));
+  }
+  .text-brand-dark {
+    color: var(--brand-dark);
+  }
+  .border-brand {
+    border-color: var(--brand-border);
+  }
+  .border-brand-solid {
+    border-color: var(--brand-primary);
+  }
+  .ring-brand:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--brand-ring);
+  }
+  .bg-brand-gradient {
+    background-image: linear-gradient(135deg, var(--brand-gradient-from), var(--brand-gradient-to));
+  }
 }
 
 /* =========================================================================
@@ -821,9 +823,11 @@ body.dark,
   --palette-muted: #8ea1a5;
   --palette-light: #d2ded8;
 
-  /* Align default dark palette (starline) with palette teal */
+  /* Align default dark palette (starline) with crisp readable light accents */
   --brand-primary: #29a19c;
   --brand-hover: #248f8a;
+  --brand-dark: #e2e8f0;
+  --brand-text: #a3f7bf;
   --brand-ring: rgba(41, 161, 156, 0.45);
   --brand-gradient-from: #29a19c;
   --brand-gradient-to: #1e7a76;
@@ -841,28 +845,32 @@ body.dark,
   --dropdown-badge-text: #a3f7bf;
 }
 
-/* Preserve chosen theme colors & theme-matched dropdown lists in Dark Mode */
-.dark[data-theme="hotel"] {
-  --brand-primary: #13b497;
-  --brand-hover: #0f9b82;
-  --brand-ring: rgba(19, 180, 151, 0.45);
-  --brand-gradient-from: #13b497;
-  --brand-gradient-to: #00a389;
-  --dropdown-bg: #152e2b;
-  --dropdown-surface: #1b3b37;
-  --dropdown-border: #1e6b5e;
-  --dropdown-text: #f0fdfa;
-  --dropdown-muted: #99f6e4;
-  --dropdown-hover-bg: #1c4d46;
-  --dropdown-selected-bg: #13b497;
+/* Preserve chosen theme colors & high-contrast dark text tokens in Dark Mode */
+.dark[data-theme="pink"] {
+  --brand-primary: #f472b6;
+  --brand-hover: #ec4899;
+  --brand-dark: #fbcfe8;
+  --brand-text: #f9a8d4;
+  --brand-ring: rgba(244, 114, 182, 0.45);
+  --brand-gradient-from: #ec4899;
+  --brand-gradient-to: #f472b6;
+  --dropdown-bg: #2e1925;
+  --dropdown-surface: #3b2030;
+  --dropdown-border: #db528d;
+  --dropdown-text: #fdf2f8;
+  --dropdown-muted: #fbcfe8;
+  --dropdown-hover-bg: #4f253c;
+  --dropdown-selected-bg: #ec4899;
   --dropdown-selected-text: #ffffff;
-  --dropdown-badge-bg: rgba(19, 180, 151, 0.24);
-  --dropdown-badge-text: #5eead4;
+  --dropdown-badge-bg: rgba(244, 114, 182, 0.24);
+  --dropdown-badge-text: #fbcfe8;
 }
 
 .dark[data-theme="indigo"] {
   --brand-primary: #6366f1;
   --brand-hover: #4f46e5;
+  --brand-dark: #e0e7ff;
+  --brand-text: #a5b4fc;
   --brand-ring: rgba(99, 102, 241, 0.45);
   --brand-gradient-from: #4f46e5;
   --brand-gradient-to: #6366f1;
@@ -881,6 +889,8 @@ body.dark,
 .dark[data-theme="emerald"] {
   --brand-primary: #10b981;
   --brand-hover: #059669;
+  --brand-dark: #d1fae5;
+  --brand-text: #6ee7b7;
   --brand-ring: rgba(16, 185, 129, 0.45);
   --brand-gradient-from: #059669;
   --brand-gradient-to: #10b981;
@@ -899,6 +909,8 @@ body.dark,
 .dark[data-theme="sapphire"] {
   --brand-primary: #3b82f6;
   --brand-hover: #2563eb;
+  --brand-dark: #dbeafe;
+  --brand-text: #93c5fd;
   --brand-ring: rgba(59, 130, 246, 0.45);
   --brand-gradient-from: #2563eb;
   --brand-gradient-to: #3b82f6;
@@ -917,6 +929,8 @@ body.dark,
 .dark[data-theme="rose"] {
   --brand-primary: #f43f5e;
   --brand-hover: #e11d48;
+  --brand-dark: #ffe4e6;
+  --brand-text: #fda4af;
   --brand-ring: rgba(244, 63, 94, 0.45);
   --brand-gradient-from: #e11d48;
   --brand-gradient-to: #f43f5e;
@@ -935,6 +949,8 @@ body.dark,
 .dark[data-theme="amber"] {
   --brand-primary: #f59e0b;
   --brand-hover: #d97706;
+  --brand-dark: #fef3c7;
+  --brand-text: #fcd34d;
   --brand-ring: rgba(245, 158, 11, 0.45);
   --brand-gradient-from: #d97706;
   --brand-gradient-to: #f59e0b;
@@ -953,6 +969,8 @@ body.dark,
 .dark[data-theme="violet"] {
   --brand-primary: #8b5cf6;
   --brand-hover: #7c3aed;
+  --brand-dark: #ede9fe;
+  --brand-text: #c4b5fd;
   --brand-ring: rgba(139, 92, 246, 0.45);
   --brand-gradient-from: #7c3aed;
   --brand-gradient-to: #8b5cf6;
@@ -971,6 +989,8 @@ body.dark,
 .dark[data-theme="slate"] {
   --brand-primary: #64748b;
   --brand-hover: #475569;
+  --brand-dark: #f1f5f9;
+  --brand-text: #cbd5e1;
   --brand-ring: rgba(100, 116, 139, 0.45);
   --brand-gradient-from: #334155;
   --brand-gradient-to: #475569;
@@ -1093,11 +1113,16 @@ html.dark body {
   border-color: #55666d !important;
 }
 
-/* Text Colors in Dark Mode (High contrast pure white for primary, mint #a3f7bf for accents, soft slate for secondary) */
-.dark .text-slate-900:not(.text-black):not(.dark\:text-black):not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *),
-.dark .text-slate-950:not(.text-black):not(.dark\:text-black):not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *),
+/* Text Colors in Dark Mode (High-contrast pure white & soft luminous neutrals/semantics) */
+.dark .text-slate-900:not(.text-black):not(.dark\:text-black):not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *):not([data-attendance-card]):not([data-attendance-card] *),
+.dark .text-slate-950:not(.text-black):not(.dark\:text-black):not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *):not([data-attendance-card]):not([data-attendance-card] *),
+.dark .text-gray-900:not(.text-black):not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *),
+.dark .text-gray-950:not(.text-black):not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *),
+.dark .text-zinc-900:not(.text-black):not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *),
+.dark .text-stone-900:not(.text-black):not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *),
+.dark .text-neutral-900:not(.text-black):not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *),
 .dark .text-white:not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *),
-.dark .tabular-nums:not(.text-black):not(.dark\:text-black):not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *) {
+.dark .tabular-nums:not(.text-black):not(.dark\:text-black):not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *):not([data-attendance-card]):not([data-attendance-card] *) {
   color: #ffffff !important;
 }
 
@@ -1110,19 +1135,140 @@ html.dark body {
   color: #ffffff !important;
 }
 
-.dark .text-slate-800:not(.text-black):not(.dark\:text-black):not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *),
-.dark .text-slate-700:not(.text-black):not(.dark\:text-black):not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *) {
+.dark .text-slate-800:not(.text-black):not(.dark\:text-black):not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *):not([data-attendance-card]):not([data-attendance-card] *),
+.dark .text-slate-700:not(.text-black):not(.dark\:text-black):not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *):not([data-attendance-card]):not([data-attendance-card] *),
+.dark .text-gray-800:not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *),
+.dark .text-gray-700:not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *),
+.dark .text-zinc-800:not([data-timetable-card]):not([data-timetable-card] *),
+.dark .text-zinc-700:not([data-timetable-card]):not([data-timetable-card] *),
+.dark .text-stone-800:not([data-timetable-card]):not([data-timetable-card] *),
+.dark .text-stone-700:not([data-timetable-card]):not([data-timetable-card] *) {
   color: #f8fafc !important;
 }
 
-.dark .text-slate-600:not(.text-black):not(.dark\:text-black):not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *),
-.dark .text-slate-500:not(.text-black):not(.dark\:text-black):not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *) {
-  color: #d2ded8 !important;
+.dark .text-slate-600:not(.text-black):not(.dark\:text-black):not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *):not([data-attendance-card]):not([data-attendance-card] *),
+.dark .text-slate-500:not(.text-black):not(.dark\:text-black):not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *):not([data-attendance-card]):not([data-attendance-card] *),
+.dark .text-gray-600:not([data-timetable-card]):not([data-timetable-card] *),
+.dark .text-gray-500:not([data-timetable-card]):not([data-timetable-card] *),
+.dark .text-stone-600:not([data-timetable-card]):not([data-timetable-card] *),
+.dark .text-stone-500:not([data-timetable-card]):not([data-timetable-card] *) {
+  color: #dbe4e8 !important;
 }
 
 .dark .text-slate-400:not(.text-black):not(.dark\:text-black):not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *),
+.dark .text-gray-400:not([data-timetable-card]):not([data-timetable-card] *) {
+  color: #cbd5e1 !important;
+}
+
 .dark .text-slate-300:not(.text-black):not(.dark\:text-black):not([data-timetable-card]):not([data-timetable-card] *):not(.timetable-card):not(.timetable-card *) {
-  color: #8ea1a5 !important;
+  color: #e2e8f0 !important;
+}
+
+/* Semantic Pastel Surfaces & Dark-Shade Text Safeguards in Dark Mode (Guarantees legibility on dark surfaces) */
+.dark .bg-emerald-50:not([data-timetable-card]),
+.dark .bg-emerald-50\/50:not([data-timetable-card]),
+.dark .bg-emerald-50\/80:not([data-timetable-card]),
+.dark .bg-emerald-100:not([data-timetable-card]),
+.dark .bg-emerald-100\/80:not([data-timetable-card]) {
+  background-color: rgba(16, 185, 129, 0.16) !important;
+  border-color: rgba(52, 211, 153, 0.32) !important;
+}
+.dark .bg-rose-50:not([data-timetable-card]),
+.dark .bg-rose-50\/50:not([data-timetable-card]),
+.dark .bg-rose-50\/80:not([data-timetable-card]),
+.dark .bg-rose-100:not([data-timetable-card]) {
+  background-color: rgba(244, 63, 94, 0.16) !important;
+  border-color: rgba(251, 113, 133, 0.32) !important;
+}
+.dark .bg-amber-50:not([data-timetable-card]),
+.dark .bg-amber-50\/80:not([data-timetable-card]),
+.dark .bg-amber-100:not([data-timetable-card]) {
+  background-color: rgba(245, 158, 11, 0.16) !important;
+  border-color: rgba(251, 191, 36, 0.34) !important;
+}
+.dark .bg-indigo-50:not([data-timetable-card]),
+.dark .bg-indigo-50\/80:not([data-timetable-card]),
+.dark .bg-indigo-100:not([data-timetable-card]) {
+  background-color: rgba(99, 102, 241, 0.18) !important;
+  border-color: rgba(129, 140, 248, 0.34) !important;
+}
+.dark .bg-blue-50:not([data-timetable-card]),
+.dark .bg-blue-100:not([data-timetable-card]) {
+  background-color: rgba(59, 130, 246, 0.18) !important;
+  border-color: rgba(96, 165, 250, 0.34) !important;
+}
+.dark .bg-purple-50:not([data-timetable-card]),
+.dark .bg-purple-100:not([data-timetable-card]) {
+  background-color: rgba(168, 85, 247, 0.18) !important;
+  border-color: rgba(192, 132, 252, 0.34) !important;
+}
+.dark .bg-teal-50:not([data-timetable-card]),
+.dark .bg-teal-100:not([data-timetable-card]) {
+  background-color: rgba(20, 184, 166, 0.18) !important;
+  border-color: rgba(45, 212, 191, 0.34) !important;
+}
+.dark .bg-cyan-50:not([data-timetable-card]),
+.dark .bg-cyan-100:not([data-timetable-card]) {
+  background-color: rgba(6, 182, 212, 0.18) !important;
+  border-color: rgba(34, 211, 238, 0.34) !important;
+}
+.dark .bg-orange-50:not([data-timetable-card]),
+.dark .bg-orange-100:not([data-timetable-card]) {
+  background-color: rgba(249, 115, 22, 0.18) !important;
+  border-color: rgba(251, 146, 60, 0.34) !important;
+}
+.dark .bg-sky-50:not([data-timetable-card]),
+.dark .bg-sky-100:not([data-timetable-card]) {
+  background-color: rgba(14, 165, 233, 0.18) !important;
+  border-color: rgba(56, 189, 248, 0.34) !important;
+}
+
+.dark .text-emerald-700:not([class*="bg-[#"]):not([data-timetable-card] *),
+.dark .text-emerald-800:not([class*="bg-[#"]):not([data-timetable-card] *),
+.dark .text-emerald-900:not([class*="bg-[#"]):not([data-timetable-card] *) {
+  color: #6ee7b7 !important;
+}
+.dark .text-rose-700:not([class*="bg-[#"]):not([data-timetable-card] *),
+.dark .text-rose-800:not([class*="bg-[#"]):not([data-timetable-card] *),
+.dark .text-rose-900:not([class*="bg-[#"]):not([data-timetable-card] *) {
+  color: #fda4af !important;
+}
+.dark .text-amber-700:not([class*="bg-[#"]):not([data-timetable-card] *),
+.dark .text-amber-800:not([class*="bg-[#"]):not([data-timetable-card] *),
+.dark .text-amber-900:not([class*="bg-[#"]):not([data-timetable-card] *) {
+  color: #fcd34d !important;
+}
+.dark .text-indigo-700:not([class*="bg-[#"]):not([data-timetable-card] *),
+.dark .text-indigo-800:not([class*="bg-[#"]):not([data-timetable-card] *),
+.dark .text-indigo-900:not([class*="bg-[#"]):not([data-timetable-card] *) {
+  color: #a5b4fc !important;
+}
+.dark .text-blue-700:not([class*="bg-[#"]):not([data-timetable-card] *),
+.dark .text-blue-800:not([class*="bg-[#"]):not([data-timetable-card] *),
+.dark .text-blue-900:not([class*="bg-[#"]):not([data-timetable-card] *) {
+  color: #93c5fd !important;
+}
+.dark .text-purple-700:not([class*="bg-[#"]):not([data-timetable-card] *),
+.dark .text-purple-800:not([class*="bg-[#"]):not([data-timetable-card] *),
+.dark .text-purple-900:not([class*="bg-[#"]):not([data-timetable-card] *) {
+  color: #d8b4fe !important;
+}
+.dark .text-teal-700:not([class*="bg-[#"]):not([data-timetable-card] *),
+.dark .text-teal-800:not([class*="bg-[#"]):not([data-timetable-card] *),
+.dark .text-teal-900:not([class*="bg-[#"]):not([data-timetable-card] *) {
+  color: #5eead4 !important;
+}
+.dark .text-cyan-700:not([class*="bg-[#"]):not([data-timetable-card] *),
+.dark .text-cyan-800:not([class*="bg-[#"]):not([data-timetable-card] *) {
+  color: #67e8f9 !important;
+}
+.dark .text-orange-700:not([class*="bg-[#"]):not([data-timetable-card] *),
+.dark .text-orange-800:not([class*="bg-[#"]):not([data-timetable-card] *) {
+  color: #fdba74 !important;
+}
+.dark .text-sky-700:not([class*="bg-[#"]):not([data-timetable-card] *),
+.dark .text-sky-800:not([class*="bg-[#"]):not([data-timetable-card] *) {
+  color: #7dd3fc !important;
 }
 
 .dark .text-\[\#a0a0a0\],
@@ -1132,7 +1278,7 @@ html.dark body {
 
 .dark .text-\[\#818181\],
 .dark .dark\:text-\[\#818181\] {
-  color: #8ea1a5 !important;
+  color: #cbd5e1 !important;
 }
 
 /* Segmented Toggles & Tab Bars in Dark Mode: crisp dark container & clear readable text/icons */
@@ -1264,30 +1410,28 @@ html.dark [data-attendance-card] [data-force-white],
 }
 
 /* =========================================================================
-   WARM-SHADED SAME-BACKGROUND INPUT FIELDS WITH INNER CORNER DEPTH EFFECT
-   Matches surrounding light/dark surface in a warm shade with 4-corner depth
+   GREYISH LIGHT-MODE & CLEAN DARK-MODE INPUT FIELDS WITH SUBTLE INNER DEPTH
+   Soft greyish surface in light mode with reduced corner shading effect
    ========================================================================= */
 input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]):not(.glass-input):not(.bg-transparent):not(.border-0),
 textarea:not(.glass-input):not(.bg-transparent):not(.border-0),
 select:not(.glass-input):not(.bg-transparent):not(.sr-only),
 .depth-input-container {
-  background-color: color-mix(in srgb, var(--brand-lighter, #faf6f0) 36%, #f8f2e9) !important;
+  background-color: #eef0f3 !important;
   background-image:
-    radial-gradient(ellipse 34% 48% at 0% 0%, rgba(126, 94, 62, 0.22) 0%, transparent 72%),
-    radial-gradient(ellipse 34% 48% at 100% 0%, rgba(126, 94, 62, 0.19) 0%, transparent 72%),
-    radial-gradient(ellipse 34% 48% at 0% 100%, rgba(126, 94, 62, 0.17) 0%, transparent 72%),
-    radial-gradient(ellipse 34% 48% at 100% 100%, rgba(126, 94, 62, 0.16) 0%, transparent 72%) !important;
-  border: 1px solid rgba(154, 126, 98, 0.34) !important;
+    radial-gradient(ellipse 28% 40% at 0% 0%, rgba(71, 85, 105, 0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 28% 40% at 100% 0%, rgba(71, 85, 105, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 28% 40% at 0% 100%, rgba(71, 85, 105, 0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 28% 40% at 100% 100%, rgba(71, 85, 105, 0.05) 0%, transparent 70%) !important;
+  border: 1px solid rgba(148, 163, 184, 0.42) !important;
   border-radius: 0.875rem;
-  color: #1c1917 !important;
+  color: #0f172a !important;
   caret-color: var(--brand-primary, #6C7D8A);
   color-scheme: light;
   box-shadow:
-    inset 6px 6px 11px -3px rgba(112, 82, 54, 0.22),
-    inset -6px -6px 11px -3px rgba(112, 82, 54, 0.16),
-    inset 6px -6px 10px -3px rgba(112, 82, 54, 0.15),
-    inset -6px 6px 10px -3px rgba(112, 82, 54, 0.15),
-    0 1px 0 rgba(255, 255, 255, 0.82) !important;
+    inset 2px 2px 5px -1px rgba(71, 85, 105, 0.09),
+    inset -2px -2px 5px -1px rgba(71, 85, 105, 0.05),
+    0 1px 0 rgba(255, 255, 255, 0.85) !important;
   transition: border-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1),
               background-color 180ms ease;
@@ -1297,13 +1441,11 @@ input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="r
 textarea:not(.glass-input):not(.bg-transparent):not(.border-0):hover:not(:disabled):not(:focus),
 select:not(.glass-input):not(.bg-transparent):not(.sr-only):hover:not(:disabled):not(:focus),
 .depth-input-container:hover:not(:focus-within) {
-  background-color: color-mix(in srgb, var(--brand-lighter, #fbf7f2) 30%, #f5ede2) !important;
-  border-color: color-mix(in srgb, var(--brand-primary, #6C7D8A) 45%, rgba(154, 126, 98, 0.45)) !important;
+  background-color: #e8ecef !important;
+  border-color: color-mix(in srgb, var(--brand-primary, #6C7D8A) 45%, rgba(148, 163, 184, 0.52)) !important;
   box-shadow:
-    inset 7px 7px 12px -3px rgba(112, 82, 54, 0.26),
-    inset -7px -7px 12px -3px rgba(112, 82, 54, 0.19),
-    inset 7px -7px 11px -3px rgba(112, 82, 54, 0.17),
-    inset -7px 7px 11px -3px rgba(112, 82, 54, 0.17),
+    inset 2px 2px 6px -1px rgba(71, 85, 105, 0.11),
+    inset -2px -2px 6px -1px rgba(71, 85, 105, 0.06),
     0 1px 0 rgba(255, 255, 255, 0.85) !important;
 }
 
@@ -1312,57 +1454,51 @@ textarea:not(.glass-input):not(.bg-transparent):not(.border-0):focus,
 select:not(.glass-input):not(.bg-transparent):not(.sr-only):focus,
 .depth-input-container:focus-within {
   outline: none !important;
-  background-color: color-mix(in srgb, var(--brand-lighter, #fcf9f4) 40%, #fbf5ec) !important;
+  background-color: #f4f6f8 !important;
   border-color: var(--brand-primary, #6C7D8A) !important;
   box-shadow:
-    inset 7px 7px 13px -3px rgba(105, 76, 48, 0.25),
-    inset -7px -7px 13px -3px rgba(105, 76, 48, 0.19),
-    inset 7px -7px 11px -3px rgba(105, 76, 48, 0.17),
-    inset -7px 7px 11px -3px rgba(105, 76, 48, 0.17),
-    0 0 0 2.5px var(--brand-ring, rgba(108, 125, 138, 0.3)) !important;
+    inset 2px 2px 6px -1px rgba(71, 85, 105, 0.08),
+    inset -2px -2px 6px -1px rgba(71, 85, 105, 0.05),
+    0 0 0 2px var(--brand-ring, rgba(108, 125, 138, 0.28)) !important;
 }
 
 input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]):not(.glass-input):not(.bg-transparent):not(.border-0):disabled,
 textarea:not(.glass-input):not(.bg-transparent):not(.border-0):disabled,
 select:not(.glass-input):not(.bg-transparent):not(.sr-only):disabled {
-  background-color: #f1eae0 !important;
-  border: 1px dashed rgba(146, 124, 102, 0.42) !important;
-  color: #78716c !important;
-  box-shadow:
-    inset 5px 5px 9px -3px rgba(112, 82, 54, 0.18),
-    inset -5px -5px 9px -3px rgba(112, 82, 54, 0.12) !important;
+  background-color: #e6e9ed !important;
+  border: 1px dashed rgba(148, 163, 184, 0.5) !important;
+  color: #64748b !important;
+  box-shadow: inset 1px 1px 4px -1px rgba(71, 85, 105, 0.08) !important;
 }
 
-/* Dark Mode Warm-Shaded Same-Background Input Fields with Inner Corner Depth */
+/* Dark Mode Input Fields with Reduced Subtle Inner Corner Depth & Crisp White Text */
 .dark input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]):not(.glass-input):not(.bg-transparent):not(.border-0),
 .dark textarea:not(.glass-input):not(.bg-transparent):not(.border-0),
 .dark select:not(.glass-input):not(.bg-transparent):not(.sr-only),
 .dark .depth-input-container {
-  background-color: color-mix(in srgb, #435055 72%, #5c4534) !important;
+  background-color: #344046 !important;
   background-image:
-    radial-gradient(ellipse 36% 52% at 0% 0%, rgba(16, 10, 6, 0.56) 0%, transparent 72%),
-    radial-gradient(ellipse 36% 52% at 100% 0%, rgba(16, 10, 6, 0.50) 0%, transparent 72%),
-    radial-gradient(ellipse 36% 52% at 0% 100%, rgba(16, 10, 6, 0.46) 0%, transparent 72%),
-    radial-gradient(ellipse 36% 52% at 100% 100%, rgba(16, 10, 6, 0.44) 0%, transparent 72%) !important;
-  border: 1px solid rgba(30, 22, 16, 0.56) !important;
-  border-bottom-color: rgba(214, 194, 174, 0.22) !important;
-  color: #faf7f2 !important;
+    radial-gradient(ellipse 28% 40% at 0% 0%, rgba(15, 23, 42, 0.22) 0%, transparent 70%),
+    radial-gradient(ellipse 28% 40% at 100% 0%, rgba(15, 23, 42, 0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 28% 40% at 0% 100%, rgba(15, 23, 42, 0.16) 0%, transparent 70%),
+    radial-gradient(ellipse 28% 40% at 100% 100%, rgba(15, 23, 42, 0.16) 0%, transparent 70%) !important;
+  border: 1px solid rgba(148, 163, 184, 0.28) !important;
+  border-bottom-color: rgba(203, 213, 225, 0.24) !important;
+  color: #f8fafc !important;
   caret-color: var(--brand-primary, #29a19c);
   color-scheme: dark;
   box-shadow:
-    inset 7px 7px 13px -3px rgba(14, 9, 5, 0.62),
-    inset -7px -7px 13px -3px rgba(14, 9, 5, 0.48),
-    inset 7px -7px 12px -3px rgba(14, 9, 5, 0.45),
-    inset -7px 7px 12px -3px rgba(14, 9, 5, 0.45),
-    0 1px 0 rgba(255, 245, 235, 0.09) !important;
+    inset 2px 2px 6px -2px rgba(15, 23, 42, 0.28),
+    inset -2px -2px 6px -2px rgba(15, 23, 42, 0.2),
+    0 1px 0 rgba(255, 255, 255, 0.06) !important;
 }
 
 .dark input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]):not(.glass-input):not(.bg-transparent):not(.border-0):hover:not(:disabled):not(:focus),
 .dark textarea:not(.glass-input):not(.bg-transparent):not(.border-0):hover:not(:disabled):not(:focus),
 .dark select:not(.glass-input):not(.bg-transparent):not(.sr-only):hover:not(:disabled):not(:focus),
 .dark .depth-input-container:hover:not(:focus-within) {
-  background-color: color-mix(in srgb, #435055 68%, #634a37) !important;
-  border-color: color-mix(in srgb, var(--brand-primary, #29a19c) 45%, rgba(214, 194, 174, 0.28)) !important;
+  background-color: #39464d !important;
+  border-color: color-mix(in srgb, var(--brand-primary, #29a19c) 45%, rgba(203, 213, 225, 0.32)) !important;
 }
 
 .dark input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]):not(.glass-input):not(.bg-transparent):not(.border-0):focus,
@@ -1370,33 +1506,29 @@ select:not(.glass-input):not(.bg-transparent):not(.sr-only):disabled {
 .dark select:not(.glass-input):not(.bg-transparent):not(.sr-only):focus,
 .dark .depth-input-container:focus-within {
   outline: none !important;
-  background-color: color-mix(in srgb, #3d484d 72%, #594130) !important;
+  background-color: #2f3b41 !important;
   border-color: var(--brand-primary, #29a19c) !important;
   box-shadow:
-    inset 8px 8px 14px -3px rgba(12, 7, 4, 0.68),
-    inset -8px -8px 14px -3px rgba(12, 7, 4, 0.54),
-    inset 8px -8px 12px -3px rgba(12, 7, 4, 0.5),
-    inset -8px 8px 12px -3px rgba(12, 7, 4, 0.5),
-    0 0 0 2.5px var(--brand-ring, rgba(41, 161, 156, 0.42)) !important;
+    inset 2px 2px 6px -2px rgba(15, 23, 42, 0.32),
+    inset -2px -2px 6px -2px rgba(15, 23, 42, 0.22),
+    0 0 0 2px var(--brand-ring, rgba(41, 161, 156, 0.4)) !important;
 }
 
 .dark input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]):not(.glass-input):not(.bg-transparent):not(.border-0):disabled,
 .dark textarea:not(.glass-input):not(.bg-transparent):not(.border-0):disabled,
 .dark select:not(.glass-input):not(.bg-transparent):not(.sr-only):disabled {
-  background-color: color-mix(in srgb, #394449 75%, #4d3b2e) !important;
-  border: 1px dashed rgba(186, 168, 150, 0.32) !important;
-  color: #b8aea3 !important;
-  box-shadow:
-    inset 6px 6px 10px -3px rgba(14, 9, 5, 0.54),
-    inset -6px -6px 10px -3px rgba(14, 9, 5, 0.42) !important;
+  background-color: #2d373c !important;
+  border: 1px dashed rgba(148, 163, 184, 0.32) !important;
+  color: #cbd5e1 !important;
+  box-shadow: inset 1px 1px 4px -1px rgba(15, 23, 42, 0.24) !important;
 }
 
-/* Keep icons inside warm depth input wrappers legible in both Light & Dark modes */
+/* Keep icons inside depth input wrappers legible in both Light & Dark modes */
 .relative:has(> input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]):not(.glass-input):not(.bg-transparent):not(.border-0)) > svg,
 .relative:has(> textarea:not(.glass-input):not(.bg-transparent):not(.border-0)) > svg,
 .relative:has(> select:not(.glass-input):not(.bg-transparent):not(.sr-only)) > svg,
 .depth-input-container > svg {
-  color: #78716c;
+  color: #64748b;
   z-index: 1;
   transition: color 180ms ease;
 }
@@ -1405,7 +1537,7 @@ select:not(.glass-input):not(.bg-transparent):not(.sr-only):disabled {
 .dark .relative:has(> textarea:not(.glass-input):not(.bg-transparent):not(.border-0)) > svg,
 .dark .relative:has(> select:not(.glass-input):not(.bg-transparent):not(.sr-only)) > svg,
 .dark .depth-input-container > svg {
-  color: #c2b7ab;
+  color: #cbd5e1;
 }
 
 .relative:focus-within:has(> input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]):not(.glass-input):not(.bg-transparent):not(.border-0)) > svg,
@@ -1414,14 +1546,14 @@ select:not(.glass-input):not(.bg-transparent):not(.sr-only):disabled {
   color: var(--brand-primary, #6C7D8A);
 }
 
-/* Preserve warm background styling during browser autofill */
+/* Preserve greyish/dark background styling during browser autofill */
 input:not(.glass-input):-webkit-autofill,
 input:not(.glass-input):-webkit-autofill:hover,
 input:not(.glass-input):-webkit-autofill:focus,
 textarea:not(.glass-input):-webkit-autofill {
-  -webkit-text-fill-color: #1c1917 !important;
-  -webkit-box-shadow: 0 0 0 1000px #f8f2e9 inset !important;
-  box-shadow: 0 0 0 1000px #f8f2e9 inset !important;
+  -webkit-text-fill-color: #0f172a !important;
+  -webkit-box-shadow: 0 0 0 1000px #eef0f3 inset !important;
+  box-shadow: 0 0 0 1000px #eef0f3 inset !important;
   transition: background-color 5000s ease-in-out 0s;
 }
 
@@ -1429,9 +1561,9 @@ textarea:not(.glass-input):-webkit-autofill {
 .dark input:not(.glass-input):-webkit-autofill:hover,
 .dark input:not(.glass-input):-webkit-autofill:focus,
 .dark textarea:not(.glass-input):-webkit-autofill {
-  -webkit-text-fill-color: #faf7f2 !important;
-  -webkit-box-shadow: 0 0 0 1000px #4a4c4b inset !important;
-  box-shadow: 0 0 0 1000px #4a4c4b inset !important;
+  -webkit-text-fill-color: #f8fafc !important;
+  -webkit-box-shadow: 0 0 0 1000px #344046 inset !important;
+  box-shadow: 0 0 0 1000px #344046 inset !important;
 }
 
 /* All Placeholders: Strict Sans-Serif Typography */
@@ -1443,8 +1575,8 @@ textarea::placeholder,
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
   font-weight: 400 !important;
   letter-spacing: 0.01em !important;
-  color: #78716c !important;
-  opacity: 0.85 !important;
+  color: #64748b !important;
+  opacity: 0.88 !important;
 }
 
 .dark input::placeholder,
@@ -1452,16 +1584,16 @@ textarea::placeholder,
 .dark .glass-input::placeholder,
 .dark .depth-input-container input::placeholder,
 .dark .depth-input-container textarea::placeholder {
-  color: #c2b7ab !important;
-  opacity: 0.82 !important;
+  color: #cbd5e1 !important;
+  opacity: 0.8 !important;
 }
 
-/* Native <select> Dropdown Lists (<option> & <optgroup>) matching warm depth fields */
+/* Native <select> Dropdown Lists (<option> & <optgroup>) matching greyish light & clean dark fields */
 select option,
 select optgroup,
 #auth-form-panel select option {
-  background-color: #f8f2e9 !important;
-  color: #1c1917 !important;
+  background-color: #f1f3f5 !important;
+  color: #0f172a !important;
   font-family: 'Lexend', sans-serif !important;
   font-weight: 500;
 }
@@ -1469,8 +1601,8 @@ select optgroup,
 .dark select option,
 .dark select optgroup,
 .dark #auth-form-panel select option {
-  background-color: #3f4445 !important;
-  color: #faf7f2 !important;
+  background-color: #2f3b41 !important;
+  color: #f8fafc !important;
   font-family: 'Lexend', sans-serif !important;
   font-weight: 500;
 }
@@ -1959,6 +2091,10 @@ select option:focus,
 .dark #sidebar-navigation {
   background-color: #182026 !important;
   border-right-color: rgba(255, 255, 255, 0.14) !important;
+  color: #ffffff;
+}
+
+.dark #sidebar-navigation :is(span, p, button, svg):not([role="switch"]):not([role="switch"] *):not([class*="text-amber"]):not([class*="text-rose"]):not([class*="text-emerald"]) {
   color: #ffffff;
 }
 

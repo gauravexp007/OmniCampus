@@ -153,15 +153,15 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onNavigate }) =>
   return (
     <div className="space-y-4 animate-in fade-in duration-150">
       {/* Header */}
-      <div className="bg-white rounded-xl p-4 md:p-5 border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="bg-white dark:bg-[#435055] rounded-xl p-4 md:p-5 border border-slate-200 dark:border-[#55666d] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-lg font-bold text-slate-900">System Settings & Preferences</h2>
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white">System Settings & Preferences</h2>
           </div>
         </div>
 
         {savedSuccess && (
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-semibold">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-200 rounded-lg text-xs font-semibold">
             <CheckCircle className="w-3.5 h-3.5" />
             <span>Preferences Saved</span>
           </div>
@@ -169,20 +169,20 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onNavigate }) =>
       </div>
 
       {/* Display Appearance (Light & Dark Mode) with Animated Dribbble Toggle Switch */}
-      <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs space-y-4">
+      <div className="bg-white dark:bg-[#435055] rounded-xl border border-slate-200 dark:border-[#55666d] p-5 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <div className="p-2.5 rounded-xl bg-brand-light text-brand shrink-0">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+              <h3 className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">
                 Display Appearance (Light & Dark Mode)
               </h3>
             </div>
           </div>
-          <div className="flex items-center gap-3 shrink-0 bg-slate-50 p-2.5 rounded-xl border border-slate-200/80">
-            <span className="text-xs font-bold text-slate-700">
+          <div className="flex items-center gap-3 shrink-0 bg-slate-50 dark:bg-[#354146] p-2.5 rounded-xl border border-slate-200/80 dark:border-[#55666d]">
+            <span className="text-xs font-bold text-slate-700 dark:text-white">
               {isDarkMode ? 'Dark Mode' : 'Light Mode'}
             </span>
             <ThemeToggleButton size="md" />
@@ -191,14 +191,14 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onNavigate }) =>
       </div>
 
       {/* Theme & Color Combination Selection */}
-      <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs space-y-4">
+      <div className="bg-white dark:bg-[#435055] rounded-xl border border-slate-200 dark:border-[#55666d] p-5 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2.5">
             <div className="p-2.5 rounded-xl bg-brand-light text-brand shrink-0">
               <Palette className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+              <h3 className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">
                 Theme & Color Combinations
               </h3>
             </div>
@@ -221,10 +221,10 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onNavigate }) =>
                 id={`theme-option-${t.id}`}
                 onClick={() => setTheme(t.id)}
                 className={cn(
-                  'relative text-left p-3.5 rounded-xl border-2 transition-all flex flex-col justify-between gap-3 group',
+                  'relative text-left p-3.5 rounded-xl border-2 transition-all flex flex-col justify-between gap-3 group cursor-pointer',
                   isSelected
                     ? 'border-brand bg-brand-light/30 shadow-sm ring-2 ring-brand/20'
-                    : 'border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50/70'
+                    : 'border-slate-200 dark:border-[#55666d] hover:border-slate-300 dark:hover:border-slate-400 bg-white dark:bg-[#354146] hover:bg-slate-50/70 dark:hover:bg-[#3d4a50]'
                 )}
               >
                 <div className="flex items-start justify-between gap-2">
@@ -239,10 +239,10 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onNavigate }) =>
                       {isSelected ? <Check className="w-4 h-4 text-white drop-shadow-xs stroke-[3]" /> : null}
                     </div>
                     <div>
-                      <span className="text-xs font-bold text-slate-900 block leading-tight">
+                      <span className="text-xs font-bold text-slate-900 dark:text-white block leading-tight">
                         {t.name}
                       </span>
-                      <span className="text-[10px] text-slate-500 block leading-tight mt-0.5">
+                      <span className="text-[10px] text-slate-500 dark:text-slate-300 block leading-tight mt-0.5">
                         {t.subtitle}
                       </span>
                     </div>
@@ -250,15 +250,15 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onNavigate }) =>
                 </div>
 
                 {/* Color swatches preview bar */}
-                <div className="flex items-center justify-between pt-2 border-t border-slate-100/80">
+                <div className="flex items-center justify-between pt-2 border-t border-slate-100/80 dark:border-[#55666d]">
                   <div className="flex items-center gap-1.5">
                     <span
-                      className="w-3.5 h-3.5 rounded-full border border-black/10 shadow-2xs inline-block"
+                      className="w-3.5 h-3.5 rounded-full border border-black/15 dark:border-white/25 shadow-2xs inline-block"
                       style={{ backgroundColor: t.primaryColor }}
                       title={`Primary: ${t.primaryColor}`}
                     />
                     <span
-                      className="w-3.5 h-3.5 rounded-full border border-black/10 shadow-2xs inline-block"
+                      className="w-3.5 h-3.5 rounded-full border border-black/15 dark:border-white/25 shadow-2xs inline-block"
                       style={{ backgroundColor: t.accentColor }}
                       title={`Accent: ${t.accentColor}`}
                     />
@@ -268,7 +268,7 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onNavigate }) =>
                       'text-[10px] font-bold px-2 py-0.5 rounded-md transition-colors',
                       isSelected
                         ? 'bg-brand text-white'
-                        : 'bg-slate-100 text-slate-600 group-hover:bg-slate-200'
+                        : 'bg-slate-100 dark:bg-[#435055] text-slate-600 dark:text-slate-200 group-hover:bg-slate-200 dark:group-hover:bg-[#4e5c61]'
                     )}
                   >
                     {isSelected ? 'Selected' : 'Apply'}

@@ -842,32 +842,32 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-                <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 text-center">
-                  <span className="text-xs font-bold text-emerald-800 block">Exemplary (&ge;85%)</span>
-                  <p className="text-3xl font-black text-emerald-700 mt-1">
+                <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-500/35 text-center">
+                  <span className="text-xs font-bold text-emerald-800 dark:text-emerald-200 block">Exemplary (&ge;85%)</span>
+                  <p className="text-3xl font-black text-emerald-700 dark:text-emerald-300 mt-1">
                     {cohortAnalytics.attendanceDistribution.high}
                   </p>
-                  <span className="text-[11px] text-emerald-600">Students compliant</span>
+                  <span className="text-[11px] text-emerald-600 dark:text-emerald-300/90">Students compliant</span>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-200 text-center">
-                  <span className="text-xs font-bold text-indigo-800 block">Adequate (75%-84%)</span>
-                  <p className="text-3xl font-black text-indigo-700 mt-1">
+                <div className="p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-500/35 text-center">
+                  <span className="text-xs font-bold text-indigo-800 dark:text-indigo-200 block">Adequate (75%-84%)</span>
+                  <p className="text-3xl font-black text-indigo-700 dark:text-indigo-300 mt-1">
                     {cohortAnalytics.attendanceDistribution.adequate}
                   </p>
-                  <span className="text-[11px] text-indigo-600">Meeting threshold</span>
+                  <span className="text-[11px] text-indigo-600 dark:text-indigo-300/90">Meeting threshold</span>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/20 border border-rose-200 text-center">
-                  <span className="text-xs font-bold text-rose-800 block">At-Risk (&lt;75%)</span>
-                  <p className="text-3xl font-black text-rose-700 mt-1">
+                <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-500/35 text-center">
+                  <span className="text-xs font-bold text-rose-800 dark:text-rose-200 block">At-Risk (&lt;75%)</span>
+                  <p className="text-3xl font-black text-rose-700 dark:text-rose-300 mt-1">
                     {cohortAnalytics.attendanceDistribution.atRisk}
                   </p>
-                  <span className="text-[11px] text-rose-600">Shortfall flagged</span>
+                  <span className="text-[11px] text-rose-600 dark:text-rose-300/90">Shortfall flagged</span>
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 text-xs text-slate-600 space-y-2">
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-200 space-y-2">
                 <span className="font-extrabold text-slate-900 dark:text-white block">
                   Faculty Cohort Recommendations:
                 </span>
@@ -1191,9 +1191,9 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
 
               {/* Weak Subjects Identification Alert */}
               {studentMetrics.weakSubjects.length > 0 ? (
-                <div className="p-3 bg-amber-50 dark:bg-amber-950/20 rounded-2xl border border-amber-200 text-xs text-amber-900 space-y-1">
+                <div className="p-3 bg-amber-50 dark:bg-amber-950/30 rounded-2xl border border-amber-200 dark:border-amber-500/35 text-xs text-amber-900 dark:text-amber-200 space-y-1">
                   <div className="font-extrabold flex items-center gap-1.5">
-                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-300" />
                     <span>Weak Subject Alert: Focus Required</span>
                   </div>
                   <p className="opacity-90">
@@ -1201,8 +1201,8 @@ export const StudentPerformanceAnalyticsDashboard: React.FC<
                   </p>
                 </div>
               ) : (
-                <div className="p-3 bg-emerald-50 dark:bg-emerald-950/20 rounded-2xl border border-emerald-200 text-xs text-emerald-900 flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <div className="p-3 bg-emerald-50 dark:bg-emerald-950/30 rounded-2xl border border-emerald-200 dark:border-emerald-500/35 text-xs text-emerald-900 dark:text-emerald-200 flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-300 shrink-0" />
                   <span>All subjects maintain proficient standing above 70%. Excellent balanced mastery!</span>
                 </div>
               )}

@@ -125,17 +125,17 @@ export const CommandDialog: React.FC<CommandDialogProps> = ({
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   autoFocus
-                  className="glass-input flex-1 bg-transparent text-stone-900 dark:text-[#faf7f2] text-xs sm:text-sm focus:outline-hidden border-0"
+                  className="glass-input flex-1 bg-transparent text-slate-900 dark:text-slate-50 text-xs sm:text-sm focus:outline-hidden border-0"
                 />
                 {query && (
                   <button
                     onClick={() => setQuery('')}
-                    className="no-theme-btn btn-press p-1 rounded-lg text-stone-500 dark:text-[#c2b7ab] hover:text-stone-900 dark:hover:text-white"
+                    className="no-theme-btn btn-press p-1 rounded-lg text-slate-500 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 )}
-                <span className="text-[10px] font-semibold text-stone-600 dark:text-[#e7dfd6] px-1.5 py-0.5 bg-black/5 dark:bg-white/10 rounded border border-black/10 dark:border-white/15 hidden sm:inline">
+                <span className="text-[10px] font-semibold text-slate-600 dark:text-slate-200 px-1.5 py-0.5 bg-black/5 dark:bg-white/10 rounded border border-black/10 dark:border-white/15 hidden sm:inline">
                   ESC
                 </span>
               </div>
@@ -212,8 +212,8 @@ export const CommandDialog: React.FC<CommandDialogProps> = ({
           {/* Filtered Exams */}
           {query && filteredExams.length > 0 && (
             <div>
-              <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-1.5">
-                <FileSpreadsheet className="w-3.5 h-3.5 text-amber-500" />
+              <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
+                <FileSpreadsheet className="w-3.5 h-3.5 text-amber-500 dark:text-amber-300" />
                 Examinations ({filteredExams.length})
               </p>
               <div className="space-y-1">
@@ -224,20 +224,20 @@ export const CommandDialog: React.FC<CommandDialogProps> = ({
                       onSelectModule('exams');
                       onClose();
                     }}
-                    className="flex items-center justify-between w-full p-2.5 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all text-left"
+                    className="flex items-center justify-between w-full p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-[#354146] border border-transparent hover:border-slate-200 dark:hover:border-[#55666d] transition-all text-left"
                   >
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 font-bold text-[10px]">
+                        <span className="px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-500/20 text-amber-700 dark:text-amber-200 font-bold text-[10px]">
                           {e.examCode}
                         </span>
-                        <p className="text-xs font-bold text-slate-800">{e.courseTitle}</p>
+                        <p className="text-xs font-bold text-slate-800 dark:text-white">{e.courseTitle}</p>
                       </div>
-                      <p className="text-[11px] text-slate-500 mt-0.5">
+                      <p className="text-[11px] text-slate-500 dark:text-slate-300 mt-0.5">
                         {e.date} • {e.time} • {e.venue}
                       </p>
                     </div>
-                    <span className="text-[10px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded">
+                    <span className="text-[10px] font-semibold bg-slate-100 dark:bg-[#354146] text-slate-600 dark:text-slate-200 px-2 py-0.5 rounded">
                       {e.examType}
                     </span>
                   </button>
@@ -249,8 +249,8 @@ export const CommandDialog: React.FC<CommandDialogProps> = ({
           {/* Filtered Students */}
           {query && filteredStudents.length > 0 && (
             <div>
-              <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-1.5">
-                <GraduationCap className="w-3.5 h-3.5 text-indigo-500" />
+              <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
+                <GraduationCap className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-300" />
                 Students ({filteredStudents.length})
               </p>
               <div className="space-y-1">
@@ -261,12 +261,12 @@ export const CommandDialog: React.FC<CommandDialogProps> = ({
                       onSelectModule('students');
                       onClose();
                     }}
-                    className="flex items-center justify-between w-full p-2.5 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all text-left"
+                    className="flex items-center justify-between w-full p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-[#354146] border border-transparent hover:border-slate-200 dark:hover:border-[#55666d] transition-all text-left"
                   >
                     <div>
-                      <p className="text-sm sm:text-base font-extrabold text-slate-800">{s.name}</p>
-                      <p className="text-xs sm:text-sm font-mono font-bold text-slate-600 mt-0.5">
-                        {s.enrollmentNo} <span className="font-sans font-normal text-slate-500">• {s.program}</span>
+                      <p className="text-sm sm:text-base font-extrabold text-slate-800 dark:text-white">{s.name}</p>
+                      <p className="text-xs sm:text-sm font-mono font-bold text-slate-600 dark:text-slate-200 mt-0.5">
+                        {s.enrollmentNo} <span className="font-sans font-normal text-slate-500 dark:text-slate-300">• {s.program}</span>
                       </p>
                     </div>
                   </button>
@@ -278,8 +278,8 @@ export const CommandDialog: React.FC<CommandDialogProps> = ({
           {/* Filtered Faculty */}
           {query && filteredFaculty.length > 0 && (
             <div>
-              <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-blue-500" />
+              <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
+                <Users className="w-3.5 h-3.5 text-blue-500 dark:text-blue-300" />
                 Faculty Members ({filteredFaculty.length})
               </p>
               <div className="space-y-1">
@@ -290,11 +290,11 @@ export const CommandDialog: React.FC<CommandDialogProps> = ({
                       onSelectModule('faculty');
                       onClose();
                     }}
-                    className="flex items-center justify-between w-full p-2.5 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all text-left"
+                    className="flex items-center justify-between w-full p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-[#354146] border border-transparent hover:border-slate-200 dark:hover:border-[#55666d] transition-all text-left"
                   >
                     <div>
-                      <p className="text-xs font-bold text-slate-800">{f.name}</p>
-                      <p className="text-[11px] text-slate-500">
+                      <p className="text-xs font-bold text-slate-800 dark:text-white">{f.name}</p>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-300">
                         {f.designation} • {f.department}
                       </p>
                     </div>
@@ -309,9 +309,9 @@ export const CommandDialog: React.FC<CommandDialogProps> = ({
             filteredFaculty.length === 0 &&
             filteredCourses.length === 0 &&
             filteredExams.length === 0 && (
-              <div className="py-10 text-center text-slate-400">
-                <p className="text-xs font-semibold text-slate-700">No records found for "{query}"</p>
-                <p className="text-[11px] text-slate-400 mt-1">
+              <div className="py-10 text-center text-slate-400 dark:text-slate-300">
+                <p className="text-xs font-semibold text-slate-700 dark:text-white">No records found for "{query}"</p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-300 mt-1">
                   Try searching by course title, exam code, student name, or department.
                 </p>
               </div>

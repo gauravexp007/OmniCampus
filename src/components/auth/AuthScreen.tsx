@@ -760,12 +760,12 @@ export const AuthScreen: React.FC<AuthModalProps> = ({ initialMode = 'signin', o
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="Full Name"
                     style={{ backgroundColor: 'transparent', outline: 'none' }}
-                    className="glass-input w-full bg-transparent px-3 py-2 lg:px-4 lg:py-3 text-xs sm:text-sm lg:text-base font-medium text-stone-900 dark:text-[#faf7f2] focus:outline-hidden border-0"
+                    className="glass-input w-full bg-transparent px-3 py-2 lg:px-4 lg:py-3 text-xs sm:text-sm lg:text-base font-medium text-slate-900 dark:text-slate-50 focus:outline-hidden border-0"
                   />
                 </div>
               )}
 
-              {/* WARM DEPTH FIELD: Username or Email */}
+              {/* DEPTH FIELD: Username or Email */}
               <div className="depth-input-container relative flex items-center rounded-full! transition-all duration-300 h-10 sm:h-11 lg:h-12 xl:h-13">
                 <User className="w-4 h-4 lg:w-5 lg:h-5 ml-4 lg:ml-5 shrink-0 stroke-[2]" />
                 <input
@@ -781,11 +781,11 @@ export const AuthScreen: React.FC<AuthModalProps> = ({ initialMode = 'signin', o
                       : 'Student ID or Email (e.g. STU-...)'
                   }
                   style={{ backgroundColor: 'transparent', outline: 'none' }}
-                  className="glass-input w-full bg-transparent px-3 py-2 lg:px-4 lg:py-3 text-xs sm:text-sm lg:text-base font-medium text-stone-900 dark:text-[#faf7f2] focus:outline-hidden border-0"
+                  className="glass-input w-full bg-transparent px-3 py-2 lg:px-4 lg:py-3 text-xs sm:text-sm lg:text-base font-medium text-slate-900 dark:text-slate-50 focus:outline-hidden border-0"
                 />
               </div>
 
-              {/* WARM DEPTH FIELD: Password */}
+              {/* DEPTH FIELD: Password */}
               <div className="depth-input-container relative flex items-center rounded-full! transition-all duration-300 h-10 sm:h-11 lg:h-12 xl:h-13">
                 <Lock className="w-4 h-4 lg:w-5 lg:h-5 ml-4 lg:ml-5 shrink-0 stroke-[2]" />
                 <input
@@ -797,13 +797,13 @@ export const AuthScreen: React.FC<AuthModalProps> = ({ initialMode = 'signin', o
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
                   style={{ backgroundColor: 'transparent', outline: 'none' }}
-                  className="glass-input w-full bg-transparent px-3 py-2 lg:px-4 lg:py-3 text-xs sm:text-sm lg:text-base font-medium text-stone-900 dark:text-[#faf7f2] focus:outline-hidden border-0"
+                  className="glass-input w-full bg-transparent px-3 py-2 lg:px-4 lg:py-3 text-xs sm:text-sm lg:text-base font-medium text-slate-900 dark:text-slate-50 focus:outline-hidden border-0"
                 />
                 <button
                   type="button"
                   tabIndex={-1}
                   onClick={() => setShowPassword(!showPassword)}
-                  className="no-theme-btn mr-3.5 lg:mr-4.5 p-1 text-stone-500 dark:text-[#c2b7ab] hover:text-stone-900 dark:hover:text-white transition-colors cursor-pointer"
+                  className="no-theme-btn mr-3.5 lg:mr-4.5 p-1 text-slate-500 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? (
@@ -821,7 +821,7 @@ export const AuthScreen: React.FC<AuthModalProps> = ({ initialMode = 'signin', o
                   <select
                     value={department}
                     onChange={(e) => setDepartment(e.target.value)}
-                    className="glass-input w-full bg-transparent px-2.5 py-1.5 lg:px-3 lg:py-2 text-xs lg:text-sm font-medium text-stone-900 dark:text-[#faf7f2] focus:outline-hidden cursor-pointer"
+                    className="glass-input w-full bg-transparent px-2.5 py-1.5 lg:px-3 lg:py-2 text-xs lg:text-sm font-medium text-slate-900 dark:text-slate-50 focus:outline-hidden cursor-pointer"
                   >
                     <option value="Computer Science & Engineering">Computer Science & Engineering</option>
                     <option value="Electrical & Electronics">Electrical & Electronics</option>

@@ -1053,7 +1053,7 @@ export const LecturePlanModule: React.FC = () => {
                               'w-10 h-10 rounded-xl inline-flex items-center justify-center border-2 mx-auto',
                               item.status === 'completed'
                                 ? 'bg-emerald-600 border-emerald-600 text-white shadow-xs'
-                                : 'bg-slate-50 dark:bg-[#354146]/60 border-slate-200 dark:border-[#55666d] text-slate-300 dark:text-slate-500'
+                                : 'bg-slate-50 dark:bg-[#354146]/60 border-slate-200 dark:border-[#55666d] text-slate-400 dark:text-slate-300'
                             )}
                             title={item.status === 'completed' ? 'Lecture Completed' : 'Not marked completed'}
                           >
@@ -1090,7 +1090,7 @@ export const LecturePlanModule: React.FC = () => {
                               'w-10 h-10 rounded-xl inline-flex items-center justify-center border-2 mx-auto',
                               item.status === 'missed'
                                 ? 'bg-rose-600 border-rose-600 text-white shadow-xs'
-                                : 'bg-slate-50 dark:bg-[#354146]/60 border-slate-200 dark:border-[#55666d] text-slate-300 dark:text-slate-500'
+                                : 'bg-slate-50 dark:bg-[#354146]/60 border-slate-200 dark:border-[#55666d] text-slate-400 dark:text-slate-300'
                             )}
                             title={item.status === 'missed' ? 'Lecture Not Taken' : 'Not marked missed'}
                           >
@@ -1361,8 +1361,8 @@ export const LecturePlanModule: React.FC = () => {
           </table>
         </div>
 
-        {/* Role & Legend Footer */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-300 pt-1">
+        {/* Legend Footer */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-600 dark:text-slate-200 pt-1">
           <div className="flex items-center gap-4 flex-wrap">
             <span className="inline-flex items-center gap-1.5 font-bold">
               <span className="w-5 h-5 rounded-md bg-emerald-600 text-white inline-flex items-center justify-center">
@@ -1377,11 +1377,6 @@ export const LecturePlanModule: React.FC = () => {
               Unable to Take (Reason Directed to Admin)
             </span>
           </div>
-          <span className="font-bold">
-            {isFaculty
-              ? 'Only Faculty can create, edit, or mark lectures.'
-              : 'Read-only access — managed exclusively by Faculty.'}
-          </span>
         </div>
       </div>
     </div>

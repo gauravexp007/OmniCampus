@@ -77,12 +77,12 @@ export const COLOR_THEMES: ColorThemeOption[] = [
     previewBg: 'from-[#6C7D8A] to-[#4F606C]',
   },
   {
-    id: 'hotel',
-    name: 'Innap Hotel Teal',
-    subtitle: 'Hotel Admin Signature Teal & Gold',
-    primaryColor: '#13B497',
-    accentColor: '#FEA700',
-    previewBg: 'from-[#13B497] to-[#00A389]',
+    id: 'pink',
+    name: 'Light Pink',
+    subtitle: 'Soft Blush Pink & Pastel Rose',
+    primaryColor: '#ec6ca3',
+    accentColor: '#f9a8d4',
+    previewBg: 'from-pink-300 to-pink-500',
   },
   {
     id: 'indigo',

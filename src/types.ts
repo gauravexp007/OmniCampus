@@ -25,7 +25,7 @@ export type UserRole = 'Admin' | 'Faculty' | 'Student';
 
 export type ColorThemeId =
   | 'starline'
-  | 'hotel'
+  | 'pink'
   | 'indigo'
   | 'emerald'
   | 'sapphire'

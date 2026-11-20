@@ -232,11 +232,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                 transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
                 className="theme-dropdown-panel absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl shadow-xl border py-2.5 z-50 origin-top-right"
               >
-                <div className="flex items-center justify-between px-3.5 pb-2.5 border-b border-slate-100">
+                <div className="flex items-center justify-between px-3.5 pb-2.5 border-b border-slate-100 dark:border-white/15">
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-xs text-slate-800">Notifications Center</span>
+                    <span className="font-bold text-xs text-slate-800 dark:text-white">Notifications Center</span>
                     {unreadCount > 0 && (
-                      <span className="text-[10px] font-bold bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full">
+                      <span className="text-[10px] font-bold bg-rose-100 dark:bg-rose-500/25 text-rose-700 dark:text-rose-200 px-2 py-0.5 rounded-full">
                         {unreadCount} new
                       </span>
                     )}
@@ -244,18 +244,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                   {userNotifications.length > 0 && (
                     <button
                       onClick={() => clearNotifications()}
-                      className="text-[11px] text-slate-500 hover:text-rose-600 font-semibold cursor-pointer transition-colors"
+                      className="text-[11px] text-slate-500 dark:text-slate-300 hover:text-rose-600 dark:hover:text-rose-300 font-semibold cursor-pointer transition-colors"
                     >
                       Clear all
                     </button>
                   )}
                 </div>
 
-                <div className="divide-y divide-slate-100 max-h-72 overflow-y-auto">
+                <div className="divide-y divide-slate-100 dark:divide-white/10 max-h-72 overflow-y-auto">
                   {userNotifications.length === 0 ? (
                     <div className="p-5 text-center">
-                      <p className="text-xs text-slate-500 font-semibold">No new notifications</p>
-                      <p className="text-[11px] text-slate-400 mt-0.5">
+                      <p className="text-xs text-slate-500 dark:text-slate-200 font-semibold">No new notifications</p>
+                      <p className="text-[11px] text-slate-400 dark:text-slate-300 mt-0.5">
                         Attendance alerts and system notices will appear here.
                       </p>
                     </div>
@@ -264,24 +264,24 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <div
                         key={item.id}
                         onClick={() => markNotificationAsRead(item.id)}
-                        className={`p-3 hover:bg-slate-50 transition-colors cursor-pointer ${
+                        className={`p-3 hover:bg-slate-50 dark:hover:bg-white/10 transition-colors cursor-pointer ${
                           !item.read ? 'bg-brand-light/60' : ''
                         }`}
                       >
                         <div className="flex items-start justify-between gap-1">
                           <div className="flex items-center gap-2 flex-1 min-w-0">
                             {item.metadata?.status === 'Present' ? (
-                              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-300 shrink-0" />
                             ) : item.metadata?.status === 'Absent' ? (
-                              <XCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                              <XCircle className="w-4 h-4 text-rose-600 dark:text-rose-300 shrink-0" />
                             ) : (
                               <span className="w-2 h-2 rounded-full bg-brand shrink-0" />
                             )}
-                            <p className="text-xs font-bold text-slate-800 truncate">{item.title}</p>
+                            <p className="text-xs font-bold text-slate-800 dark:text-white truncate">{item.title}</p>
                           </div>
-                          <span className="text-[10px] text-slate-400 shrink-0">{item.time}</span>
+                          <span className="text-[10px] text-slate-400 dark:text-slate-300 shrink-0">{item.time}</span>
                         </div>
-                        <p className="text-[11px] text-slate-600 mt-1 line-clamp-2 leading-relaxed pl-6">
+                        <p className="text-[11px] text-slate-600 dark:text-slate-200 mt-1 line-clamp-2 leading-relaxed pl-6">
                           {item.desc}
                         </p>
                         {item.metadata?.status && (
@@ -289,14 +289,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                             <span
                               className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ${
                                 item.metadata.status === 'Present'
-                                  ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                                  : 'bg-rose-100 text-rose-800 border-rose-300'
+                                  ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-200 border-emerald-300 dark:border-emerald-400/40'
+                                  : 'bg-rose-100 dark:bg-rose-500/20 text-rose-800 dark:text-rose-200 border-rose-300 dark:border-rose-400/40'
                               }`}
                             >
                               {item.metadata.status}
                             </span>
                             {item.metadata.courseCode && (
-                              <span className="text-[10px] text-slate-500 font-mono">
+                              <span className="text-[10px] text-slate-500 dark:text-slate-300 font-mono">
                                 {item.metadata.courseCode}
                               </span>
                             )}
@@ -351,9 +351,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                 transition={{ duration: 0.15 }}
                 className="theme-dropdown-panel absolute right-0 mt-2 w-56 rounded-2xl shadow-xl border py-1.5 z-50 origin-top-right"
               >
-                <div className="px-3.5 py-2 border-b border-slate-100">
-                  <p className="text-xs font-bold text-slate-900 truncate">{currentUser.name}</p>
-                  <p className="text-[11px] text-slate-400 truncate">{currentUser.email}</p>
+                <div className="px-3.5 py-2 border-b border-slate-100 dark:border-white/15">
+                  <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{currentUser.name}</p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-300 truncate">{currentUser.email}</p>
                 </div>
 
                 <div className="p-1 space-y-0.5">
@@ -362,9 +362,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onSelectModule && onSelectModule('profile');
                       setShowUserMenu(false);
                     }}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 rounded-xl transition-colors text-left cursor-pointer"
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-700 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-white/10 rounded-xl transition-colors text-left cursor-pointer"
                   >
-                    <User className="w-4 h-4 text-slate-400" />
+                    <User className="w-4 h-4 text-slate-500 dark:text-slate-300" />
                     <span>My Profile</span>
                   </button>
 
@@ -373,14 +373,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onSelectModule && onSelectModule('settings');
                       setShowUserMenu(false);
                     }}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 rounded-xl transition-colors text-left cursor-pointer"
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-700 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-white/10 rounded-xl transition-colors text-left cursor-pointer"
                   >
                     <div className="p-1 rounded-md bg-brand-light text-brand">
                       <Palette className="w-3.5 h-3.5" />
                     </div>
                     <div className="flex flex-col">
-                      <span className="font-semibold text-slate-800">Theme & Settings</span>
-                      <span className="text-[10px] text-slate-400">Change theme color & options</span>
+                      <span className="font-semibold text-slate-800 dark:text-white">Theme & Settings</span>
+                      <span className="text-[10px] text-slate-500 dark:text-slate-300">Change theme color & options</span>
                     </div>
                   </button>
                 </div>
