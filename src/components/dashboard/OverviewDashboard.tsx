@@ -26,6 +26,7 @@ import {
   MoreVertical,
   LayoutGrid,
   MapPin,
+  ClipboardList,
 } from 'lucide-react';
 import { useERP } from '../../context/ERPContext';
 import { ERPModuleId } from '../../types';
@@ -78,9 +79,15 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
     results,
     transactions,
     admissions,
+    lecturePlans,
     role,
     currentUser,
   } = useERP();
+
+  const missedLectureCount = React.useMemo(
+    () => lecturePlans.filter((l) => l.status === 'missed').length,
+    [lecturePlans]
+  );
 
   const {
     isEditMode,
@@ -155,13 +162,13 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
     if (role === 'Faculty') {
       return [
         {
-          id: 'assigned_courses',
-          title: 'Assigned Courses',
-          value: courses.length || 4,
-          tag: 'Curriculum Syllabi',
-          icon: BookOpen,
+          id: 'lecture_plan',
+          title: 'Lecture Plan',
+          value: lecturePlans.length,
+          tag: 'Dates & Topics',
+          icon: ClipboardList,
           iconColor: 'bg-blue-500/10 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400 border border-blue-500/20',
-          onClick: () => onNavigate('academics'),
+          onClick: () => onNavigate('lectureplan'),
         },
         {
           id: 'attendance_registers',
@@ -233,7 +240,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
         onClick: () => onNavigate('finance'),
       },
     ];
-  }, [role, courses, avgAttendance, attendanceRecords, timetableSlots, studentResult, results, students, faculty, admissions, totalFeeRevenue, onNavigate]);
+  }, [role, courses, lecturePlans, avgAttendance, attendanceRecords, timetableSlots, studentResult, results, students, faculty, admissions, totalFeeRevenue, onNavigate]);
 
   // Hold & Drag Layout Customization State for the 4 Blocks
   const storageKey = `omnicampus_statblock_order_${role}`;
@@ -242,7 +249,9 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
       const saved = localStorage.getItem(storageKey);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length === 4) return parsed;
+        if (Array.isArray(parsed) && parsed.length === 4) {
+          return parsed.map((id: string) => (id === 'assigned_courses' ? 'lecture_plan' : id));
+        }
       }
     } catch {}
     return rawStatBlocks.map((b) => b.id);
@@ -252,11 +261,12 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
     // Sync order if default IDs changed for current role
     const currentIds = rawStatBlocks.map((b) => b.id);
     setBlockOrder((prev) => {
+      const migrated = prev.map((id) => (id === 'assigned_courses' ? 'lecture_plan' : id));
       const isIdentical =
-        prev.length === currentIds.length &&
-        prev.every((id, idx) => id === currentIds[idx]);
-      if (isIdentical) return prev;
-      const filtered = prev.filter((id) => currentIds.includes(id));
+        migrated.length === currentIds.length &&
+        migrated.every((id, idx) => id === currentIds[idx]);
+      if (isIdentical) return migrated;
+      const filtered = migrated.filter((id) => currentIds.includes(id));
       const missing = currentIds.filter((id) => !filtered.includes(id));
       const next = [...filtered, ...missing];
       return next.length === 4 ? next : currentIds;
@@ -444,7 +454,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
           ===================================================================== */}
       <div
         className={cn(
-          'relative bg-white dark:bg-[#435055] rounded-3xl p-5 sm:p-6 border border-slate-200/90 dark:border-[#55666d] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 overflow-visible transition-all',
+          'relative theme-header-banner rounded-3xl p-5 sm:p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 overflow-visible transition-all',
           isCustomizationMenuOpen ? 'z-50' : 'z-20'
         )}
       >
@@ -452,28 +462,46 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
           <h2 className="text-xl md:text-2xl font-bold text-slate-950 dark:text-white tracking-tight">
             Welcome back, {currentUser.name}
           </h2>
-          <p className="text-xs text-slate-500 dark:text-[#a3f7bf]">
+          <p className="text-xs text-brand-dark/80 dark:text-[#a3f7bf] font-medium">
             Academic Year 2026–2027 &bull; Semester Term 8
           </p>
         </div>
 
         {/* Action Controls - Customization inside 3 vertical dots at right corner */}
         <div className="flex items-center gap-2 shrink-0 flex-wrap relative z-20">
+          {role !== 'Faculty' && (
+            <button
+              type="button"
+              id="dashboard-lecture-plan-btn"
+              onClick={() => onNavigate('lectureplan')}
+              className="theme-btn-soft flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-extrabold transition-all cursor-pointer"
+              title="Open Lecture Plan"
+            >
+              <ClipboardList className="w-3.5 h-3.5 text-brand dark:text-[#a3f7bf]" />
+              <span>Lecture Plan</span>
+              {role === 'Admin' && missedLectureCount > 0 && (
+                <span className="ml-0.5 px-1.5 py-0.2 rounded-md bg-rose-600 text-white text-[10px] font-extrabold">
+                  {missedLectureCount}
+                </span>
+              )}
+            </button>
+          )}
+
           <button
             onClick={() => onNavigate('documents')}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-[#354146] hover:bg-slate-200 dark:hover:bg-[#4e5c61] text-slate-800 dark:text-white text-xs font-bold transition-all cursor-pointer border border-slate-200 dark:border-[#55666d]"
+            className="theme-btn-soft flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer"
             title="Document Vault"
           >
-            <HardDrive className="w-3.5 h-3.5 text-slate-600 dark:text-[#a3f7bf]" />
+            <HardDrive className="w-3.5 h-3.5 text-brand dark:text-[#a3f7bf]" />
             <span>Vault</span>
           </button>
 
           <button
             onClick={onOpenAiCopilot}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-[#354146] hover:bg-slate-200 dark:hover:bg-[#4e5c61] text-slate-800 dark:text-white text-xs font-bold transition-all border border-slate-200 dark:border-[#55666d] cursor-pointer"
+            className="theme-btn-soft flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer"
             title="Campus Operations & Help Desk"
           >
-            <HelpCircle className="w-3.5 h-3.5 text-slate-500 dark:text-[#a3f7bf]" />
+            <HelpCircle className="w-3.5 h-3.5 text-brand dark:text-[#a3f7bf]" />
             <span>Campus Desk</span>
           </button>
 
@@ -486,8 +514,8 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
               className={cn(
                 'p-2 rounded-xl border transition-all cursor-pointer flex items-center justify-center shadow-xs',
                 isCustomizationMenuOpen
-                  ? 'bg-slate-900 text-white dark:bg-[#29a19c] border-transparent ring-2 ring-slate-900/20 dark:ring-[#29a19c]/40'
-                  : 'bg-slate-100 hover:bg-slate-200 dark:bg-[#354146] dark:hover:bg-[#4e5c61] text-slate-800 dark:text-white border-slate-200 dark:border-[#55666d]'
+                  ? 'bg-brand text-white border-transparent ring-2 ring-brand/30'
+                  : 'theme-btn-soft'
               )}
               title="Customization Options (Dashboard, KPI Blocks, Graphs & Presets)"
               aria-label="Customization Menu"
@@ -1008,7 +1036,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.98 }}
                   className={cn(
-                    'relative overflow-hidden bg-white/95 dark:bg-[#435055]/95 backdrop-blur-xs rounded-2xl p-4 sm:p-4.5 border border-slate-200/90 dark:border-[#55666d]',
+                    'relative overflow-hidden theme-dashboard-block backdrop-blur-xs rounded-2xl p-4 sm:p-4.5',
                     'shadow-2xs hover:shadow-md transition-all duration-200 cursor-pointer group flex flex-col justify-between min-h-[120px] sm:min-h-[126px]',
                     isBeingDragged && 'opacity-40 ring-2 ring-brand scale-95',
                     isDragOver && 'ring-2 ring-brand border-brand bg-brand/5 dark:bg-brand/10'
@@ -1017,7 +1045,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                   {/* Drag Grip Indicator */}
                   <div className="absolute top-2 right-2 z-20 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                     <span
-                      className="p-1 rounded-lg bg-slate-100 dark:bg-[#354146] text-slate-500 dark:text-slate-300 hover:text-[#29a19c] cursor-grab active:cursor-grabbing shadow-xs"
+                      className="p-1 rounded-lg bg-brand-light/90 dark:bg-[#354146] text-brand-dark dark:text-slate-300 hover:text-brand cursor-grab active:cursor-grabbing shadow-xs"
                       title="Hold and drag to change position"
                       onClick={(e) => e.stopPropagation()}
                     >
@@ -1025,9 +1053,9 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                     </span>
                   </div>
 
-                  {/* Top Row: Title with dark same color shown in image (image_e2dda226.png) */}
+                  {/* Top Row: Theme-tinted title */}
                   <div className="flex items-start justify-between gap-2.5 relative z-10">
-                    <span className="text-sm sm:text-base font-medium text-slate-500 dark:text-[#a3f7bf] tracking-tight leading-snug">
+                    <span className="text-sm sm:text-base font-medium text-brand-dark/85 dark:text-[#a3f7bf] tracking-tight leading-snug">
                       {block.title}
                     </span>
                     <div
@@ -1040,7 +1068,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                     </div>
                   </div>
 
-                  {/* Middle: Bold Metric (Bright pure white) */}
+                  {/* Middle: Bold Metric */}
                   <div className="my-1 relative z-10">
                     <p className="text-2xl sm:text-3xl font-black text-slate-950 dark:text-white tracking-tight tabular-nums">
                       <AnimatedCounter
@@ -1052,24 +1080,24 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                     </p>
                   </div>
 
-                  {/* Bottom: Divider line + Label with SAME dark color as top title */}
-                  <div className="flex items-center justify-between text-xs text-slate-500 dark:text-[#a3f7bf] pt-1.5 border-t border-slate-100 dark:border-[#55666d] relative z-10">
-                    <span className="font-medium text-slate-500 dark:text-[#a3f7bf] text-[11px] sm:text-xs">
+                  {/* Bottom: Divider line + Label */}
+                  <div className="flex items-center justify-between text-xs text-brand-dark/75 dark:text-[#a3f7bf] pt-1.5 border-t border-brand/20 dark:border-[#55666d] relative z-10">
+                    <span className="font-medium text-brand-dark/75 dark:text-[#a3f7bf] text-[11px] sm:text-xs">
                       {block.tag}
                     </span>
-                    <ArrowRight className="w-3.5 h-3.5 text-slate-400 dark:text-[#a3f7bf] group-hover:text-slate-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+                    <ArrowRight className="w-3.5 h-3.5 text-brand/70 dark:text-[#a3f7bf] group-hover:text-brand-dark dark:group-hover:text-white group-hover:translate-x-0.5 transition-all" />
                   </div>
                 </motion.div>
               );
             })}
           </div>
 
-          {/* TIMETABLE SECTION (Image 2) - Placed directly below the 4 blocks, ends till Quick Access */}
-          <div className="bg-white dark:bg-[#435055] rounded-3xl border border-slate-200/90 dark:border-[#55666d] p-4.5 sm:p-5 shadow-xs flex flex-col justify-between space-y-3.5 flex-1 relative z-10 overflow-hidden">
+          {/* TIMETABLE SECTION - Placed directly below the 4 blocks, ends till Quick Access */}
+          <div className="theme-section-card rounded-3xl p-4.5 sm:p-5 shadow-xs flex flex-col justify-between space-y-3.5 flex-1 relative z-10 overflow-hidden">
             <div className="relative z-10">
-              <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#55666d] pb-3 mb-3.5">
+              <div className="flex items-center justify-between border-b border-brand/15 dark:border-[#55666d] pb-3 mb-3.5">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-[#a3f7bf] flex items-center justify-center shadow-2xs font-bold shrink-0">
+                  <div className="w-9 h-9 rounded-2xl bg-brand-light dark:bg-[#29a19c]/25 text-brand dark:text-[#a3f7bf] border border-brand/25 flex items-center justify-center shadow-2xs font-bold shrink-0">
                     <CalendarDays className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                   <div>
@@ -1080,10 +1108,10 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                 </div>
                 <button
                   onClick={() => onNavigate('timetable')}
-                  className="px-3.5 py-1.5 rounded-full bg-[#CBD5E1] dark:bg-[#29a19c] hover:bg-slate-300 dark:hover:bg-[#248f8a] text-black dark:text-white text-xs font-black flex items-center gap-1 cursor-pointer transition-colors border border-slate-400 dark:border-[#29a19c] shadow-2xs"
+                  className="px-3.5 py-1.5 rounded-full bg-brand hover:bg-brand-hover text-white text-xs font-black flex items-center gap-1 cursor-pointer transition-colors border border-brand/30 shadow-2xs"
                 >
-                  <span className="text-black dark:text-white font-black">Full Timetable</span>
-                  <ChevronRight className="w-3.5 h-3.5 text-black dark:text-white" />
+                  <span className="text-white font-black">Full Timetable</span>
+                  <ChevronRight className="w-3.5 h-3.5 text-white" />
                 </button>
               </div>
 

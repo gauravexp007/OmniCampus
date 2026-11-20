@@ -361,6 +361,31 @@
         "createdByUid": { "type": "string" }
       },
       "required": ["id", "title", "desc"]
+    },
+    "LecturePlanItem": {
+      "title": "LecturePlanItem",
+      "description": "Faculty-managed lecture plan entry with date, topic, completion tick, or missed reason directed to Admin",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "serialNo": { "type": "number" },
+        "date": { "type": "string" },
+        "topicName": { "type": "string" },
+        "courseCode": { "type": "string" },
+        "courseTitle": { "type": "string" },
+        "semester": { "type": "number" },
+        "department": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "completed", "missed"] },
+        "missedReason": { "type": "string" },
+        "missedReportedAt": { "type": "string" },
+        "completedAt": { "type": "string" },
+        "facultyUid": { "type": "string" },
+        "facultyName": { "type": "string" },
+        "facultyEmail": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "date", "topicName", "status", "facultyName", "createdAt"]
     }
   },
   "firestore": {
@@ -435,6 +460,10 @@
     "/notifications/{notificationId}": {
       "schema": "AppNotification",
       "description": "User notifications"
+    },
+    "/lecture_plans/{planId}": {
+      "schema": "LecturePlanItem",
+      "description": "Lecture plan schedule with completion status and missed lecture reasons sent to Admin"
     }
   }
 }

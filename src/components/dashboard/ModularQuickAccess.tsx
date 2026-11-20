@@ -396,7 +396,7 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
     <div
       id="modular-quick-access-container"
       className={cn(
-        'relative bg-white dark:bg-[#435055] rounded-3xl border border-slate-200/80 dark:border-[#55666d] p-4 sm:p-5 shadow-xs transition-all duration-300 space-y-3.5 overflow-visible',
+        'relative theme-section-card rounded-3xl p-4 sm:p-5 shadow-xs transition-all duration-300 space-y-3.5 overflow-visible',
         isMenuOpen ? 'z-40' : 'z-10',
         isEditMode && 'ring-2 ring-brand/50 shadow-md border-brand/50'
       )}
@@ -404,7 +404,7 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
       {/* Header Bar with Dedicated "Customize" Button */}
       <div className="flex items-center justify-between gap-2 flex-wrap relative z-20">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-brand/10 dark:bg-brand/20 text-brand flex items-center justify-center shadow-2xs font-black">
+          <div className="w-8 h-8 rounded-xl bg-brand-light dark:bg-brand/20 text-brand border border-brand/25 flex items-center justify-center shadow-2xs font-black">
             <Compass className="w-4 h-4" />
           </div>
           <div>
@@ -413,7 +413,7 @@ export const ModularQuickAccess: React.FC<ModularQuickAccessProps> = ({
                 Quick Access
               </h3>
               {/* Badge with clean theme-aware styling */}
-              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-[#354146] text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-[#55666d] shadow-2xs">
+              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-brand-light/85 dark:bg-[#354146] text-brand-dark dark:text-slate-200 border border-brand/25 dark:border-[#55666d] shadow-2xs">
                 {bigSquaresCount} Squares &bull; {smallBarsCount} Bars
               </span>
             </div>

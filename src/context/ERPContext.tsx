@@ -23,171 +23,13 @@ import {
   ColorThemeId,
   ColorThemeOption,
   UserUploadedFile,
+  LecturePlanItem,
 } from '../types';
-import {
-  loginProfiles,
-  mockStudents,
-  mockFaculty,
-  mockCourses,
-  mockAdmissions,
-  mockAttendanceRecords,
-  mockFacultyAttendanceRecords,
-  mockStudentAttendanceRecords,
-  mockTimetableSlots,
-  mockExams,
-  mockResults,
-  mockTransactions,
-  mockLibraryItems,
-  mockHostels,
-  mockHREmployees,
-  mockDocuments,
-  mockAnnouncements,
-} from '../data/mockData';
+import { loginProfiles } from '../data/mockData';
 import { auth, db } from '../lib/firebase';
 import { handleFirestoreError, OperationType } from '../lib/firestoreErrors';
 import { onAuthStateChanged, signOut, User as FirebaseUser } from 'firebase/auth';
 import { getSketchAvatar } from '../utils/sketchAvatars';
-
-export const ADMIN_EMAIL = 'fab.gaurav007@gmail.com';
-
-// Master Set of all mock IDs from mockData.ts
-export const ALL_DEMO_IDS = new Set<string>([
-  ...mockStudents.map((s) => s.id),
-  ...mockFaculty.map((f) => f.id),
-  ...mockCourses.map((c) => c.id),
-  ...mockAdmissions.map((a) => a.id),
-  ...mockAttendanceRecords.map((a) => a.id),
-  ...mockFacultyAttendanceRecords.map((f) => f.id),
-  ...mockStudentAttendanceRecords.map((s) => s.id),
-  ...mockTimetableSlots.map((t) => t.id),
-  ...mockExams.map((e) => e.id),
-  ...mockResults.map((r) => r.id),
-  ...mockTransactions.map((t) => t.id),
-  ...mockLibraryItems.map((l) => l.id),
-  ...mockHostels.map((h) => `${h.block}_${h.roomNo}`.replace(/[\/\s]/g, '_')),
-  ...mockHostels.map((h) => h.roomNo),
-  ...mockHREmployees.map((h) => h.id),
-  ...mockDocuments.map((d) => d.id),
-  ...mockAnnouncements.map((a) => a.id),
-  'std-101', 'std-102', 'std-103', 'std-104', 'std-105', 'std-106', 'std-107',
-  'fac-01', 'fac-02', 'fac-03', 'fac-04', 'fac-05', 'fac-06',
-  'adm-001', 'adm-002', 'adm-003', 'adm-004', 'adm-005',
-  'crs-01', 'crs-02', 'crs-03', 'crs-04', 'crs-05',
-  'att-201', 'att-202', 'att-203', 'att-204', 'att-205',
-  'fac-att-01', 'fac-att-02', 'fac-att-301', 'fac-att-302', 'fac-att-303', 'fac-att-304',
-  'stu-att-01', 'stu-att-02', 'stu-att-03', 'stu-att-04',
-  'tt-1', 'tt-2', 'tt-3', 'tt-4', 'tt-5', 'tt-6', 'tt-7', 'tt-8',
-  'tt-101', 'tt-102', 'tt-103', 'tt-104', 'tt-105', 'tt-106', 'tt-107',
-  'ex-01', 'ex-02', 'ex-03', 'exam-101', 'exam-102', 'exam-103',
-  'res-01', 'res-02', 'res-03', 'res-04', 'res-05', 'res-101', 'res-102',
-  'tx-901', 'tx-902', 'tx-903', 'tx-904', 'tx-905', 'tx-101', 'tx-102',
-  'lib-01', 'lib-02', 'lib-03', 'lib-04', 'lib-05', 'lib-101',
-  'emp-01', 'emp-02', 'emp-03', 'emp-04', 'hr-101',
-  'doc-001', 'doc-002', 'doc-003', 'doc-101', 'doc-102',
-  'ann-1', 'ann-2', 'ann-3', 'ann-101', 'ann-102',
-  'Block-A_101', 'Block-A_102', 'Block-B_201', 'Block-B_202', 'Block-C_301',
-]);
-
-const ALL_DEMO_TITLES = new Set<string>([
-  'official transcripts - batch 2024 cs',
-  'bonafide scholarship verification certificate',
-  'international exchange noc & credit transfer dossier',
-  'deep learning & foundation architectures',
-  'distributed database systems',
-  'distributed database management & vector indexes',
-  'embedded system architecture & rtos',
-  'embedded rtos hardware lab',
-  'biomechanics & physiological signal modeling',
-  'enterprise tech commercialization & strategy',
-  'deep learning',
-  'distributed db',
-  'distributed db lab',
-  'embedded systems',
-  'biomechanics',
-  'enterprise tech strategy',
-  'autonomous robotics workshop',
-  'doctoral colloquium',
-  'fall 2026 mid-semester examination schedules & hall ticket portal activated',
-  'annual innovation hackathon & global research symposium announced',
-  'biometric attendance reconciliation deadline for month of august',
-]);
-
-const ALL_DEMO_CODES = new Set<string>([
-  'exam-2026-f-01',
-  'exam-2026-f-02',
-  'exam-2026-f-03',
-  'app-2026-cs-9801',
-  'app-2026-cs-9844',
-  'app-2026-ec-4412',
-  'app-2026-me-1029',
-  'app-2026-mg-7781',
-  'inv-2026-8801',
-  'inv-2026-8802',
-  'inv-2026-8803',
-  'inv-2026-8804',
-  'inv-2026-8805',
-]);
-
-const ALL_DEMO_ENROLLMENTS = new Set<string>([
-  'omni-2024-cs-084',
-  'omni-2024-cs-119',
-  'omni-2024-ec-042',
-  'omni-2024-me-018',
-  'omni-2023-mg-005',
-  'omni-2024-bm-033',
-  'omni-2024-cs-204',
-  'omni-2023-cs-001',
-  'omni-2023-cs-015',
-  '230101010001',
-]);
-
-export const isDemoRecord = (id?: string | null, data?: any): boolean => {
-  if (id) {
-    const s = String(id).trim();
-    if (s.startsWith('manual-')) return false;
-    if (ALL_DEMO_IDS.has(s)) return true;
-    if (
-      s.startsWith('init-') ||
-      s.startsWith('demo-') ||
-      s.startsWith('att-seed-') ||
-      /^tt-[0-9]+$/.test(s) ||
-      /^ex-[0-9]+$/.test(s) ||
-      /^res-[0-9]+$/.test(s) ||
-      /^doc-00[0-9]+$/.test(s) ||
-      /^ann-[0-9]+$/.test(s) ||
-      /^tx-90[0-9]+$/.test(s) ||
-      /^lib-0[0-9]+$/.test(s) ||
-      /^fac-0[0-9]+$/.test(s) ||
-      /^std-10[0-9]+$/.test(s) ||
-      /^adm-00[0-9]+$/.test(s) ||
-      /^crs-0[0-9]+$/.test(s) ||
-      /^att-20[0-9]+$/.test(s) ||
-      /^fac-att-30[0-9]+$/.test(s) ||
-      /^emp-0[0-9]+$/.test(s)
-    ) {
-      return true;
-    }
-  }
-  if (data) {
-    if (String(data.id || '').startsWith('manual-')) return false;
-    if (data.isDemo || data.isMock) return true;
-    const title = String(data.title || data.courseTitle || '').trim().toLowerCase();
-    if (title && ALL_DEMO_TITLES.has(title)) return true;
-    const code = String(data.examCode || data.applicationNo || data.invoiceNo || '').trim().toLowerCase();
-    if (code && ALL_DEMO_CODES.has(code)) return true;
-    const enrollment = String(data.enrollmentNo || '').trim().toLowerCase();
-    if (enrollment && ALL_DEMO_ENROLLMENTS.has(enrollment)) return true;
-    const requester = String(data.requester || '').trim().toLowerCase();
-    if (requester && (
-      requester.includes('aria chen') ||
-      requester.includes('julian montgomery') ||
-      requester.includes('zara al-mansoor')
-    )) {
-      return true;
-    }
-  }
-  return false;
-};
 import {
   collection,
   doc,
@@ -199,6 +41,31 @@ import {
   getDoc,
   getDocs,
 } from 'firebase/firestore';
+
+export const ADMIN_EMAIL = 'fab.gaurav007@gmail.com';
+
+// Kept as safe no-op exports for compatibility — never delete or hide real saved Firestore records
+export const ALL_DEMO_IDS = new Set<string>();
+export const isDemoRecord = (_id?: string | null, _data?: unknown): boolean => false;
+
+// Recursively remove undefined values so Cloud Firestore setDoc/updateDoc never rejects valid payloads
+function stripUndefinedDeep<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value
+      .filter((item) => item !== undefined)
+      .map((item) => stripUndefinedDeep(item)) as unknown as T;
+  }
+  if (value !== null && typeof value === 'object' && !(value instanceof Date)) {
+    const cleaned: Record<string, unknown> = {};
+    for (const [key, val] of Object.entries(value as Record<string, unknown>)) {
+      if (val !== undefined) {
+        cleaned[key] = stripUndefinedDeep(val);
+      }
+    }
+    return cleaned as T;
+  }
+  return value;
+}
 
 export const COLOR_THEMES: ColorThemeOption[] = [
   {
@@ -316,6 +183,7 @@ interface ERPContextType {
   employees: HREmployee[];
   documents: DocumentRecord[];
   announcements: AnnouncementItem[];
+  lecturePlans: LecturePlanItem[];
 
   // Mutations
   addStudent: (student: Omit<Student, 'id'> & { id?: string }) => void;
@@ -389,6 +257,10 @@ interface ERPContextType {
   addAnnouncement: (announcement: Omit<AnnouncementItem, 'id'> & { id?: string }) => void;
   deleteAnnouncement: (id: string) => void;
 
+  addLecturePlan: (item: Omit<LecturePlanItem, 'id' | 'createdAt'> & { id?: string; createdAt?: string }) => Promise<LecturePlanItem | null>;
+  updateLecturePlan: (id: string, updates: Partial<LecturePlanItem>) => Promise<void>;
+  deleteLecturePlan: (id: string) => Promise<void>;
+
   // Database Sync & Persistence Status
   isDatabaseSynced: boolean;
   lastSyncTime: string;
@@ -431,6 +303,7 @@ const STORAGE_KEYS = {
   EMPLOYEES: 'erp_employees',
   DOCUMENTS: 'erp_documents',
   ANNOUNCEMENTS: 'erp_announcements',
+  LECTURE_PLANS: 'erp_lecture_plans',
 };
 
 // Safe localStorage loader starting EMPTY by default
@@ -448,8 +321,8 @@ function loadStorage<T>(key: string, defaultValue: T): T {
 
 // Allowed modules per role
 export const ROLE_ALLOWED_MODULES: Record<UserRole, ERPModuleId[]> = {
-  Student: ['dashboard', 'profile', 'academics', 'timetable', 'exams', 'results', 'attendance', 'documents', 'userfiles'],
-  Faculty: ['dashboard', 'profile', 'students', 'academics', 'attendance', 'timetable', 'exams', 'results', 'documents', 'userfiles'],
+  Student: ['dashboard', 'profile', 'academics', 'lectureplan', 'timetable', 'exams', 'results', 'attendance', 'notices', 'performance', 'documents', 'userfiles', 'settings'],
+  Faculty: ['dashboard', 'profile', 'students', 'academics', 'lectureplan', 'attendance', 'timetable', 'exams', 'results', 'notices', 'performance', 'library', 'documents', 'userfiles', 'settings'],
   Admin: [
     'dashboard',
     'profile',
@@ -457,10 +330,13 @@ export const ROLE_ALLOWED_MODULES: Record<UserRole, ERPModuleId[]> = {
     'faculty',
     'admissions',
     'academics',
+    'lectureplan',
     'attendance',
     'timetable',
     'exams',
     'results',
+    'notices',
+    'performance',
     'finance',
     'library',
     'hostel',
@@ -614,6 +490,14 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
               }).catch((syncErr) => console.warn('Admin faculty sync error:', syncErr));
             }
 
+            // Restore saved theme / dark mode preferences from Firestore if present
+            if (data.theme && COLOR_THEMES.some((t) => t.id === data.theme)) {
+              setThemeState(data.theme as ColorThemeId);
+            }
+            if (typeof data.isDarkMode === 'boolean') {
+              setIsDarkModeState(data.isDarkMode);
+            }
+
             setRoleState(userRole);
             setCustomProfile({
               uid: user.uid,
@@ -727,7 +611,11 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           setUserFiles(loaded);
         },
         (error) => {
-          console.warn('Firestore user_files snapshot notice:', error.message);
+          try {
+            handleFirestoreError(error, OperationType.LIST, 'user_files');
+          } catch {
+            // Structured FirestoreErrorInfo already logged
+          }
         }
       );
 
@@ -764,7 +652,11 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     try {
       const userDocRef = doc(db, 'users', firebaseUser.uid);
-      await setDoc(userDocRef, { ...updates, updatedAt: new Date().toISOString() }, { merge: true });
+      await setDoc(
+        userDocRef,
+        stripUndefinedDeep({ ...updates, updatedAt: new Date().toISOString() }),
+        { merge: true }
+      );
 
       // Synchronize faculty collection if user is Faculty
       if (currentUser?.role === 'Faculty') {
@@ -872,6 +764,9 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const setTheme = (newTheme: ColorThemeId) => {
     setThemeState(newTheme);
+    if (firebaseUser) {
+      setDoc(doc(db, 'users', firebaseUser.uid), { theme: newTheme }, { merge: true }).catch(() => {});
+    }
   };
 
   // Synchronize dark mode class on root document and localStorage
@@ -887,153 +782,57 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [isDarkMode]);
 
   const toggleDarkMode = () => {
-    setIsDarkModeState((prev) => !prev);
+    setIsDarkModeState((prev) => {
+      const next = !prev;
+      if (firebaseUser) {
+        setDoc(doc(db, 'users', firebaseUser.uid), { isDarkMode: next }, { merge: true }).catch(() => {});
+      }
+      return next;
+    });
   };
 
   const setDarkMode = (dark: boolean) => {
     setIsDarkModeState(dark);
+    if (firebaseUser) {
+      setDoc(doc(db, 'users', firebaseUser.uid), { isDarkMode: dark }, { merge: true }).catch(() => {});
+    }
   };
-
-  // Clean any old demo records that might be present in localStorage
-  useEffect(() => {
-    try {
-      Object.values(STORAGE_KEYS).forEach((key) => {
-        const raw = localStorage.getItem(key);
-        if (raw && raw.startsWith('[')) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed)) {
-            const filtered = parsed.filter((item: any) => !isDemoRecord(item?.id, item));
-            if (filtered.length !== parsed.length) {
-              localStorage.setItem(key, JSON.stringify(filtered));
-            }
-          }
-        }
-      });
-    } catch (_) {}
-  }, []);
 
   // Database sync state
   const [isDatabaseSynced, setIsDatabaseSynced] = useState<boolean>(true);
   const [lastSyncTime, setLastSyncTime] = useState<string>(() => new Date().toLocaleTimeString());
 
-  // Core collections - strictly user/faculty/admin managed records (no pre-seeded demo data)
-  const [students, setStudents] = useState<Student[]>(() => {
-    const saved = loadStorage<Student[]>(STORAGE_KEYS.STUDENTS, []);
-    return saved.filter((s) => !isDemoRecord(s?.id, s));
-  });
-  const [faculty, setFaculty] = useState<FacultyMember[]>(() => {
-    const saved = loadStorage<FacultyMember[]>(STORAGE_KEYS.FACULTY, []);
-    return saved.filter((f) => !isDemoRecord(f?.id, f));
-  });
-  const [admissions, setAdmissions] = useState<AdmissionCandidate[]>(() => {
-    const saved = loadStorage<AdmissionCandidate[]>(STORAGE_KEYS.ADMISSIONS, []);
-    return saved.filter((a) => !isDemoRecord(a?.id, a));
-  });
-  const [courses, setCourses] = useState<AcademicCourse[]>(() => {
-    const saved = loadStorage<AcademicCourse[]>(STORAGE_KEYS.COURSES, []);
-    return saved.filter((c) => !isDemoRecord(c?.id, c));
-  });
-  const [attendanceRecords, setAttendanceRecords] = useState<AttendanceRecord[]>(() => {
-    const saved = loadStorage<AttendanceRecord[]>(STORAGE_KEYS.ATTENDANCE, []);
-    return saved.filter((a) => !isDemoRecord(a?.id, a));
-  });
-  const [facultyAttendanceRecords, setFacultyAttendanceRecords] = useState<FacultyAttendanceRecord[]>(() => {
-    const saved = loadStorage<FacultyAttendanceRecord[]>(STORAGE_KEYS.FACULTY_ATTENDANCE, []);
-    return saved.filter((f) => !isDemoRecord(f?.id, f));
-  });
-  const [studentAttendanceRecords, setStudentAttendanceRecords] = useState<StudentAttendanceRecord[]>(() => {
-    const saved = loadStorage<StudentAttendanceRecord[]>(STORAGE_KEYS.STUDENT_ATTENDANCE, []);
-    return saved.filter((s) => !isDemoRecord(s?.id, s));
-  });
-  const [notifications, setNotifications] = useState<AppNotification[]>(() =>
-    loadStorage(STORAGE_KEYS.NOTIFICATIONS, [])
-  );
-  const [timetableSlots, setTimetableSlots] = useState<TimetableSlot[]>(() => {
-    const saved = loadStorage<TimetableSlot[]>(STORAGE_KEYS.TIMETABLE, []);
-    return saved.filter((t) => !isDemoRecord(t?.id, t));
-  });
-  const [exams, setExams] = useState<ExamRecord[]>(() => {
-    const saved = loadStorage<ExamRecord[]>(STORAGE_KEYS.EXAMS, []);
-    return saved.filter((e) => !isDemoRecord(e?.id, e));
-  });
-  const [results, setResults] = useState<ResultRecord[]>(() => {
-    const saved = loadStorage<ResultRecord[]>(STORAGE_KEYS.RESULTS, []);
-    return saved.filter((r) => !isDemoRecord(r?.id, r));
-  });
-  const [transactions, setTransactions] = useState<FinancialTransaction[]>(() => {
-    const saved = loadStorage<FinancialTransaction[]>(STORAGE_KEYS.TRANSACTIONS, []);
-    return saved.filter((t) => !isDemoRecord(t?.id, t));
-  });
-  const [libraryItems, setLibraryItems] = useState<LibraryItem[]>(() => {
-    const saved = loadStorage<LibraryItem[]>(STORAGE_KEYS.LIBRARY, []);
-    return saved.filter((l) => !isDemoRecord(l?.id, l));
-  });
-  const [hostelRooms, setHostelRooms] = useState<HostelOccupancy[]>(() => {
-    const saved = loadStorage<HostelOccupancy[]>(STORAGE_KEYS.HOSTEL, []);
-    return saved.filter((h: any) => !isDemoRecord(h?.id || `${h?.block}_${h?.roomNo}`, h));
-  });
-  const [employees, setEmployees] = useState<HREmployee[]>(() => {
-    const saved = loadStorage<HREmployee[]>(STORAGE_KEYS.EMPLOYEES, []);
-    return saved.filter((e) => !isDemoRecord(e?.id, e));
-  });
-  const [documents, setDocuments] = useState<DocumentRecord[]>(() => {
-    const saved = loadStorage<DocumentRecord[]>(STORAGE_KEYS.DOCUMENTS, []);
-    return saved.filter((d) => !isDemoRecord(d?.id, d));
-  });
-  const [announcements, setAnnouncements] = useState<AnnouncementItem[]>(() => {
-    const saved = loadStorage<AnnouncementItem[]>(STORAGE_KEYS.ANNOUNCEMENTS, []);
-    return saved.filter((a) => !isDemoRecord(a?.id, a));
-  });
+  // Core collections — hydrated from cache immediately and continuously synced live with Cloud Firestore
+  const [students, setStudents] = useState<Student[]>(() => loadStorage<Student[]>(STORAGE_KEYS.STUDENTS, []));
+  const [faculty, setFaculty] = useState<FacultyMember[]>(() => loadStorage<FacultyMember[]>(STORAGE_KEYS.FACULTY, []));
+  const [admissions, setAdmissions] = useState<AdmissionCandidate[]>(() => loadStorage<AdmissionCandidate[]>(STORAGE_KEYS.ADMISSIONS, []));
+  const [courses, setCourses] = useState<AcademicCourse[]>(() => loadStorage<AcademicCourse[]>(STORAGE_KEYS.COURSES, []));
+  const [attendanceRecords, setAttendanceRecords] = useState<AttendanceRecord[]>(() => loadStorage<AttendanceRecord[]>(STORAGE_KEYS.ATTENDANCE, []));
+  const [facultyAttendanceRecords, setFacultyAttendanceRecords] = useState<FacultyAttendanceRecord[]>(() => loadStorage<FacultyAttendanceRecord[]>(STORAGE_KEYS.FACULTY_ATTENDANCE, []));
+  const [studentAttendanceRecords, setStudentAttendanceRecords] = useState<StudentAttendanceRecord[]>(() => loadStorage<StudentAttendanceRecord[]>(STORAGE_KEYS.STUDENT_ATTENDANCE, []));
+  const [notifications, setNotifications] = useState<AppNotification[]>(() => loadStorage<AppNotification[]>(STORAGE_KEYS.NOTIFICATIONS, []));
+  const [timetableSlots, setTimetableSlots] = useState<TimetableSlot[]>(() => loadStorage<TimetableSlot[]>(STORAGE_KEYS.TIMETABLE, []));
+  const [exams, setExams] = useState<ExamRecord[]>(() => loadStorage<ExamRecord[]>(STORAGE_KEYS.EXAMS, []));
+  const [results, setResults] = useState<ResultRecord[]>(() => loadStorage<ResultRecord[]>(STORAGE_KEYS.RESULTS, []));
+  const [transactions, setTransactions] = useState<FinancialTransaction[]>(() => loadStorage<FinancialTransaction[]>(STORAGE_KEYS.TRANSACTIONS, []));
+  const [libraryItems, setLibraryItems] = useState<LibraryItem[]>(() => loadStorage<LibraryItem[]>(STORAGE_KEYS.LIBRARY, []));
+  const [hostelRooms, setHostelRooms] = useState<HostelOccupancy[]>(() => loadStorage<HostelOccupancy[]>(STORAGE_KEYS.HOSTEL, []));
+  const [employees, setEmployees] = useState<HREmployee[]>(() => loadStorage<HREmployee[]>(STORAGE_KEYS.EMPLOYEES, []));
+  const [documents, setDocuments] = useState<DocumentRecord[]>(() => loadStorage<DocumentRecord[]>(STORAGE_KEYS.DOCUMENTS, []));
+  const [announcements, setAnnouncements] = useState<AnnouncementItem[]>(() => loadStorage<AnnouncementItem[]>(STORAGE_KEYS.ANNOUNCEMENTS, []));
+  const [lecturePlans, setLecturePlans] = useState<LecturePlanItem[]>(() => loadStorage<LecturePlanItem[]>(STORAGE_KEYS.LECTURE_PLANS, []));
 
   // Real-time Firestore Database Synchronization:
-  // Listens to Firestore collections when logged in. All records added manually by user,
-  // faculty, or admin are permanently stored in Firestore and loaded into the UI across logins.
+  // Streams ALL saved documents from Firebase Firestore and always displays them across reloads & devices.
   useEffect(() => {
     if (!firebaseUser) return;
 
     setIsDatabaseSynced(false);
     const unsubs: (() => void)[] = [];
 
-    // Active Purge of demo records from Firestore database
-    const purgeAllDemoDataFromDatabase = async () => {
-      const collNames = [
-        'students',
-        'faculty',
-        'courses',
-        'student_attendance',
-        'faculty_attendance',
-        'attendance',
-        'timetable',
-        'exams',
-        'results',
-        'admissions',
-        'documents',
-        'announcements',
-        'transactions',
-        'library',
-        'hostel',
-        'employees',
-        'notifications',
-      ];
-      for (const cName of collNames) {
-        try {
-          const snap = await getDocs(collection(db, cName));
-          for (const d of snap.docs) {
-            if (isDemoRecord(d.id, d.data())) {
-              await deleteDoc(d.ref).catch(() => {});
-            }
-          }
-        } catch (err) {
-          console.warn(`Purge error for ${cName}:`, err);
-        }
-      }
-    };
-    purgeAllDemoDataFromDatabase();
-
     const setupSync = <T extends object>(
       collectionName: string,
-      setState: React.Dispatch<React.SetStateAction<T[]>>,
-      storageKey: string
+      setState: React.Dispatch<React.SetStateAction<T[]>>
     ) => {
       try {
         const collRef = collection(db, collectionName);
@@ -1042,53 +841,52 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           (snapshot) => {
             const loaded: T[] = [];
             snapshot.forEach((d) => {
-              const data = d.data() as any;
-              // If an old demo doc exists in the database, delete it so database remains 100% clean
-              if (isDemoRecord(d.id, data)) {
-                deleteDoc(doc(db, collectionName, d.id)).catch(() => {});
-              } else {
-                loaded.push({ id: d.id, ...data });
-              }
+              loaded.push({ id: d.id, ...(d.data() as Record<string, unknown>) } as T);
             });
             setState(loaded);
             setIsDatabaseSynced(true);
             setLastSyncTime(new Date().toLocaleTimeString());
           },
           (err) => {
-            console.warn(`Firestore onSnapshot ${collectionName} notice:`, err.message);
             setIsDatabaseSynced(true);
+            try {
+              handleFirestoreError(err, OperationType.LIST, collectionName);
+            } catch {
+              // Error already logged with full FirestoreErrorInfo context
+            }
           }
         );
         unsubs.push(unsub);
       } catch (err) {
-        console.warn(`Failed to set up Firestore sync for ${collectionName}:`, err);
+        console.error(`Failed to set up Firestore sync for ${collectionName}:`, err);
       }
     };
 
-    setupSync('students', setStudents, STORAGE_KEYS.STUDENTS);
-    setupSync('faculty', setFaculty, STORAGE_KEYS.FACULTY);
-    setupSync('courses', setCourses, STORAGE_KEYS.COURSES);
-    setupSync('student_attendance', setStudentAttendanceRecords, STORAGE_KEYS.STUDENT_ATTENDANCE);
-    setupSync('faculty_attendance', setFacultyAttendanceRecords, STORAGE_KEYS.FACULTY_ATTENDANCE);
-    setupSync('attendance', setAttendanceRecords, STORAGE_KEYS.ATTENDANCE);
-    setupSync('timetable', setTimetableSlots, STORAGE_KEYS.TIMETABLE);
-    setupSync('exams', setExams, STORAGE_KEYS.EXAMS);
-    setupSync('results', setResults, STORAGE_KEYS.RESULTS);
-    setupSync('admissions', setAdmissions, STORAGE_KEYS.ADMISSIONS);
-    setupSync('documents', setDocuments, STORAGE_KEYS.DOCUMENTS);
-    setupSync('announcements', setAnnouncements, STORAGE_KEYS.ANNOUNCEMENTS);
-    setupSync('transactions', setTransactions, STORAGE_KEYS.TRANSACTIONS);
-    setupSync('library', setLibraryItems, STORAGE_KEYS.LIBRARY);
-    setupSync('hostel', setHostelRooms, STORAGE_KEYS.HOSTEL);
-    setupSync('employees', setEmployees, STORAGE_KEYS.EMPLOYEES);
-    setupSync('notifications', setNotifications, STORAGE_KEYS.NOTIFICATIONS);
+    setupSync('students', setStudents);
+    setupSync('faculty', setFaculty);
+    setupSync('courses', setCourses);
+    setupSync('student_attendance', setStudentAttendanceRecords);
+    setupSync('faculty_attendance', setFacultyAttendanceRecords);
+    setupSync('attendance', setAttendanceRecords);
+    setupSync('timetable', setTimetableSlots);
+    setupSync('exams', setExams);
+    setupSync('results', setResults);
+    setupSync('admissions', setAdmissions);
+    setupSync('documents', setDocuments);
+    setupSync('announcements', setAnnouncements);
+    setupSync('transactions', setTransactions);
+    setupSync('library', setLibraryItems);
+    setupSync('hostel', setHostelRooms);
+    setupSync('employees', setEmployees);
+    setupSync('notifications', setNotifications);
+    setupSync('lecture_plans', setLecturePlans);
 
     return () => {
       unsubs.forEach((u) => u());
     };
   }, [firebaseUser]);
 
-  // Manual one-click Database Sync
+  // Manual one-click Database Sync directly from Firebase Firestore
   const syncDatabaseNow = async () => {
     if (!firebaseUser) return;
     setIsDatabaseSynced(false);
@@ -1111,21 +909,15 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         'hostel',
         'employees',
         'notifications',
+        'lecture_plans',
       ];
       await Promise.all(
         collNames.map(async (cName) => {
           const snap = await getDocs(collection(db, cName));
           const docs: any[] = [];
-          if (!snap.empty) {
-            snap.forEach((d) => {
-              const data = d.data();
-              if (isDemoRecord(d.id, data)) {
-                deleteDoc(doc(db, cName, d.id)).catch(() => {});
-              } else {
-                docs.push({ id: d.id, ...data });
-              }
-            });
-          }
+          snap.forEach((d) => {
+            docs.push({ id: d.id, ...d.data() });
+          });
           if (cName === 'students') setStudents(docs);
           else if (cName === 'faculty') setFaculty(docs);
           else if (cName === 'courses') setCourses(docs);
@@ -1143,13 +935,14 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           else if (cName === 'hostel') setHostelRooms(docs);
           else if (cName === 'employees') setEmployees(docs);
           else if (cName === 'notifications') setNotifications(docs);
+          else if (cName === 'lecture_plans') setLecturePlans(docs);
         })
       );
       setLastSyncTime(new Date().toLocaleTimeString());
       setIsDatabaseSynced(true);
     } catch (err) {
-      console.error('Error during manual database sync:', err);
       setIsDatabaseSynced(true);
+      handleFirestoreError(err, OperationType.GET, 'database_sync');
     }
   };
 
@@ -1226,6 +1019,10 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem(STORAGE_KEYS.ANNOUNCEMENTS, JSON.stringify(announcements));
   }, [announcements]);
 
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.LECTURE_PLANS, JSON.stringify(lecturePlans));
+  }, [lecturePlans]);
+
   // Set role and enforce module permissions
   const setRole = (newRole: UserRole) => {
     const userEmail = (firebaseUser?.email || currentUser.email || '').trim().toLowerCase();
@@ -1254,40 +1051,49 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Profile
   const currentUser = customProfile || loginProfiles[role] || loginProfiles.Admin;
 
-  // Student Actions (Saved to Cloud Firestore and showed in ERP UI across logins)
+  // Helper for sanitized Firestore persistence so undefined fields never fail silently
+  const persistDoc = async (collectionName: string, docId: string, payload: Record<string, unknown>, merge = false) => {
+    const clean = stripUndefinedDeep(payload);
+    try {
+      await setDoc(doc(db, collectionName, docId), clean, merge ? { merge: true } : {});
+      setLastSyncTime(new Date().toLocaleTimeString());
+    } catch (err) {
+      handleFirestoreError(err, merge ? OperationType.UPDATE : OperationType.WRITE, `${collectionName}/${docId}`);
+    }
+  };
+
+  const removeDoc = async (collectionName: string, docId: string) => {
+    try {
+      await deleteDoc(doc(db, collectionName, docId));
+      setLastSyncTime(new Date().toLocaleTimeString());
+    } catch (err) {
+      handleFirestoreError(err, OperationType.DELETE, `${collectionName}/${docId}`);
+    }
+  };
+
+  // Student Actions (Saved to Cloud Firestore and shown in ERP UI across logins)
   const addStudent = async (studentData: Omit<Student, 'id'> & { id?: string }) => {
-    const newStudent: Student = {
+    const newStudent: Student = stripUndefinedDeep({
       ...studentData,
       id: studentData.id || `manual-std-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    };
+    });
     setStudents((prev) => [newStudent, ...prev.filter((s) => s.id !== newStudent.id)]);
-    try {
-      await setDoc(doc(db, 'students', newStudent.id), {
-        ...newStudent,
-        createdByUid: firebaseUser?.uid || 'user',
-        createdAt: new Date().toISOString(),
-      });
-    } catch (err) {
-      console.error('Error saving student to Firestore:', err);
-    }
+    await persistDoc('students', newStudent.id, {
+      ...newStudent,
+      createdByUid: firebaseUser?.uid || 'user',
+      createdAt: new Date().toISOString(),
+    });
   };
 
   const deleteStudent = async (id: string) => {
     setStudents((prev) => prev.filter((s) => s.id !== id));
-    try {
-      await deleteDoc(doc(db, 'students', id));
-    } catch (err) {
-      console.error('Error deleting student from Firestore:', err);
-    }
+    await removeDoc('students', id);
   };
 
   const updateStudent = async (updated: Student) => {
-    setStudents((prev) => prev.map((s) => (s.id === updated.id ? updated : s)));
-    try {
-      await setDoc(doc(db, 'students', updated.id), updated, { merge: true });
-    } catch (err) {
-      console.error('Error updating student in Firestore:', err);
-    }
+    const clean = stripUndefinedDeep(updated);
+    setStudents((prev) => prev.map((s) => (s.id === clean.id ? clean : s)));
+    await persistDoc('students', clean.id, clean as unknown as Record<string, unknown>, true);
   };
 
   // Faculty Actions (Saved to Cloud Firestore)
@@ -1298,202 +1104,134 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         ? facultyData.employeeId.trim()
         : `FAC-${facultyYear}-${Math.floor(1000 + Math.random() * 9000)}`;
 
-    const newFaculty: FacultyMember = {
+    const newFaculty: FacultyMember = stripUndefinedDeep({
       ...facultyData,
       id: facultyData.id || `manual-fac-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       employeeId: uniqueId,
-    };
+    });
     setFaculty((prev) => [newFaculty, ...prev.filter((f) => f.id !== newFaculty.id)]);
-    try {
-      await setDoc(doc(db, 'faculty', newFaculty.id), {
-        ...newFaculty,
-        createdByUid: firebaseUser?.uid || 'user',
-        createdAt: new Date().toISOString(),
-      });
-    } catch (err) {
-      console.error('Error saving faculty to Firestore:', err);
-    }
+    await persistDoc('faculty', newFaculty.id, {
+      ...newFaculty,
+      createdByUid: firebaseUser?.uid || 'user',
+      createdAt: new Date().toISOString(),
+    });
   };
 
   const deleteFaculty = async (id: string) => {
     setFaculty((prev) => prev.filter((f) => f.id !== id));
-    try {
-      await deleteDoc(doc(db, 'faculty', id));
-    } catch (err) {
-      console.error('Error deleting faculty from Firestore:', err);
-    }
+    await removeDoc('faculty', id);
   };
 
   const updateFaculty = async (updated: FacultyMember) => {
-    setFaculty((prev) => prev.map((f) => (f.id === updated.id ? updated : f)));
-    try {
-      await setDoc(doc(db, 'faculty', updated.id), updated, { merge: true });
-    } catch (err) {
-      console.error('Error updating faculty in Firestore:', err);
-    }
+    const clean = stripUndefinedDeep(updated);
+    setFaculty((prev) => prev.map((f) => (f.id === clean.id ? clean : f)));
+    await persistDoc('faculty', clean.id, clean as unknown as Record<string, unknown>, true);
   };
 
   // Admissions Actions (Saved to Cloud Firestore)
   const addAdmission = async (candidateData: Omit<AdmissionCandidate, 'id'> & { id?: string }) => {
-    const newCandidate: AdmissionCandidate = {
+    const newCandidate: AdmissionCandidate = stripUndefinedDeep({
       ...candidateData,
       id: candidateData.id || `manual-adm-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    };
+    });
     setAdmissions((prev) => [newCandidate, ...prev.filter((c) => c.id !== newCandidate.id)]);
-    try {
-      await setDoc(doc(db, 'admissions', newCandidate.id), {
-        ...newCandidate,
-        createdByUid: firebaseUser?.uid || 'user',
-      });
-    } catch (err) {
-      console.error('Error saving admission candidate to Firestore:', err);
-    }
+    await persistDoc('admissions', newCandidate.id, {
+      ...newCandidate,
+      createdByUid: firebaseUser?.uid || 'user',
+    });
   };
 
   const updateAdmissionStage = async (id: string, stage: AdmissionCandidate['stage']) => {
     setAdmissions((prev) => prev.map((c) => (c.id === id ? { ...c, stage } : c)));
-    try {
-      await setDoc(doc(db, 'admissions', id), { stage }, { merge: true });
-    } catch (err) {
-      console.error('Error updating admission stage in Firestore:', err);
-    }
+    await persistDoc('admissions', id, { stage }, true);
   };
 
   const deleteAdmission = async (id: string) => {
     setAdmissions((prev) => prev.filter((c) => c.id !== id));
-    try {
-      await deleteDoc(doc(db, 'admissions', id));
-    } catch (err) {
-      console.error('Error deleting admission from Firestore:', err);
-    }
+    await removeDoc('admissions', id);
   };
 
   // Course Actions (Saved to Cloud Firestore)
   const addCourse = async (courseData: Omit<AcademicCourse, 'id'> & { id?: string }) => {
-    const newCourse: AcademicCourse = {
+    const newCourse: AcademicCourse = stripUndefinedDeep({
       ...courseData,
       id: courseData.id || `manual-crs-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    };
+    });
     setCourses((prev) => [newCourse, ...prev.filter((c) => c.id !== newCourse.id)]);
-    try {
-      await setDoc(doc(db, 'courses', newCourse.id), {
-        ...newCourse,
-        createdByUid: firebaseUser?.uid || 'user',
-      });
-    } catch (err) {
-      console.error('Error saving course to Firestore:', err);
-    }
+    await persistDoc('courses', newCourse.id, {
+      ...newCourse,
+      createdByUid: firebaseUser?.uid || 'user',
+    });
   };
 
   const deleteCourse = async (id: string) => {
     setCourses((prev) => prev.filter((c) => c.id !== id));
-    try {
-      await deleteDoc(doc(db, 'courses', id));
-    } catch (err) {
-      console.error('Error deleting course from Firestore:', err);
-    }
+    await removeDoc('courses', id);
   };
 
   // Attendance Actions (Saved to Cloud Firestore)
   const addAttendanceRecord = async (recordData: Omit<AttendanceRecord, 'id'> & { id?: string }) => {
-    const newRecord: AttendanceRecord = {
+    const newRecord: AttendanceRecord = stripUndefinedDeep({
       ...recordData,
       id: recordData.id || `manual-att-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    };
+    });
     setAttendanceRecords((prev) => [newRecord, ...prev.filter((r) => r.id !== newRecord.id)]);
-    try {
-      await setDoc(doc(db, 'attendance', newRecord.id), newRecord);
-    } catch (err) {
-      console.error('Error saving attendance record to Firestore:', err);
-    }
+    await persistDoc('attendance', newRecord.id, newRecord as unknown as Record<string, unknown>);
   };
 
   const deleteAttendanceRecord = async (id: string) => {
     setAttendanceRecords((prev) => prev.filter((r) => r.id !== id));
-    try {
-      await deleteDoc(doc(db, 'attendance', id));
-    } catch (err) {
-      console.error('Error deleting attendance record from Firestore:', err);
-    }
+    await removeDoc('attendance', id);
   };
 
   const addFacultyAttendanceRecord = async (recordData: Omit<FacultyAttendanceRecord, 'id'> & { id?: string }) => {
-    const newRecord: FacultyAttendanceRecord = {
+    const newRecord: FacultyAttendanceRecord = stripUndefinedDeep({
       ...recordData,
       id: recordData.id || `manual-fac-att-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    };
+    });
     setFacultyAttendanceRecords((prev) => [newRecord, ...prev.filter((r) => r.id !== newRecord.id)]);
-    try {
-      await setDoc(doc(db, 'faculty_attendance', newRecord.id), newRecord);
-    } catch (err) {
-      console.error('Error saving faculty attendance to Firestore:', err);
-    }
+    await persistDoc('faculty_attendance', newRecord.id, newRecord as unknown as Record<string, unknown>);
   };
 
   const deleteFacultyAttendanceRecord = async (id: string) => {
     setFacultyAttendanceRecords((prev) => prev.filter((r) => r.id !== id));
-    try {
-      await deleteDoc(doc(db, 'faculty_attendance', id));
-    } catch (err) {
-      console.error('Error deleting faculty attendance from Firestore:', err);
-    }
+    await removeDoc('faculty_attendance', id);
   };
 
   const addStudentAttendanceRecord = async (recordData: Omit<StudentAttendanceRecord, 'id'> & { id?: string }) => {
-    const newRecord: StudentAttendanceRecord = {
+    const newRecord: StudentAttendanceRecord = stripUndefinedDeep({
       ...recordData,
       id: recordData.id || `manual-stu-att-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    };
+    });
     setStudentAttendanceRecords((prev) => [newRecord, ...prev.filter((r) => r.id !== newRecord.id)]);
-    try {
-      await setDoc(doc(db, 'student_attendance', newRecord.id), newRecord);
-    } catch (err) {
-      console.error('Error saving student attendance to Firestore:', err);
-    }
+    await persistDoc('student_attendance', newRecord.id, newRecord as unknown as Record<string, unknown>);
   };
 
   const deleteStudentAttendanceRecord = async (id: string) => {
     setStudentAttendanceRecords((prev) => prev.filter((r) => r.id !== id));
-    try {
-      await deleteDoc(doc(db, 'student_attendance', id));
-    } catch (err) {
-      console.error('Error deleting student attendance from Firestore:', err);
-    }
+    await removeDoc('student_attendance', id);
   };
 
   const addNotification = async (notifData: Omit<AppNotification, 'id' | 'timestamp'> & { id?: string; timestamp?: number }) => {
-    const newNotif: AppNotification = {
+    const newNotif: AppNotification = stripUndefinedDeep({
       ...notifData,
       id: notifData.id || `manual-notif-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       timestamp: notifData.timestamp || Date.now(),
       read: notifData.read ?? false,
-    };
+    });
     setNotifications((prev) => [newNotif, ...prev.filter((n) => n.id !== newNotif.id)]);
-    try {
-      await setDoc(doc(db, 'notifications', newNotif.id), newNotif);
-    } catch (err) {
-      console.error('Error saving notification to Firestore:', err);
-    }
+    await persistDoc('notifications', newNotif.id, newNotif as unknown as Record<string, unknown>);
   };
 
   const markNotificationAsRead = async (id: string) => {
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
-    try {
-      await setDoc(doc(db, 'notifications', id), { read: true }, { merge: true });
-    } catch (err) {
-      console.error('Error marking notification read in Firestore:', err);
-    }
+    await persistDoc('notifications', id, { read: true }, true);
   };
 
   const clearNotifications = async () => {
+    const toDelete = [...notifications];
     setNotifications([]);
-    try {
-      notifications.forEach((n) => {
-        deleteDoc(doc(db, 'notifications', n.id)).catch(() => {});
-      });
-    } catch (err) {
-      console.error('Error clearing notifications from Firestore:', err);
-    }
+    await Promise.all(toDelete.map((n) => removeDoc('notifications', n.id).catch(() => {})));
   };
 
   const markStudentAttendanceSingle = async (params: {
@@ -1520,7 +1258,7 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const recordId =
       existingIdx >= 0 ? studentAttendanceRecords[existingIdx].id : `manual-stu-att-${Date.now()}-${student.id}`;
 
-    const record: StudentAttendanceRecord = {
+    const record: StudentAttendanceRecord = stripUndefinedDeep({
       id: recordId,
       studentId: student.id,
       studentName: student.name,
@@ -1538,7 +1276,7 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       facultyId: facultyId || '',
       remarks: `Marked ${status} by ${facultyName}${venue ? ` at ${venue}` : ''}`,
       timestamp: Date.now(),
-    };
+    });
 
     setStudentAttendanceRecords((prev) => {
       const idx = prev.findIndex((r) => r.id === recordId);
@@ -1550,11 +1288,7 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return [record, ...prev];
     });
 
-    try {
-      await setDoc(doc(db, 'student_attendance', recordId), record);
-    } catch (err) {
-      console.error('Error saving single student attendance to Firestore:', err);
-    }
+    await persistDoc('student_attendance', recordId, record as unknown as Record<string, unknown>);
 
     // Automatically send notification to the student!
     addNotification({
@@ -1578,61 +1312,43 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Timetable Actions (Saved to Cloud Firestore)
   const addTimetableSlot = async (slotData: Omit<TimetableSlot, 'id'> & { id?: string }) => {
-    const newSlot: TimetableSlot = {
+    const newSlot: TimetableSlot = stripUndefinedDeep({
       ...slotData,
       id: slotData.id || `manual-tt-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    };
+    });
     setTimetableSlots((prev) => [newSlot, ...prev.filter((s) => s.id !== newSlot.id)]);
-    try {
-      await setDoc(doc(db, 'timetable', newSlot.id), newSlot);
-    } catch (err) {
-      console.error('Error saving timetable slot to Firestore:', err);
-    }
+    await persistDoc('timetable', newSlot.id, newSlot as unknown as Record<string, unknown>);
   };
 
   const deleteTimetableSlot = async (id: string) => {
     setTimetableSlots((prev) => prev.filter((s) => s.id !== id));
-    try {
-      await deleteDoc(doc(db, 'timetable', id));
-    } catch (err) {
-      console.error('Error deleting timetable slot from Firestore:', err);
-    }
+    await removeDoc('timetable', id);
   };
 
   const updateTimetableSlot = async (id: string, updates: Partial<TimetableSlot>) => {
+    const clean = stripUndefinedDeep(updates);
     setTimetableSlots((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, ...updates } : s))
+      prev.map((s) => (s.id === id ? { ...s, ...clean } : s))
     );
-    try {
-      await setDoc(doc(db, 'timetable', id), updates, { merge: true });
-    } catch (err) {
-      console.error('Error updating timetable slot in Firestore:', err);
-    }
+    await persistDoc('timetable', id, clean as unknown as Record<string, unknown>, true);
   };
 
   const batchSetTimetableSlots = async (slots: TimetableSlot[]) => {
-    setTimetableSlots(slots);
-    try {
-      for (const slot of slots) {
-        await setDoc(doc(db, 'timetable', slot.id), slot);
-      }
-    } catch (err) {
-      console.error('Error batch saving timetable slots to Firestore:', err);
+    const cleaned = slots.map((s) => stripUndefinedDeep(s));
+    setTimetableSlots(cleaned);
+    for (const slot of cleaned) {
+      await persistDoc('timetable', slot.id, slot as unknown as Record<string, unknown>);
     }
   };
 
   // Exam Actions (Saved to Cloud Firestore)
   const addExam = async (examData: Omit<ExamRecord, 'id'> & { id?: string }) => {
-    const newExam: ExamRecord = {
+    const newExam: ExamRecord = stripUndefinedDeep({
       ...examData,
       id: examData.id || `manual-exam-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    };
+    });
     setExams((prev) => [newExam, ...prev.filter((e) => e.id !== newExam.id)]);
-    try {
-      await setDoc(doc(db, 'exams', newExam.id), newExam);
-    } catch (err) {
-      console.error('Error saving exam to Firestore:', err);
-    }
+    await persistDoc('exams', newExam.id, newExam as unknown as Record<string, unknown>);
   };
 
   const toggleExamHallTicket = async (id: string) => {
@@ -1646,34 +1362,22 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         return e;
       })
     );
-    try {
-      await setDoc(doc(db, 'exams', id), { hallTicketStatus: nextStatus }, { merge: true });
-    } catch (err) {
-      console.error('Error updating exam hall ticket in Firestore:', err);
-    }
+    await persistDoc('exams', id, { hallTicketStatus: nextStatus }, true);
   };
 
   const deleteExam = async (id: string) => {
     setExams((prev) => prev.filter((e) => e.id !== id));
-    try {
-      await deleteDoc(doc(db, 'exams', id));
-    } catch (err) {
-      console.error('Error deleting exam from Firestore:', err);
-    }
+    await removeDoc('exams', id);
   };
 
   // Result Actions (Saved to Cloud Firestore)
   const addResult = async (resultData: Omit<ResultRecord, 'id'> & { id?: string }) => {
-    const newResult: ResultRecord = {
+    const newResult: ResultRecord = stripUndefinedDeep({
       ...resultData,
       id: resultData.id || `manual-res-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    };
+    });
     setResults((prev) => [newResult, ...prev.filter((r) => r.id !== newResult.id)]);
-    try {
-      await setDoc(doc(db, 'results', newResult.id), newResult);
-    } catch (err) {
-      console.error('Error saving result to Firestore:', err);
-    }
+    await persistDoc('results', newResult.id, newResult as unknown as Record<string, unknown>);
 
     // Automatically sync student's calculated CGPA into student record
     if (newResult.enrollmentNo && newResult.cgpa) {
@@ -1691,171 +1395,201 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           st.enrollmentNo.toLowerCase() === newResult.enrollmentNo.toLowerCase()
       );
       if (matchedStudent) {
-        try {
-          await setDoc(
-            doc(db, 'students', matchedStudent.id),
-            { cgpa: newResult.cgpa },
-            { merge: true }
-          );
-        } catch (e) {
-          console.error('Error syncing student cgpa to Firestore:', e);
-        }
+        await persistDoc('students', matchedStudent.id, { cgpa: newResult.cgpa }, true);
       }
     }
   };
 
   const deleteResult = async (id: string) => {
     setResults((prev) => prev.filter((s) => s.id !== id));
-    try {
-      await deleteDoc(doc(db, 'results', id));
-    } catch (err) {
-      console.error('Error deleting result from Firestore:', err);
-    }
+    await removeDoc('results', id);
   };
 
   // Finance Actions (Saved to Cloud Firestore)
   const addTransaction = async (txnData: Omit<FinancialTransaction, 'id'> & { id?: string }) => {
-    const newTxn: FinancialTransaction = {
+    const newTxn: FinancialTransaction = stripUndefinedDeep({
       ...txnData,
       id: txnData.id || `manual-tx-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    };
+    });
     setTransactions((prev) => [newTxn, ...prev.filter((t) => t.id !== newTxn.id)]);
-    try {
-      await setDoc(doc(db, 'transactions', newTxn.id), newTxn);
-    } catch (err) {
-      console.error('Error saving transaction to Firestore:', err);
-    }
+    await persistDoc('transactions', newTxn.id, newTxn as unknown as Record<string, unknown>);
   };
 
   const deleteTransaction = async (id: string) => {
     setTransactions((prev) => prev.filter((t) => t.id !== id));
-    try {
-      await deleteDoc(doc(db, 'transactions', id));
-    } catch (err) {
-      console.error('Error deleting transaction from Firestore:', err);
-    }
+    await removeDoc('transactions', id);
   };
 
   // Library Actions (Saved to Cloud Firestore)
   const addLibraryItem = async (itemData: Omit<LibraryItem, 'id'> & { id?: string }) => {
-    const newItem: LibraryItem = {
+    const newItem: LibraryItem = stripUndefinedDeep({
       ...itemData,
       id: itemData.id || `manual-lib-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    };
+    });
     setLibraryItems((prev) => [newItem, ...prev.filter((i) => i.id !== newItem.id)]);
-    try {
-      await setDoc(doc(db, 'library', newItem.id), newItem);
-    } catch (err) {
-      console.error('Error saving library item to Firestore:', err);
-    }
+    await persistDoc('library', newItem.id, newItem as unknown as Record<string, unknown>);
   };
 
   const deleteLibraryItem = async (id: string) => {
     setLibraryItems((prev) => prev.filter((i) => i.id !== id));
-    try {
-      await deleteDoc(doc(db, 'library', id));
-    } catch (err) {
-      console.error('Error deleting library item from Firestore:', err);
-    }
+    await removeDoc('library', id);
   };
 
   // Hostel Actions (Saved to Cloud Firestore)
   const addHostelRoom = async (room: HostelOccupancy) => {
     const docId = `manual-hostel-${room.block}_${room.roomNo}`.replace(/[\/\s]/g, '_');
+    const cleanRoom = stripUndefinedDeep(room);
     setHostelRooms((prev) => [
-      room,
-      ...prev.filter((r) => !(r.block === room.block && r.roomNo === room.roomNo)),
+      cleanRoom,
+      ...prev.filter((r) => !(r.block === cleanRoom.block && r.roomNo === cleanRoom.roomNo)),
     ]);
-    try {
-      await setDoc(doc(db, 'hostel', docId), room);
-    } catch (err) {
-      console.error('Error saving hostel room to Firestore:', err);
-    }
+    await persistDoc('hostel', docId, cleanRoom as unknown as Record<string, unknown>);
   };
 
   const deleteHostelRoom = async (block: string, roomNo: string) => {
-    const docId = `manual-hostel-${block}_${roomNo}`.replace(/[\/\s]/g, '_');
+    const existing = hostelRooms.find((r) => r.block === block && r.roomNo === roomNo) as (HostelOccupancy & { id?: string }) | undefined;
+    const docId = existing?.id || `manual-hostel-${block}_${roomNo}`.replace(/[\/\s]/g, '_');
     setHostelRooms((prev) => prev.filter((r) => !(r.block === block && r.roomNo === roomNo)));
-    try {
-      await deleteDoc(doc(db, 'hostel', docId));
-    } catch (err) {
-      console.error('Error deleting hostel room from Firestore:', err);
-    }
+    await removeDoc('hostel', docId);
   };
 
   // HR Actions (Saved to Cloud Firestore)
   const addEmployee = async (empData: Omit<HREmployee, 'id'> & { id?: string }) => {
-    const newEmp: HREmployee = {
+    const newEmp: HREmployee = stripUndefinedDeep({
       ...empData,
       id: empData.id || `manual-emp-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    };
+    });
     setEmployees((prev) => [newEmp, ...prev.filter((e) => e.id !== newEmp.id)]);
-    try {
-      await setDoc(doc(db, 'employees', newEmp.id), newEmp);
-    } catch (err) {
-      console.error('Error saving employee to Firestore:', err);
-    }
+    await persistDoc('employees', newEmp.id, newEmp as unknown as Record<string, unknown>);
   };
 
   const deleteEmployee = async (id: string) => {
     setEmployees((prev) => prev.filter((e) => e.id !== id));
-    try {
-      await deleteDoc(doc(db, 'employees', id));
-    } catch (err) {
-      console.error('Error deleting employee from Firestore:', err);
-    }
+    await removeDoc('employees', id);
   };
 
   // Document Actions (Saved to Cloud Firestore)
   const addDocument = async (docData: Omit<DocumentRecord, 'id'> & { id?: string }) => {
-    const rawDoc: DocumentRecord = {
+    const newDoc: DocumentRecord = stripUndefinedDeep({
       ...docData,
       id: docData.id || `manual-doc-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       uploadedByUid: firebaseUser?.uid || 'user',
       issuedByRole: docData.issuedByRole || currentUser.role,
       issuedByName: docData.issuedByName || currentUser.name,
-    };
-    const newDoc = Object.fromEntries(
-      Object.entries(rawDoc).filter(([, value]) => value !== undefined)
-    ) as DocumentRecord;
-
+    });
     setDocuments((prev) => [newDoc, ...prev.filter((d) => d.id !== newDoc.id)]);
-    try {
-      await setDoc(doc(db, 'documents', newDoc.id), newDoc);
-    } catch (err) {
-      handleFirestoreError(err, OperationType.WRITE, `documents/${newDoc.id}`);
-    }
+    await persistDoc('documents', newDoc.id, newDoc as unknown as Record<string, unknown>);
   };
 
   const deleteDocument = async (id: string) => {
     setDocuments((prev) => prev.filter((d) => d.id !== id));
-    try {
-      await deleteDoc(doc(db, 'documents', id));
-    } catch (err) {
-      handleFirestoreError(err, OperationType.DELETE, `documents/${id}`);
-    }
+    await removeDoc('documents', id);
   };
 
   // Announcement Actions (Saved to Cloud Firestore)
   const addAnnouncement = async (annData: Omit<AnnouncementItem, 'id'> & { id?: string }) => {
-    const newAnn: AnnouncementItem = {
+    const newAnn: AnnouncementItem = stripUndefinedDeep({
       ...annData,
       id: annData.id || `manual-ann-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    };
+    });
     setAnnouncements((prev) => [newAnn, ...prev.filter((a) => a.id !== newAnn.id)]);
-    try {
-      await setDoc(doc(db, 'announcements', newAnn.id), newAnn);
-    } catch (err) {
-      console.error('Error saving announcement to Firestore:', err);
-    }
+    await persistDoc('announcements', newAnn.id, newAnn as unknown as Record<string, unknown>);
   };
 
   const deleteAnnouncement = async (id: string) => {
     setAnnouncements((prev) => prev.filter((a) => a.id !== id));
+    await removeDoc('announcements', id);
+  };
+
+  // Lecture Plan Actions (Faculty-only create/edit/delete; persisted to Firestore)
+  const sanitizeFirestoreDoc = (obj: Record<string, unknown>) => stripUndefinedDeep(obj);
+
+  const addLecturePlan = async (
+    itemData: Omit<LecturePlanItem, 'id' | 'createdAt'> & { id?: string; createdAt?: string }
+  ): Promise<LecturePlanItem | null> => {
+    if (role !== 'Faculty') return null;
+
+    const nowIso = new Date().toISOString();
+    const id = itemData.id || `lp-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    const newItem: LecturePlanItem = {
+      id,
+      serialNo: itemData.serialNo ?? lecturePlans.length + 1,
+      date: itemData.date,
+      topicName: itemData.topicName.trim(),
+      courseCode: itemData.courseCode?.trim() || undefined,
+      courseTitle: itemData.courseTitle?.trim() || undefined,
+      semester: itemData.semester,
+      department: itemData.department?.trim() || currentUser.department || undefined,
+      status: itemData.status || 'pending',
+      missedReason: itemData.missedReason?.trim() || undefined,
+      missedReportedAt: itemData.missedReportedAt || undefined,
+      completedAt: itemData.completedAt || undefined,
+      facultyUid: itemData.facultyUid || firebaseUser?.uid || undefined,
+      facultyName: itemData.facultyName?.trim() || currentUser.name || 'Faculty Member',
+      facultyEmail: itemData.facultyEmail?.trim() || currentUser.email || undefined,
+      createdAt: itemData.createdAt || nowIso,
+      updatedAt: nowIso,
+    };
+
+    const cleanPayload = sanitizeFirestoreDoc(newItem as unknown as Record<string, unknown>) as unknown as LecturePlanItem;
+    setLecturePlans((prev) => [...prev.filter((p) => p.id !== cleanPayload.id), cleanPayload]);
+
     try {
-      await deleteDoc(doc(db, 'announcements', id));
+      await setDoc(doc(db, 'lecture_plans', cleanPayload.id), cleanPayload);
+      return cleanPayload;
     } catch (err) {
-      console.error('Error deleting announcement from Firestore:', err);
+      handleFirestoreError(err, OperationType.WRITE, `lecture_plans/${cleanPayload.id}`);
+      return cleanPayload;
+    }
+  };
+
+  const updateLecturePlan = async (id: string, updates: Partial<LecturePlanItem>): Promise<void> => {
+    if (role !== 'Faculty') return;
+
+    const existing = lecturePlans.find((p) => p.id === id);
+    if (!existing) return;
+
+    const merged: LecturePlanItem = {
+      ...existing,
+      ...updates,
+      id: existing.id,
+      createdAt: existing.createdAt || new Date().toISOString(),
+      facultyName: updates.facultyName || existing.facultyName || currentUser.name || 'Faculty Member',
+      updatedAt: new Date().toISOString(),
+    };
+
+    // Strip optional empty/undefined fields so Firestore rules remain valid
+    if (merged.status !== 'missed') {
+      delete merged.missedReason;
+      delete merged.missedReportedAt;
+    }
+    if (merged.status !== 'completed') {
+      delete merged.completedAt;
+    }
+    if (!merged.courseCode) delete merged.courseCode;
+    if (!merged.courseTitle) delete merged.courseTitle;
+    if (!merged.department) delete merged.department;
+    if (!merged.facultyEmail) delete merged.facultyEmail;
+    if (!merged.facultyUid) delete merged.facultyUid;
+
+    const cleanPayload = sanitizeFirestoreDoc(merged as unknown as Record<string, unknown>) as unknown as LecturePlanItem;
+    setLecturePlans((prev) => prev.map((p) => (p.id === id ? cleanPayload : p)));
+
+    try {
+      await setDoc(doc(db, 'lecture_plans', id), cleanPayload);
+    } catch (err) {
+      handleFirestoreError(err, OperationType.UPDATE, `lecture_plans/${id}`);
+    }
+  };
+
+  const deleteLecturePlan = async (id: string): Promise<void> => {
+    if (role !== 'Faculty') return;
+
+    setLecturePlans((prev) => prev.filter((p) => p.id !== id));
+    try {
+      await deleteDoc(doc(db, 'lecture_plans', id));
+    } catch (err) {
+      handleFirestoreError(err, OperationType.DELETE, `lecture_plans/${id}`);
     }
   };
 
@@ -1875,6 +1609,7 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setEmployees([]);
     setDocuments([]);
     setAnnouncements([]);
+    setLecturePlans([]);
     Object.values(STORAGE_KEYS).forEach((key) => {
       if (key !== STORAGE_KEYS.ROLE) {
         localStorage.removeItem(key);
@@ -1923,6 +1658,7 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         employees,
         documents,
         announcements,
+        lecturePlans,
         addStudent,
         deleteStudent,
         updateStudent,
@@ -1965,6 +1701,9 @@ export const ERPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         deleteDocument,
         addAnnouncement,
         deleteAnnouncement,
+        addLecturePlan,
+        updateLecturePlan,
+        deleteLecturePlan,
         clearAllData,
       }}
     >

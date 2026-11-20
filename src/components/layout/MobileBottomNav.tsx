@@ -13,6 +13,7 @@ import {
   GraduationCap,
   Users,
   UserCheck,
+  ClipboardList,
 } from 'lucide-react';
 import { ERPModuleId } from '../../types';
 import { useERP } from '../../context/ERPContext';
@@ -31,10 +32,10 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   currentModule,
   onSelectModule,
 }) => {
-  const { role, currentUser, courses, attendanceRecords, timetableSlots, exams, results } = useERP();
+  const { role, currentUser, courses, attendanceRecords, timetableSlots, lecturePlans, exams, results } = useERP();
   const [activeSheet, setActiveSheet] = useState<ActiveSheet>('none');
 
-  const isAcademicsActive = ['academics', 'timetable', 'attendance', 'students'].includes(currentModule);
+  const isAcademicsActive = ['academics', 'lectureplan', 'timetable', 'attendance', 'students'].includes(currentModule);
   const isExamsActive = ['exams', 'results'].includes(currentModule);
   const isDocumentsActive = currentModule === 'documents';
   const isDashboardActive = currentModule === 'dashboard';
@@ -131,6 +132,39 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                     </span>
                   </div>
                   <p className="text-[11px] text-slate-500 mt-0.5">Syllabus, modules, credits & instructors</p>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-400" />
+            </button>
+
+            {/* Lecture Plan */}
+            <button
+              onClick={() => navigateAndClose('lectureplan')}
+              className={cn(
+                'flex items-center justify-between p-3 rounded-xl border text-left transition-all',
+                currentModule === 'lectureplan'
+                  ? 'bg-indigo-50/80 border-indigo-200 text-indigo-900'
+                  : 'bg-white border-slate-200 hover:bg-slate-50 text-slate-800'
+              )}
+            >
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-blue-100 text-blue-700">
+                  <ClipboardList className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-xs">Lecture Plan</span>
+                    <span className="px-1.5 py-0.2 rounded text-[10px] font-semibold bg-blue-100 text-blue-800">
+                      {lecturePlans.length}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 mt-0.5">
+                    {role === 'Faculty'
+                      ? 'Create lectures, mark ✓ done or ✕ missed'
+                      : role === 'Admin'
+                      ? 'View lectures & missed reasons from faculty'
+                      : 'View scheduled lecture dates & topics'}
+                  </p>
                 </div>
               </div>
               <ChevronRight className="w-4 h-4 text-slate-400" />

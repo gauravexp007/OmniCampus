@@ -1,17 +1,33 @@
-@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Comfortaa', cursive, system-ui, -apple-system, sans-serif;
-  --font-display: 'Comfortaa', cursive, system-ui, -apple-system, sans-serif;
+  --font-sans: 'Lexend', sans-serif;
+  --font-serif: 'Lexend', sans-serif;
+  --font-mono: 'Lexend', sans-serif;
+  --font-display: 'Lexend', sans-serif;
+
+  /* Balanced readable Lexend type scale */
+  --text-xs: 0.78rem;
+  --text-xs--line-height: 1.15rem;
+  --text-sm: 0.89rem;
+  --text-sm--line-height: 1.35rem;
+  --text-base: 1rem;
+  --text-base--line-height: 1.55rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.7rem;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: 1.8rem;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: 2rem;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
   :root, [data-theme="starline"] {
-    --font-sans: 'Comfortaa', cursive, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    --font-display: 'Comfortaa', cursive, system-ui, -apple-system, sans-serif;
+    --font-sans: 'Lexend', sans-serif;
+    --font-display: 'Lexend', sans-serif;
     
     /* Default Palette (Steel Slate from User Reference) */
     --brand-primary: #6C7D8A;
@@ -232,28 +248,41 @@
     --dropdown-badge-text: #0f172a;
   }
 
-  *, html, body, #root, button, input, select, textarea {
-    font-family: var(--font-sans);
+  html, body, #root, button, input, select, textarea, optgroup, option {
+    font-family: 'Lexend', sans-serif;
+    font-weight: 500;
+    font-optical-sizing: auto;
+    text-rendering: optimizeLegibility;
   }
 
   body {
-    font-family: var(--font-sans);
-    letter-spacing: -0.012em;
+    font-family: 'Lexend', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    font-optical-sizing: auto;
+    font-variant-numeric: lining-nums tabular-nums;
+    letter-spacing: -0.005em;
     background-color: #F1F5F9;
     color: #0f172a;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  h1, h2, h3, h4, h5, h6, .font-display {
-    font-family: var(--font-display);
-    letter-spacing: -0.025em;
+  /* Use Lexend across all headings and display text */
+  h1, h2, .font-display {
+    font-family: 'Lexend', sans-serif;
+    letter-spacing: -0.02em;
     font-weight: 700;
   }
 
-  /* Refined, non-AI editorial tabular figures for numbers & stats */
+  h3, h4, h5, h6 {
+    font-family: 'Lexend', sans-serif;
+    font-weight: 700;
+  }
+
+  /* Crisp lining tabular numerals for metrics, tables, and roll numbers */
   .tabular-nums, table td, .font-mono {
-    font-variant-numeric: tabular-nums;
+    font-variant-numeric: lining-nums tabular-nums;
   }
 }
 
@@ -288,6 +317,161 @@
 }
 .bg-brand-gradient {
   background-image: linear-gradient(135deg, var(--brand-gradient-from), var(--brand-gradient-to));
+}
+
+/* =========================================================================
+   LIGHT-PALETTE THEME COMBINATIONS FOR DASHBOARD, HEADERS, BLOCKS & BUTTONS
+   ========================================================================= */
+.theme-header-banner {
+  background: linear-gradient(
+    135deg,
+    var(--brand-lighter, #f5f8fa) 0%,
+    color-mix(in srgb, var(--brand-light, #eef2f5) 68%, #ffffff) 52%,
+    var(--brand-light, #eef2f5) 100%
+  ) !important;
+  border: 1.5px solid color-mix(in srgb, var(--brand-border, #9bb0bd) 82%, transparent) !important;
+  box-shadow: 0 6px 24px -8px color-mix(in srgb, var(--brand-primary, #6C7D8A) 22%, transparent),
+              inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+}
+
+.dark .theme-header-banner {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--brand-primary, #29a19c) 22%, #39454b) 0%,
+    #435055 56%,
+    color-mix(in srgb, var(--brand-primary, #29a19c) 15%, #354146) 100%
+  ) !important;
+  border: 1.5px solid color-mix(in srgb, var(--brand-primary, #29a19c) 42%, #55666d) !important;
+  box-shadow: 0 8px 26px -8px rgba(0, 0, 0, 0.45) !important;
+}
+
+.theme-dashboard-block {
+  background: linear-gradient(
+    155deg,
+    #ffffff 0%,
+    var(--brand-lighter, #f5f8fa) 54%,
+    color-mix(in srgb, var(--brand-light, #eef2f5) 92%, #ffffff) 100%
+  ) !important;
+  border: 1.5px solid color-mix(in srgb, var(--brand-border, #9bb0bd) 78%, #e2e8f0) !important;
+  box-shadow: 0 4px 16px -6px color-mix(in srgb, var(--brand-primary, #6C7D8A) 18%, transparent),
+              inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+.theme-dashboard-block:hover {
+  border-color: var(--brand-primary, #6C7D8A) !important;
+  box-shadow: 0 12px 26px -8px color-mix(in srgb, var(--brand-primary, #6C7D8A) 28%, transparent),
+              0 0 0 1px color-mix(in srgb, var(--brand-primary, #6C7D8A) 24%, transparent) !important;
+}
+
+.dark .theme-dashboard-block {
+  background: linear-gradient(
+    155deg,
+    color-mix(in srgb, var(--brand-primary, #29a19c) 18%, #3c484e) 0%,
+    #435055 58%,
+    color-mix(in srgb, var(--brand-primary, #29a19c) 12%, #354146) 100%
+  ) !important;
+  border: 1.5px solid color-mix(in srgb, var(--brand-primary, #29a19c) 36%, #55666d) !important;
+  box-shadow: 0 6px 20px -6px rgba(0, 0, 0, 0.45) !important;
+}
+
+.dark .theme-dashboard-block:hover {
+  border-color: var(--brand-primary, #29a19c) !important;
+  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.55),
+              0 0 0 1px color-mix(in srgb, var(--brand-primary, #29a19c) 45%, transparent) !important;
+}
+
+.theme-section-card {
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    color-mix(in srgb, var(--brand-lighter, #f5f8fa) 86%, #ffffff) 100%
+  ) !important;
+  border: 1.5px solid color-mix(in srgb, var(--brand-border, #9bb0bd) 70%, #e2e8f0) !important;
+  box-shadow: 0 4px 18px -6px color-mix(in srgb, var(--brand-primary, #6C7D8A) 14%, transparent) !important;
+}
+
+.dark .theme-section-card {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--brand-primary, #29a19c) 12%, #435055) 0%,
+    #435055 100%
+  ) !important;
+  border: 1.5px solid color-mix(in srgb, var(--brand-primary, #29a19c) 32%, #55666d) !important;
+}
+
+/* Soft Theme-Tinted Action Buttons (Light Palette Combination) */
+.theme-btn-soft {
+  background-color: var(--brand-light, #eef2f5) !important;
+  color: var(--brand-dark, #23313A) !important;
+  border: 1.5px solid color-mix(in srgb, var(--brand-border, #9bb0bd) 85%, transparent) !important;
+  box-shadow: 0 2px 6px -2px color-mix(in srgb, var(--brand-primary, #6C7D8A) 18%, transparent),
+              inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+.theme-btn-soft:hover {
+  background-color: color-mix(in srgb, var(--brand-primary, #6C7D8A) 18%, var(--brand-light, #eef2f5)) !important;
+  border-color: var(--brand-primary, #6C7D8A) !important;
+  color: var(--brand-dark, #23313A) !important;
+}
+
+.dark .theme-btn-soft {
+  background-color: color-mix(in srgb, var(--brand-primary, #29a19c) 24%, #313d42) !important;
+  color: #f8fafc !important;
+  border: 1.5px solid color-mix(in srgb, var(--brand-primary, #29a19c) 48%, #55666d) !important;
+  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.35) !important;
+}
+
+.dark .theme-btn-soft:hover {
+  background-color: color-mix(in srgb, var(--brand-primary, #29a19c) 36%, #313d42) !important;
+  border-color: var(--brand-primary, #29a19c) !important;
+}
+
+/* Global Light-Palette Theme Styling for Secondary / Neutral Buttons across Modules */
+button.bg-slate-100:not([role="radio"]):not(.no-theme-btn),
+button.bg-slate-50:not([role="radio"]):not(.no-theme-btn),
+button.bg-slate-200:not([role="radio"]):not(.no-theme-btn),
+button.bg-\[\#CBD5E1\]:not([role="radio"]):not(.no-theme-btn) {
+  background-color: var(--brand-light, #eef2f5) !important;
+  border-color: color-mix(in srgb, var(--brand-border, #9bb0bd) 80%, transparent) !important;
+  color: var(--brand-dark, #23313A) !important;
+}
+
+button.bg-slate-100:not([role="radio"]):not(.no-theme-btn):hover,
+button.bg-slate-50:not([role="radio"]):not(.no-theme-btn):hover,
+button.bg-slate-200:not([role="radio"]):not(.no-theme-btn):hover,
+button.bg-\[\#CBD5E1\]:not([role="radio"]):not(.no-theme-btn):hover {
+  background-color: color-mix(in srgb, var(--brand-primary, #6C7D8A) 18%, var(--brand-light, #eef2f5)) !important;
+  border-color: var(--brand-primary, #6C7D8A) !important;
+}
+
+.dark button.bg-slate-100:not([role="radio"]):not(.no-theme-btn),
+.dark button.bg-slate-50:not([role="radio"]):not(.no-theme-btn),
+.dark button.bg-slate-200:not([role="radio"]):not(.no-theme-btn),
+.dark button.bg-\[\#CBD5E1\]:not([role="radio"]):not(.no-theme-btn) {
+  background-color: color-mix(in srgb, var(--brand-primary, #29a19c) 24%, #313d42) !important;
+  border-color: color-mix(in srgb, var(--brand-primary, #29a19c) 48%, #55666d) !important;
+  color: #ffffff !important;
+}
+
+.dark button.bg-slate-100:not([role="radio"]):not(.no-theme-btn):hover,
+.dark button.bg-slate-50:not([role="radio"]):not(.no-theme-btn):hover,
+.dark button.bg-slate-200:not([role="radio"]):not(.no-theme-btn):hover,
+.dark button.bg-\[\#CBD5E1\]:not([role="radio"]):not(.no-theme-btn):hover {
+  background-color: color-mix(in srgb, var(--brand-primary, #29a19c) 38%, #313d42) !important;
+  border-color: var(--brand-primary, #29a19c) !important;
+}
+
+/* Primary Action Buttons follow active theme */
+button.bg-\[\#29a19c\],
+button.bg-slate-900:not(.no-theme-btn) {
+  background-color: var(--brand-primary, #6C7D8A) !important;
+  border-color: var(--brand-primary, #6C7D8A) !important;
+  color: #ffffff !important;
+}
+
+button.bg-\[\#29a19c\]:hover,
+button.bg-slate-900:not(.no-theme-btn):hover {
+  background-color: var(--brand-hover, #5A6A76) !important;
 }
 
 /* Custom slick enterprise high-density scrollbars */
@@ -1079,101 +1263,222 @@ html.dark [data-attendance-card] [data-force-white],
   border-color: #a3f7bf !important;
 }
 
-/* Tactile Architectural Text Inputs & Textareas (Light & Dark Mode) */
+/* =========================================================================
+   WARM-SHADED SAME-BACKGROUND INPUT FIELDS WITH INNER CORNER DEPTH EFFECT
+   Matches surrounding light/dark surface in a warm shade with 4-corner depth
+   ========================================================================= */
 input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]):not(.glass-input):not(.bg-transparent):not(.border-0),
-textarea:not(.glass-input):not(.bg-transparent):not(.border-0) {
-  background-color: #ffffff;
-  border: 1.5px solid color-mix(in srgb, var(--brand-border, #cbd5e1) 68%, #cbd5e1);
+textarea:not(.glass-input):not(.bg-transparent):not(.border-0),
+select:not(.glass-input):not(.bg-transparent):not(.sr-only),
+.depth-input-container {
+  background-color: color-mix(in srgb, var(--brand-lighter, #faf6f0) 36%, #f8f2e9) !important;
+  background-image:
+    radial-gradient(ellipse 34% 48% at 0% 0%, rgba(126, 94, 62, 0.22) 0%, transparent 72%),
+    radial-gradient(ellipse 34% 48% at 100% 0%, rgba(126, 94, 62, 0.19) 0%, transparent 72%),
+    radial-gradient(ellipse 34% 48% at 0% 100%, rgba(126, 94, 62, 0.17) 0%, transparent 72%),
+    radial-gradient(ellipse 34% 48% at 100% 100%, rgba(126, 94, 62, 0.16) 0%, transparent 72%) !important;
+  border: 1px solid rgba(154, 126, 98, 0.34) !important;
   border-radius: 0.875rem;
-  color: #0f172a;
-  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.03);
+  color: #1c1917 !important;
+  caret-color: var(--brand-primary, #6C7D8A);
+  color-scheme: light;
+  box-shadow:
+    inset 6px 6px 11px -3px rgba(112, 82, 54, 0.22),
+    inset -6px -6px 11px -3px rgba(112, 82, 54, 0.16),
+    inset 6px -6px 10px -3px rgba(112, 82, 54, 0.15),
+    inset -6px 6px 10px -3px rgba(112, 82, 54, 0.15),
+    0 1px 0 rgba(255, 255, 255, 0.82) !important;
   transition: border-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1),
               background-color 180ms ease;
 }
 
 input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]):not(.glass-input):not(.bg-transparent):not(.border-0):hover:not(:disabled):not(:focus),
-textarea:not(.glass-input):not(.bg-transparent):not(.border-0):hover:not(:disabled):not(:focus) {
-  border-color: color-mix(in srgb, var(--brand-primary, #6C7D8A) 48%, #94a3b8);
-  background-color: #fcfdfe;
+textarea:not(.glass-input):not(.bg-transparent):not(.border-0):hover:not(:disabled):not(:focus),
+select:not(.glass-input):not(.bg-transparent):not(.sr-only):hover:not(:disabled):not(:focus),
+.depth-input-container:hover:not(:focus-within) {
+  background-color: color-mix(in srgb, var(--brand-lighter, #fbf7f2) 30%, #f5ede2) !important;
+  border-color: color-mix(in srgb, var(--brand-primary, #6C7D8A) 45%, rgba(154, 126, 98, 0.45)) !important;
+  box-shadow:
+    inset 7px 7px 12px -3px rgba(112, 82, 54, 0.26),
+    inset -7px -7px 12px -3px rgba(112, 82, 54, 0.19),
+    inset 7px -7px 11px -3px rgba(112, 82, 54, 0.17),
+    inset -7px 7px 11px -3px rgba(112, 82, 54, 0.17),
+    0 1px 0 rgba(255, 255, 255, 0.85) !important;
 }
 
 input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]):not(.glass-input):not(.bg-transparent):not(.border-0):focus,
-textarea:not(.glass-input):not(.bg-transparent):not(.border-0):focus {
-  outline: none;
+textarea:not(.glass-input):not(.bg-transparent):not(.border-0):focus,
+select:not(.glass-input):not(.bg-transparent):not(.sr-only):focus,
+.depth-input-container:focus-within {
+  outline: none !important;
+  background-color: color-mix(in srgb, var(--brand-lighter, #fcf9f4) 40%, #fbf5ec) !important;
   border-color: var(--brand-primary, #6C7D8A) !important;
-  background-color: #ffffff;
-  box-shadow: 0 0 0 3px var(--brand-ring, rgba(108, 125, 138, 0.28)), inset 0 1px 2px rgba(15, 23, 42, 0.02) !important;
+  box-shadow:
+    inset 7px 7px 13px -3px rgba(105, 76, 48, 0.25),
+    inset -7px -7px 13px -3px rgba(105, 76, 48, 0.19),
+    inset 7px -7px 11px -3px rgba(105, 76, 48, 0.17),
+    inset -7px 7px 11px -3px rgba(105, 76, 48, 0.17),
+    0 0 0 2.5px var(--brand-ring, rgba(108, 125, 138, 0.3)) !important;
 }
 
 input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]):not(.glass-input):not(.bg-transparent):not(.border-0):disabled,
-textarea:not(.glass-input):not(.bg-transparent):not(.border-0):disabled {
-  background-color: #f1f5f9 !important;
-  border-style: dashed;
-  border-color: #cbd5e1 !important;
-  color: #64748b !important;
-  box-shadow: none;
+textarea:not(.glass-input):not(.bg-transparent):not(.border-0):disabled,
+select:not(.glass-input):not(.bg-transparent):not(.sr-only):disabled {
+  background-color: #f1eae0 !important;
+  border: 1px dashed rgba(146, 124, 102, 0.42) !important;
+  color: #78716c !important;
+  box-shadow:
+    inset 5px 5px 9px -3px rgba(112, 82, 54, 0.18),
+    inset -5px -5px 9px -3px rgba(112, 82, 54, 0.12) !important;
 }
 
-input::placeholder,
-textarea::placeholder {
-  color: #64748b;
-  opacity: 0.85;
-}
-
-/* Form Controls in Dark Mode */
+/* Dark Mode Warm-Shaded Same-Background Input Fields with Inner Corner Depth */
 .dark input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]):not(.glass-input):not(.bg-transparent):not(.border-0),
-.dark textarea:not(.glass-input):not(.bg-transparent):not(.border-0) {
-  background-color: #1f2630 !important;
-  border: 1.5px solid color-mix(in srgb, var(--brand-border, #55666d) 38%, #475569) !important;
-  color: #f8fafc !important;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.32), 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+.dark textarea:not(.glass-input):not(.bg-transparent):not(.border-0),
+.dark select:not(.glass-input):not(.bg-transparent):not(.sr-only),
+.dark .depth-input-container {
+  background-color: color-mix(in srgb, #435055 72%, #5c4534) !important;
+  background-image:
+    radial-gradient(ellipse 36% 52% at 0% 0%, rgba(16, 10, 6, 0.56) 0%, transparent 72%),
+    radial-gradient(ellipse 36% 52% at 100% 0%, rgba(16, 10, 6, 0.50) 0%, transparent 72%),
+    radial-gradient(ellipse 36% 52% at 0% 100%, rgba(16, 10, 6, 0.46) 0%, transparent 72%),
+    radial-gradient(ellipse 36% 52% at 100% 100%, rgba(16, 10, 6, 0.44) 0%, transparent 72%) !important;
+  border: 1px solid rgba(30, 22, 16, 0.56) !important;
+  border-bottom-color: rgba(214, 194, 174, 0.22) !important;
+  color: #faf7f2 !important;
+  caret-color: var(--brand-primary, #29a19c);
+  color-scheme: dark;
+  box-shadow:
+    inset 7px 7px 13px -3px rgba(14, 9, 5, 0.62),
+    inset -7px -7px 13px -3px rgba(14, 9, 5, 0.48),
+    inset 7px -7px 12px -3px rgba(14, 9, 5, 0.45),
+    inset -7px 7px 12px -3px rgba(14, 9, 5, 0.45),
+    0 1px 0 rgba(255, 245, 235, 0.09) !important;
 }
 
 .dark input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]):not(.glass-input):not(.bg-transparent):not(.border-0):hover:not(:disabled):not(:focus),
-.dark textarea:not(.glass-input):not(.bg-transparent):not(.border-0):hover:not(:disabled):not(:focus) {
-  border-color: color-mix(in srgb, var(--brand-primary, #29a19c) 55%, #64748b) !important;
-  background-color: #242c37 !important;
+.dark textarea:not(.glass-input):not(.bg-transparent):not(.border-0):hover:not(:disabled):not(:focus),
+.dark select:not(.glass-input):not(.bg-transparent):not(.sr-only):hover:not(:disabled):not(:focus),
+.dark .depth-input-container:hover:not(:focus-within) {
+  background-color: color-mix(in srgb, #435055 68%, #634a37) !important;
+  border-color: color-mix(in srgb, var(--brand-primary, #29a19c) 45%, rgba(214, 194, 174, 0.28)) !important;
+}
+
+.dark input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]):not(.glass-input):not(.bg-transparent):not(.border-0):focus,
+.dark textarea:not(.glass-input):not(.bg-transparent):not(.border-0):focus,
+.dark select:not(.glass-input):not(.bg-transparent):not(.sr-only):focus,
+.dark .depth-input-container:focus-within {
+  outline: none !important;
+  background-color: color-mix(in srgb, #3d484d 72%, #594130) !important;
+  border-color: var(--brand-primary, #29a19c) !important;
+  box-shadow:
+    inset 8px 8px 14px -3px rgba(12, 7, 4, 0.68),
+    inset -8px -8px 14px -3px rgba(12, 7, 4, 0.54),
+    inset 8px -8px 12px -3px rgba(12, 7, 4, 0.5),
+    inset -8px 8px 12px -3px rgba(12, 7, 4, 0.5),
+    0 0 0 2.5px var(--brand-ring, rgba(41, 161, 156, 0.42)) !important;
 }
 
 .dark input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]):not(.glass-input):not(.bg-transparent):not(.border-0):disabled,
-.dark textarea:not(.glass-input):not(.bg-transparent):not(.border-0):disabled {
-  background-color: #181d25 !important;
-  border-style: dashed !important;
-  border-color: #3a4554 !important;
-  color: #94a3b8 !important;
-  box-shadow: none !important;
+.dark textarea:not(.glass-input):not(.bg-transparent):not(.border-0):disabled,
+.dark select:not(.glass-input):not(.bg-transparent):not(.sr-only):disabled {
+  background-color: color-mix(in srgb, #394449 75%, #4d3b2e) !important;
+  border: 1px dashed rgba(186, 168, 150, 0.32) !important;
+  color: #b8aea3 !important;
+  box-shadow:
+    inset 6px 6px 10px -3px rgba(14, 9, 5, 0.54),
+    inset -6px -6px 10px -3px rgba(14, 9, 5, 0.42) !important;
 }
 
-.dark select:not(.glass-input):not(.bg-transparent):not(.sr-only) {
-  background-color: var(--dropdown-surface, #27323a) !important;
-  border-color: var(--dropdown-border, #55666d) !important;
-  color: var(--dropdown-text, #ffffff) !important;
+/* Keep icons inside warm depth input wrappers legible in both Light & Dark modes */
+.relative:has(> input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]):not(.glass-input):not(.bg-transparent):not(.border-0)) > svg,
+.relative:has(> textarea:not(.glass-input):not(.bg-transparent):not(.border-0)) > svg,
+.relative:has(> select:not(.glass-input):not(.bg-transparent):not(.sr-only)) > svg,
+.depth-input-container > svg {
+  color: #78716c;
+  z-index: 1;
+  transition: color 180ms ease;
 }
 
-/* Native <select> Dropdown Lists (<option> & <optgroup>) across ALL themes & modes
-   Ensures options NEVER render invisible white text on a white popup background */
-select:not(.glass-input):not(.bg-transparent):not(.sr-only) {
-  background-color: var(--dropdown-surface, #ffffff);
-  border-color: var(--dropdown-border, #cbd5e1);
-  color: var(--dropdown-text, #0f172a);
+.dark .relative:has(> input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]):not(.glass-input):not(.bg-transparent):not(.border-0)) > svg,
+.dark .relative:has(> textarea:not(.glass-input):not(.bg-transparent):not(.border-0)) > svg,
+.dark .relative:has(> select:not(.glass-input):not(.bg-transparent):not(.sr-only)) > svg,
+.dark .depth-input-container > svg {
+  color: #c2b7ab;
 }
 
+.relative:focus-within:has(> input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]):not(.glass-input):not(.bg-transparent):not(.border-0)) > svg,
+.relative:focus-within:has(> textarea:not(.glass-input):not(.bg-transparent):not(.border-0)) > svg,
+.depth-input-container:focus-within > svg {
+  color: var(--brand-primary, #6C7D8A);
+}
+
+/* Preserve warm background styling during browser autofill */
+input:not(.glass-input):-webkit-autofill,
+input:not(.glass-input):-webkit-autofill:hover,
+input:not(.glass-input):-webkit-autofill:focus,
+textarea:not(.glass-input):-webkit-autofill {
+  -webkit-text-fill-color: #1c1917 !important;
+  -webkit-box-shadow: 0 0 0 1000px #f8f2e9 inset !important;
+  box-shadow: 0 0 0 1000px #f8f2e9 inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.dark input:not(.glass-input):-webkit-autofill,
+.dark input:not(.glass-input):-webkit-autofill:hover,
+.dark input:not(.glass-input):-webkit-autofill:focus,
+.dark textarea:not(.glass-input):-webkit-autofill {
+  -webkit-text-fill-color: #faf7f2 !important;
+  -webkit-box-shadow: 0 0 0 1000px #4a4c4b inset !important;
+  box-shadow: 0 0 0 1000px #4a4c4b inset !important;
+}
+
+/* All Placeholders: Strict Sans-Serif Typography */
+input::placeholder,
+textarea::placeholder,
+.glass-input::placeholder,
+.depth-input-container input::placeholder,
+.depth-input-container textarea::placeholder {
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.01em !important;
+  color: #78716c !important;
+  opacity: 0.85 !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder,
+.dark .glass-input::placeholder,
+.dark .depth-input-container input::placeholder,
+.dark .depth-input-container textarea::placeholder {
+  color: #c2b7ab !important;
+  opacity: 0.82 !important;
+}
+
+/* Native <select> Dropdown Lists (<option> & <optgroup>) matching warm depth fields */
 select option,
 select optgroup,
+#auth-form-panel select option {
+  background-color: #f8f2e9 !important;
+  color: #1c1917 !important;
+  font-family: 'Lexend', sans-serif !important;
+  font-weight: 500;
+}
+
 .dark select option,
 .dark select optgroup,
-#auth-form-panel select option,
 .dark #auth-form-panel select option {
-  background-color: var(--dropdown-bg, #ffffff) !important;
-  color: var(--dropdown-text, #0f172a) !important;
-  font-weight: 600;
+  background-color: #3f4445 !important;
+  color: #faf7f2 !important;
+  font-family: 'Lexend', sans-serif !important;
+  font-weight: 500;
 }
 
 select optgroup,
 .dark select optgroup {
   color: var(--brand-primary) !important;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 select option:checked,
@@ -1237,18 +1542,6 @@ select option:focus,
 
 .dark select.bg-transparent:not(.glass-input):not(.sr-only) {
   color: var(--dropdown-text, #ffffff) !important;
-}
-
-.dark input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]):not(.glass-input):not(.bg-transparent):not(.border-0):focus,
-.dark select:focus,
-.dark textarea:not(.glass-input):not(.bg-transparent):not(.border-0):focus {
-  border-color: var(--brand-primary, #29a19c) !important;
-  box-shadow: 0 0 0 3px var(--brand-ring, rgba(41, 161, 156, 0.35)), inset 0 1px 2px rgba(0, 0, 0, 0.25) !important;
-}
-
-.dark input::placeholder,
-.dark textarea::placeholder {
-  color: #8ea1a5 !important;
 }
 
 /* Glassmorphic Transparent Inputs (Auth Screen & Glass Overlays) */
@@ -1653,8 +1946,21 @@ select option:focus,
 }
 
 /* =========================================================================
-   SIDEBAR SINGLE FULL-BLEED IMAGE BACKGROUND
+   SIDEBAR: SUPER-LIGHT THEME GREY IN LIGHT MODE (BLACK TEXT)
+   & PREVIOUS FULL-BLEED PATTERN IN DARK MODE (NO THEME TINT)
    ========================================================================= */
+
+#sidebar-navigation {
+  background-color: color-mix(in srgb, var(--brand-light, #eef2f5) 86%, var(--brand-primary, #6c7d8a) 14%) !important;
+  border-right-color: color-mix(in srgb, var(--brand-border, #9bb0bd) 65%, #cbd5e1) !important;
+  color: #000000;
+}
+
+.dark #sidebar-navigation {
+  background-color: #182026 !important;
+  border-right-color: rgba(255, 255, 255, 0.14) !important;
+  color: #ffffff;
+}
 
 .sidebar-backdrop-layer {
   position: absolute;
@@ -1662,11 +1968,16 @@ select option:focus,
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  background: linear-gradient(160deg, #4b5d69 0%, #2f3f4a 100%);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--brand-lighter, #f5f8fa) 86%, var(--brand-primary, #6c7d8a) 14%) 0%,
+    color-mix(in srgb, var(--brand-light, #eef2f5) 82%, var(--brand-primary, #6c7d8a) 18%) 55%,
+    color-mix(in srgb, var(--brand-light, #eef2f5) 76%, var(--brand-primary, #6c7d8a) 24%) 100%
+  );
 }
 
 .dark .sidebar-backdrop-layer {
-  background: linear-gradient(160deg, #27323f 0%, #18202a 100%);
+  background: #0f172a;
 }
 
 .sidebar-backdrop-img {
@@ -1674,32 +1985,29 @@ select option:focus,
   height: 100%;
   object-fit: cover;
   object-position: center;
-  display: block;
-  filter: brightness(1.32) contrast(1.06);
-  transition: filter 200ms ease;
+  display: none;
+  transition: filter 200ms ease, opacity 200ms ease;
 }
 
 .dark .sidebar-backdrop-img {
-  filter: brightness(1.18) contrast(1.05);
+  display: block;
+  opacity: 0.92;
+  mix-blend-mode: normal;
+  filter: brightness(0.92) contrast(1.06);
 }
 
 .sidebar-backdrop-scrim {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.04) 0%,
-    rgba(0, 0, 0, 0.08) 55%,
-    rgba(0, 0, 0, 0.14) 100%
-  );
+  background: transparent;
 }
 
 .dark .sidebar-backdrop-scrim {
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0.08) 0%,
-    rgba(0, 0, 0, 0.14) 55%,
-    rgba(0, 0, 0, 0.2) 100%
+    rgba(15, 23, 42, 0.34) 0%,
+    rgba(15, 23, 42, 0.42) 55%,
+    rgba(15, 23, 42, 0.56) 100%
   );
 }

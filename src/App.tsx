@@ -16,6 +16,7 @@ import { StudentsModule } from './components/modules/StudentsModule';
 import { FacultyModule } from './components/modules/FacultyModule';
 import { AdmissionsModule } from './components/modules/AdmissionsModule';
 import { AcademicsModule } from './components/modules/AcademicsModule';
+import { LecturePlanModule } from './components/modules/LecturePlanModule';
 import { AttendanceModule } from './components/modules/AttendanceModule';
 import { TimetableModule } from './components/modules/TimetableModule';
 import { ExamsModule } from './components/modules/ExamsModule';
@@ -36,6 +37,7 @@ import { CampusSkeletonPreview } from './components/common/CampusSkeletonPreview
 import { SetNewPasswordScreen } from './components/auth/SetNewPasswordScreen';
 import { useNetworkStatus } from './hooks/useNetworkStatus';
 import { GradientGreyBackground } from './components/common/GradientGreyBackground';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
 
 function ERPAppContent() {
   const { role, currentUser, setRole, firebaseUser, isAuthLoading } = useERP();
@@ -159,6 +161,8 @@ function ERPAppContent() {
         return <AdmissionsModule />;
       case 'academics':
         return <AcademicsModule />;
+      case 'lectureplan':
+        return <LecturePlanModule />;
       case 'attendance':
         return <AttendanceModule />;
       case 'timetable':
@@ -272,10 +276,12 @@ function ERPAppContent() {
 
 export default function App() {
   return (
-    <ERPProvider>
-      <DashboardLayoutProvider>
-        <ERPAppContent />
-      </DashboardLayoutProvider>
-    </ERPProvider>
+    <ErrorBoundary>
+      <ERPProvider>
+        <DashboardLayoutProvider>
+          <ERPAppContent />
+        </DashboardLayoutProvider>
+      </ERPProvider>
+    </ErrorBoundary>
   );
 }

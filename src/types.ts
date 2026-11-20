@@ -6,6 +6,7 @@ export type ERPModuleId =
   | 'faculty'
   | 'admissions'
   | 'academics'
+  | 'lectureplan'
   | 'attendance'
   | 'timetable'
   | 'exams'
@@ -480,3 +481,26 @@ export interface SemesterProgressDataPoint {
   rank: number;
   status: 'Completed' | 'Current' | 'Upcoming';
 }
+
+export type LecturePlanStatus = 'pending' | 'completed' | 'missed';
+
+export interface LecturePlanItem {
+  id: string;
+  serialNo?: number;
+  date: string; // YYYY-MM-DD
+  topicName: string;
+  courseCode?: string;
+  courseTitle?: string;
+  semester?: number;
+  department?: string;
+  status: LecturePlanStatus;
+  missedReason?: string;
+  missedReportedAt?: string;
+  completedAt?: string;
+  facultyUid?: string;
+  facultyName: string;
+  facultyEmail?: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+

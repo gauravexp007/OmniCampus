@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   Building2,
   Award,
+  ClipboardList,
 } from 'lucide-react';
 import { ERPModuleId } from '../../types';
 import { useERP } from '../../context/ERPContext';
@@ -78,6 +79,7 @@ export const CommandDialog: React.FC<CommandDialogProps> = ({
 
   const quickActions = [
     { label: 'Campus Insights & Overview', module: 'dashboard' as ERPModuleId, icon: Sparkles },
+    { label: 'Open Lecture Plan (Dates & Topics)', module: 'lectureplan' as ERPModuleId, icon: ClipboardList },
     { label: 'View Today’s Timetable', module: 'timetable' as ERPModuleId, icon: CalendarDays },
     { label: 'Check Lecture Attendance', module: 'attendance' as ERPModuleId, icon: BookOpen },
     { label: 'Verify Exam Schedules & Dates', module: 'exams' as ERPModuleId, icon: FileSpreadsheet },
@@ -113,28 +115,30 @@ export const CommandDialog: React.FC<CommandDialogProps> = ({
             onClick={(e) => e.stopPropagation()}
           >
             {/* Search Input bar */}
-            <div className="flex items-center gap-3 px-3.5 sm:px-4 py-3.5 border-b border-slate-200 dark:border-[#55666d]">
-              <Search className="w-5 h-5 text-brand shrink-0" />
-              <input
-                id="command-search-input"
-                type="text"
-                placeholder="Search courses, exams, students, faculty, or actions..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                autoFocus
-                className="flex-1 bg-transparent text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-[#a3f7bf]/60 text-xs sm:text-sm focus:outline-hidden"
-              />
-              {query && (
-                <button
-                  onClick={() => setQuery('')}
-                  className="btn-press p-1 rounded-lg text-slate-400 dark:text-[#a3f7bf]/80 hover:text-slate-600 dark:hover:text-white"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
-              <span className="text-[10px] font-semibold text-slate-400 dark:text-[#a3f7bf] px-1.5 py-0.2 bg-slate-100 dark:bg-[#354146] rounded border border-slate-200 dark:border-[#55666d] hidden sm:inline">
-                ESC
-              </span>
+            <div className="p-3 border-b border-slate-200 dark:border-[#55666d]">
+              <div className="depth-input-container flex items-center gap-3 px-3.5 sm:px-4 py-2.5">
+                <Search className="w-5 h-5 text-brand shrink-0" />
+                <input
+                  id="command-search-input"
+                  type="text"
+                  placeholder="Search courses, exams, students, faculty, or actions..."
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  autoFocus
+                  className="glass-input flex-1 bg-transparent text-stone-900 dark:text-[#faf7f2] text-xs sm:text-sm focus:outline-hidden border-0"
+                />
+                {query && (
+                  <button
+                    onClick={() => setQuery('')}
+                    className="no-theme-btn btn-press p-1 rounded-lg text-stone-500 dark:text-[#c2b7ab] hover:text-stone-900 dark:hover:text-white"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+                <span className="text-[10px] font-semibold text-stone-600 dark:text-[#e7dfd6] px-1.5 py-0.5 bg-black/5 dark:bg-white/10 rounded border border-black/10 dark:border-white/15 hidden sm:inline">
+                  ESC
+                </span>
+              </div>
             </div>
 
         {/* Results Container */}

@@ -11,6 +11,56 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == userId;
     }
 
+    function isFaculty() {
+      return isAuthenticated()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'Faculty';
+    }
+
+    function isValidId(docId) {
+      return docId is string && docId.size() > 0 && docId.size() <= 128;
+    }
+
+    function isValidLecturePlan(data) {
+      return data.keys().hasAll(['id', 'date', 'topicName', 'status', 'facultyName', 'createdAt'])
+        && data.keys().hasOnly([
+          'id',
+          'serialNo',
+          'date',
+          'topicName',
+          'courseCode',
+          'courseTitle',
+          'semester',
+          'department',
+          'status',
+          'missedReason',
+          'missedReportedAt',
+          'completedAt',
+          'facultyUid',
+          'facultyName',
+          'facultyEmail',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.id is string && data.id.size() > 0 && data.id.size() <= 128
+        && data.date is string && data.date.size() > 0 && data.date.size() <= 32
+        && data.topicName is string && data.topicName.size() > 0 && data.topicName.size() <= 300
+        && data.status in ['pending', 'completed', 'missed']
+        && data.facultyName is string && data.facultyName.size() > 0 && data.facultyName.size() <= 150
+        && data.createdAt is string && data.createdAt.size() > 0 && data.createdAt.size() <= 64
+        && (!('serialNo' in data) || data.serialNo is number)
+        && (!('courseCode' in data) || (data.courseCode is string && data.courseCode.size() <= 64))
+        && (!('courseTitle' in data) || (data.courseTitle is string && data.courseTitle.size() <= 200))
+        && (!('semester' in data) || (data.semester is number && data.semester >= 1 && data.semester <= 12))
+        && (!('department' in data) || (data.department is string && data.department.size() <= 150))
+        && (!('missedReason' in data) || (data.missedReason is string && data.missedReason.size() <= 1000))
+        && (!('missedReportedAt' in data) || (data.missedReportedAt is string && data.missedReportedAt.size() <= 64))
+        && (!('completedAt' in data) || (data.completedAt is string && data.completedAt.size() <= 64))
+        && (!('facultyUid' in data) || (data.facultyUid is string && data.facultyUid.size() <= 128))
+        && (!('facultyEmail' in data) || (data.facultyEmail is string && data.facultyEmail.size() <= 160))
+        && (!('updatedAt' in data) || (data.updatedAt is string && data.updatedAt.size() <= 64));
+    }
+
     // Health Check & Diagnostics
     match /test/{docId} {
       allow read: if true;
@@ -137,6 +187,14 @@ service cloud.firestore {
     match /notifications/{notificationId} {
       allow read: if isAuthenticated();
       allow create, update, delete: if isAuthenticated();
+    }
+
+    // Lecture Plans Collection (Visible to Students, Faculty, Admin; only Faculty can create, edit, or delete)
+    match /lecture_plans/{planId} {
+      allow read: if isAuthenticated();
+      allow create: if isFaculty() && isValidId(planId) && isValidLecturePlan(request.resource.data);
+      allow update: if isFaculty() && isValidId(planId) && isValidLecturePlan(request.resource.data);
+      allow delete: if isFaculty() && isValidId(planId);
     }
 
     // System Credentials Collection (Protected Database Storage)
